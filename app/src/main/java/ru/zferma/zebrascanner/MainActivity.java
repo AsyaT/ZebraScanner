@@ -192,6 +192,12 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 // Scanner is IDLE
                 case IDLE:
                     statusStr = "The scanner enabled and its idle";
+                    try {
+                    scanner.read();
+                    } catch (ScannerException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                     break;
                 // Scanner is SCANNING
                 case SCANNING:
