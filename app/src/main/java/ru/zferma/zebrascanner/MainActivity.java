@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
 // Toast to indicate that the user can now start scanning
         Toast.makeText(MainActivity.this,
-                "Press Hard Scan Button to start scanning...",
+                "Нажмите жёлтую кнопку на рукоятке для начала сканирования...",
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -191,7 +191,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             switch (state) {
                 // Scanner is IDLE
                 case IDLE:
-                    statusStr = "The scanner enabled and its idle";
+                    statusStr = "Сканер включен и находится в режиме ожидания";
                     try {
                     scanner.read();
                     } catch (ScannerException e) {
@@ -201,15 +201,15 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     break;
                 // Scanner is SCANNING
                 case SCANNING:
-                    statusStr = "Scanning..";
+                    statusStr = "Сканирование..";
                     break;
                 // Scanner is waiting for trigger press
                 case WAITING:
-                    statusStr = "Waiting for trigger press..";
+                    statusStr = "В ожидании нажатия на жёлтую кнопку на рукоятке..";
                     break;
                 // Scanner is not enabled
                 case DISABLED:
-                    statusStr = "Scanner is not enabled";
+                    statusStr = "Сканер не включен";
                     break;
                 default:
                     break;
