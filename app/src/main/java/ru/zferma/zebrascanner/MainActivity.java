@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity implements EMDKListener, StatusListener, DataListener {
 
@@ -40,6 +42,10 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     // Edit Text that is used to display scanned barcode data
     private EditText dataView = null;
 
+    private ListView listView = null;
+    private List<OrderModel> dataTable = null;
+    CustomListAdapter whatever = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +62,17 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
             statusTextView.setText("EMDKManager Request Failed");
         }
+
+        whatever = new CustomListAdapter(this,getModel() );
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(whatever);
     }
 
+    private List<OrderModel> getModel() {
+        dataTable = new ArrayList<OrderModel>();
+
+        return dataTable;
+    }
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
         if (scanner == null) {
@@ -297,6 +312,9 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 dataLength = 0;
             }
             dataView.append(result + "\n");
+
+            dataTable.add(new OrderModel("Cat", "9785389076990","1"));
+            whatever.notifyDataSetChanged();
         }
 
         @Override

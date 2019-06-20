@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:padding="16dip"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
+
+    <include
+        layout="@layout/content_order_table"
+        android:layout_width="382dp"
+        android:layout_height="137dp"
+        android:layout_above="@id/editText1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp" />
 
     <EditText
         android:id="@+id/editText1"
@@ -12,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/textViewStatusTitle"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-292dp"
         android:ems="10"
         android:fadeScrollbars="true"
         android:inputType="none|textMultiLine" />
@@ -20,15 +29,14 @@
         android:id="@+id/textViewStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="" />
+        android:layout_centerInParent="true"/>
 
     <TextView
         android:id="@+id/textViewStatusTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textViewStatus"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="135dp"
         android:text="Статус сканнера:" />
 </RelativeLayout>
