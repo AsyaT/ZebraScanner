@@ -276,6 +276,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
                 ScanDataCollection scanDataCollection = params[0];
 
+                //dataView.append( Integer.toString(scanDataCollection.getResult().getValue()));
+                
                 // The ScanDataCollection object gives scanning result and the
                 // collection of ScanData. So check the data and its status
                 if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS) {
@@ -286,6 +288,9 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
                         String barcodeData = data.getData();
+
+                        //dataTable.add(new OrderModel("Dog"+barcodeData, "2739389076194","1"));
+                        //whatever.notifyDataSetChanged();
                         // Get the type of label being scanned
                         ScanDataCollection.LabelType labelType = data.getLabelType();
                         // Concatenate barcode data and label type
@@ -313,8 +318,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
             dataView.append(result + "\n");
 
-            dataTable.add(new OrderModel("Cat", "9785389076990","1"));
-            whatever.notifyDataSetChanged();
+            //dataTable.add(new OrderModel("Cat"+result, "9785389076990","1"));
+            //whatever.notifyDataSetChanged();
         }
 
         @Override
