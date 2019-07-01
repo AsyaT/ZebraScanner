@@ -326,17 +326,16 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             {
                 if(searchResult!=null)
                 {
-                    OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,"1");
-
+                    OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString());
                     dataTable.add(tableModel);
+                    whatever.notifyDataSetChanged();
                 }
-                else
-                {
-                    dataTable.add(new OrderModel("Cat-cat", result,"1"));
-                    dataView.append(Integer.toString(orderCollection.size()));
+                else{
+                    Toast.makeText(MainActivity.this,
+                            "Такой штрихкод не найден в коллекции",
+                            Toast.LENGTH_SHORT).show();
                 }
 
-                whatever.notifyDataSetChanged();
             }
             catch (Exception ex){
                 dataView.setText(ex.getMessage());
