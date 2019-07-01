@@ -21,5 +21,4 @@ public class OrderModel {
         this.Coefficient = coefficient;
 
     }
-
 }

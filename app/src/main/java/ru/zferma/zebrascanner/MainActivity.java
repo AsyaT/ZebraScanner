@@ -2,7 +2,9 @@ package ru.zferma.zebrascanner;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -75,6 +77,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         orderCollection.put("9785389076990",new IncomeCollectionModel("Cat-cat",1));
         orderCollection.put("9785431508530",new IncomeCollectionModel("Little car",1));
         orderCollection.put("4607097079818",new IncomeCollectionModel("Corn flacks",1));
+        orderCollection.put("7322540387483",new IncomeCollectionModel("Libress Super",1));
+        orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1));
     }
 
     private List<OrderModel> getModel() {
@@ -310,6 +314,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             return statusStr;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(String result) {
             // Update the dataView EditText on UI thread with barcode data and
@@ -326,9 +331,23 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             {
                 if(searchResult!=null)
                 {
-                    OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString());
-                    dataTable.add(tableModel);
-                    whatever.notifyDataSetChanged();
+                    OrderModel existingTableModel =  dataTable.stream().filter(x->result.equals(x.getBarCode())).findAny().orElse(null);
+
+                    if(existingTableModel == null)
+                    {
+                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString());
+                        dataTable.add(tableModel);
+                        whatever.notifyDataSetChanged();
+                    }
+                    else
+                    {
+                        dataTable.remove(existingTableModel);
+                        
+                        Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
+                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result, newCoefficient.toString() );
+                        dataTable.add(tableModel);
+                        whatever.notifyDataSetChanged();
+                    }
                 }
                 else{
                     Toast.makeText(MainActivity.this,
