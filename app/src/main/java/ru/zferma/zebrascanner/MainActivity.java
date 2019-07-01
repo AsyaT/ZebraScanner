@@ -23,7 +23,9 @@ import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends Activity implements EMDKListener, StatusListener, DataListener {
 
@@ -46,6 +48,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     private List<OrderModel> dataTable = null;
     CustomListAdapter whatever = null;
 
+    Map<String, IncomeCollectionModel> orderCollection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +70,11 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         whatever = new CustomListAdapter(this,getModel() );
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(whatever);
+
+        orderCollection = new HashMap<String,IncomeCollectionModel>();
+        orderCollection.put("9785389076990",new IncomeCollectionModel("Cat-cat",1));
+        orderCollection.put("9785431508530",new IncomeCollectionModel("Little car",1));
+        orderCollection.put("4607097079818",new IncomeCollectionModel("Corn flacks",1));
     }
 
     private List<OrderModel> getModel() {
@@ -312,8 +321,26 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
             dataView.append(result + "\n");
 
-            dataTable.add(new OrderModel("Cat", result,"1"));
-            whatever.notifyDataSetChanged();
+            IncomeCollectionModel searchResult = (IncomeCollectionModel) orderCollection.get(result);
+            try
+            {
+                if(searchResult!=null)
+                {
+                    OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,"1");
+
+                    dataTable.add(tableModel);
+                }
+                else
+                {
+                    dataTable.add(new OrderModel("Cat-cat", result,"1"));
+                    dataView.append(Integer.toString(orderCollection.size()));
+                }
+
+                whatever.notifyDataSetChanged();
+            }
+            catch (Exception ex){
+                dataView.setText(ex.getMessage());
+            }
         }
 
         @Override
