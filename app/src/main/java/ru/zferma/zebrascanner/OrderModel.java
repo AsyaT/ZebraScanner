@@ -3,6 +3,7 @@ package ru.zferma.zebrascanner;
 public class OrderModel {
     private String Nomenclature;
     private String BarCode;
+    private String Weight;
     private String Coefficient;
 
     public String getNomenclature() {
@@ -11,14 +12,15 @@ public class OrderModel {
     public String getBarCode(){
         return BarCode;
     }
+    public String getWeight () {return Weight;}
     public String getCoefficient(){
         return Coefficient;
     }
 
-    public OrderModel(String nomenclature, String barCode, String coefficient){
+    public OrderModel(String nomenclature, String barCode, String coefficient, String weight){
         this.Nomenclature = nomenclature;
         this.BarCode = barCode;
         this.Coefficient = coefficient;
-
+        this.Weight = weight;
     }
 }

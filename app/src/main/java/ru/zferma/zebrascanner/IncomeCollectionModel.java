@@ -5,8 +5,11 @@ public class IncomeCollectionModel {
 
     public Integer Coefficient;
 
-    public IncomeCollectionModel(String nomenklature, Integer coefficient){
+    public Double Weight;
+
+    public IncomeCollectionModel(String nomenklature, Integer coefficient, Double weight){
         this.Nomenklature = nomenklature;
         this.Coefficient = coefficient;
+        this.Weight = weight;
     }
 }

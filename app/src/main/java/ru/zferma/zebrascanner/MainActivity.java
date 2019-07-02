@@ -71,11 +71,11 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         listView.setAdapter(whatever);
 
         orderCollection = new HashMap<String,IncomeCollectionModel>();
-        orderCollection.put("9785389076990",new IncomeCollectionModel("Cat-cat",1));
-        orderCollection.put("9785431508530",new IncomeCollectionModel("Little car",1));
-        orderCollection.put("4607097079818",new IncomeCollectionModel("Corn flacks",1));
-        orderCollection.put("7322540387483",new IncomeCollectionModel("Libress Super",1));
-        orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1));
+        orderCollection.put("9785389076990",new IncomeCollectionModel("Cat-cat",1, 0.2));
+        orderCollection.put("9785431508530",new IncomeCollectionModel("Little car",1, 0.01));
+        orderCollection.put("4607097079818",new IncomeCollectionModel("Corn flacks",1, 0.5));
+        orderCollection.put("7322540387483",new IncomeCollectionModel("Libress Super",1, 0.01));
+        orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
     }
 
     private List<OrderModel> getModel() {
@@ -325,7 +325,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
                     if(existingTableModel == null)
                     {
-                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString());
+                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString(), searchResult.Weight.toString());
                         dataTable.add(tableModel);
                         whatever.notifyDataSetChanged();
                     }
@@ -334,7 +334,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                         dataTable.remove(existingTableModel);
 
                         Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
-                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result, newCoefficient.toString() );
+                        Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + searchResult.Weight;
+                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result, newCoefficient.toString(), newWeight.toString() );
                         dataTable.add(tableModel);
                         whatever.notifyDataSetChanged();
                     }
