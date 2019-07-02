@@ -1,42 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dip"
     tools:context=".MainActivity">
 
-    <include
-        layout="@layout/content_order_table"
-        android:layout_width="382dp"
-        android:layout_height="137dp"
-        android:layout_above="@id/editText1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp" />
-
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textViewStatusTitle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-292dp"
-        android:ems="10"
-        android:fadeScrollbars="true"
-        android:inputType="none|textMultiLine" />
-
     <TextView
         android:id="@+id/textViewStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_width="120dp"
+        android:layout_height="47dp"
+        android:layout_below="@+id/textViewStatusTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="9dp" />
 
     <TextView
         android:id="@+id/textViewStatusTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="450dp"
         android:layout_marginEnd="135dp"
+        android:layout_marginRight="135dp"
         android:text="Статус сканнера:" />
+
+    <include
+        android:id="@+id/layoutTable"
+        layout="@layout/content_order_table"
+        android:layout_width="371dp"
+        android:layout_height="432dp"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,8 +42,6 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     // Text view to display status of EMDK and Barcode Scanning Operations
     private TextView statusTextView = null;
 
-    // Edit Text that is used to display scanned barcode data
-    private EditText dataView = null;
 
     private ListView listView = null;
     private List<OrderModel> dataTable = null;
@@ -58,7 +55,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         setContentView(R.layout.activity_main);
 // Reference to UI elements
         statusTextView = (TextView) findViewById(R.id.textViewStatus);
-        dataView = (EditText) findViewById(R.id.editText1);
+
 
 // The EMDKManager object will be created and returned in the callback.
         EMDKResults results = EMDKManager.getEMDKManager(
@@ -317,14 +314,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(String result) {
-            // Update the dataView EditText on UI thread with barcode data and
-            // its label type
-            if (dataLength++ > 50) {
-                // Clear the cache after 50 scans
-                dataView.getText().clear();
-                dataLength = 0;
-            }
-            dataView.append(result + "\n");
+
 
             IncomeCollectionModel searchResult = (IncomeCollectionModel) orderCollection.get(result);
             try
@@ -342,7 +332,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     else
                     {
                         dataTable.remove(existingTableModel);
-                        
+
                         Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
                         OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result, newCoefficient.toString() );
                         dataTable.add(tableModel);
@@ -357,7 +347,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
             }
             catch (Exception ex){
-                dataView.setText(ex.getMessage());
+
             }
         }
 
