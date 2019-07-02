@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -341,6 +342,14 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     }
                 }
                 else{
+                    OrderModel alarmModel = new OrderModel("Штрих-код не распознан",result,"","");
+                    dataTable.add(alarmModel);
+                    whatever.notifyDataSetChanged();
+
+                    // DOES NOT WORK
+                    //View addedLine = getViewByPosition(0,listView);
+                    //addedLine.setBackgroundColor(Color.RED);
+
                     Toast.makeText(MainActivity.this,
                             "Такой штрихкод не найден в коллекции",
                             Toast.LENGTH_SHORT).show();
@@ -349,6 +358,18 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
             catch (Exception ex){
 
+            }
+        }
+
+        public View getViewByPosition(int pos, ListView listView) {
+            final int firstListItemPosition = listView.getFirstVisiblePosition();
+            final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+            if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+                return listView.getAdapter().getView(pos, null, listView);
+            } else {
+                final int childIndex = pos - firstListItemPosition;
+                return listView.getChildAt(childIndex);
             }
         }
 

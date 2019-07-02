@@ -32,7 +32,7 @@ public class CustomListAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflator = context.getLayoutInflater();
-        View view = inflator.inflate(R.layout.list_view_row, null);;
+        View view = inflator.inflate(R.layout.list_view_row, null);
 
         ViewHolder holder = new ViewHolder();
         holder.textNomenclature = (TextView) view.findViewById(R.id.textViewNomenclature);
