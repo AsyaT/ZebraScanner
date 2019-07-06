@@ -332,19 +332,17 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         void InsertDataIntoListView(String barCode, String weight )
         {
             IncomeCollectionModel searchResult = orderCollection.get(barCode);
-            try
+            if(searchResult!=null)
             {
-                Double currentWeight = 0.0;
-                if(weight.isEmpty() == false)
-                {
-                    currentWeight = Double.parseDouble( weight.substring(0,2) + "." + weight.substring(2) );
-                }
-                else {
-                    currentWeight = searchResult.Weight;
-                }
+                    Double currentWeight = 0.0;
+                    if(weight.isEmpty() == false)
+                        {
+                            currentWeight = Double.parseDouble( weight.substring(0,2) + "." + weight.substring(2) );
+                        }
+                    else {
+                            currentWeight = searchResult.Weight;
+                        }
 
-                if(searchResult!=null)
-                {
                     OrderModel existingTableModel =  dataTable.stream().filter(x->barCode.equals(x.getBarCode())).findAny().orElse(null);
 
                     if(existingTableModel == null)
@@ -360,10 +358,10 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
                         CreateNewLineInListView(searchResult.Nomenklature, barCode, newCoefficient.toString(), newWeight.toString() );
                     }
-                }
-                else
-                    {
-                        CreateNewLineInListView("Штрих-код не распознан",barCode,"","");
+            }
+            else
+                {
+                    CreateNewLineInListView("Штрих-код не распознан",barCode,"","");
 
 
                     // DOES NOT WORK
@@ -374,11 +372,6 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                             "Такой штрихкод не найден в коллекции",
                             Toast.LENGTH_SHORT).show();
                 }
-
-            }
-            catch (Exception ex){
-
-            }
         }
 
         void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
