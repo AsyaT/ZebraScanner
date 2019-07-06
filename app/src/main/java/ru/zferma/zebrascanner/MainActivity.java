@@ -77,6 +77,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         orderCollection.put("4607097079818",new IncomeCollectionModel("Corn flacks",1, 0.5));
         orderCollection.put("7322540387483",new IncomeCollectionModel("Libress Super",1, 0.01));
         orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
+        orderCollection.put("2203383",new IncomeCollectionModel("Пимидоры весовые на веточках",1, 0.0));
     }
 
     private List<OrderModel> getModel() {
@@ -316,48 +317,83 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         @Override
         protected void onPostExecute(String result) {
 
-
-            IncomeCollectionModel searchResult = (IncomeCollectionModel) orderCollection.get(result);
-            try
+            if(result.startsWith("2"))
             {
-                if(searchResult!=null)
-                {
-                    OrderModel existingTableModel =  dataTable.stream().filter(x->result.equals(x.getBarCode())).findAny().orElse(null);
+                String weightBarcode = result.substring(0,7);
+                String currentWeight = result.substring(7,12);
 
-                    if(existingTableModel == null)
-                    {
-                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString(), searchResult.Weight.toString());
-                        dataTable.add(tableModel);
-                        whatever.notifyDataSetChanged();
-                    }
-                    else
-                    {
-                        dataTable.remove(existingTableModel);
+                Toast.makeText(MainActivity.this,
+                        currentWeight,
+                        Toast.LENGTH_SHORT).show();
 
-                        Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
-                        Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + searchResult.Weight;
-                        OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result, newCoefficient.toString(), newWeight.toString() );
-                        dataTable.add(tableModel);
-                        whatever.notifyDataSetChanged();
+                IncomeCollectionModel weightSearchResult = orderCollection.get(weightBarcode);
+
+                try{
+                    if(weightSearchResult != null){
+                        OrderModel existingTableModel =  dataTable.stream().filter(x->result.equals(x.getBarCode())).findAny().orElse(null);
+                        if(existingTableModel == null)
+                        {
+                            OrderModel tableModel = new OrderModel(weightSearchResult.Nomenklature, result, weightSearchResult.Coefficient.toString(), currentWeight.substring(0,2) + "." + currentWeight.substring(2));
+                            dataTable.add(tableModel);
+                            whatever.notifyDataSetChanged();
+                        }
+                        else{
+                            dataTable.remove(existingTableModel);
+
+                            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + weightSearchResult.Coefficient;
+                            Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + Double.parseDouble(currentWeight.substring(0,2) + "." + currentWeight.substring(2));
+                            OrderModel tableModel = new OrderModel(weightSearchResult.Nomenklature, result, newCoefficient.toString(), newWeight.toString() );
+                            dataTable.add(tableModel);
+                            whatever.notifyDataSetChanged();
+                        }
                     }
                 }
-                else{
-                    OrderModel alarmModel = new OrderModel("Штрих-код не распознан",result,"","");
-                    dataTable.add(alarmModel);
-                    whatever.notifyDataSetChanged();
-
-                    // DOES NOT WORK
-                    //View addedLine = getViewByPosition(0,listView);
-                    //addedLine.setBackgroundColor(Color.RED);
-
-                    Toast.makeText(MainActivity.this,
-                            "Такой штрихкод не найден в коллекции",
-                            Toast.LENGTH_SHORT).show();
-                }
-
+                catch (Exception ex){}
             }
-            catch (Exception ex){
+            else{
+                IncomeCollectionModel searchResult = (IncomeCollectionModel) orderCollection.get(result);
 
+                try
+                {
+                    if(searchResult!=null)
+                    {
+                        OrderModel existingTableModel =  dataTable.stream().filter(x->result.equals(x.getBarCode())).findAny().orElse(null);
+
+                        if(existingTableModel == null)
+                        {
+                            OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString(), searchResult.Weight.toString());
+                            dataTable.add(tableModel);
+                            whatever.notifyDataSetChanged();
+                        }
+                        else
+                        {
+                            dataTable.remove(existingTableModel);
+
+                            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
+                            Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + searchResult.Weight;
+                            OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result, newCoefficient.toString(), newWeight.toString() );
+                            dataTable.add(tableModel);
+                            whatever.notifyDataSetChanged();
+                        }
+                    }
+                    else{
+                        OrderModel alarmModel = new OrderModel("Штрих-код не распознан",result,"","");
+                        dataTable.add(alarmModel);
+                        whatever.notifyDataSetChanged();
+
+                        // DOES NOT WORK
+                        //View addedLine = getViewByPosition(0,listView);
+                        //addedLine.setBackgroundColor(Color.RED);
+
+                        Toast.makeText(MainActivity.this,
+                                "Такой штрихкод не найден в коллекции",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                catch (Exception ex){
+
+                }
             }
         }
 
