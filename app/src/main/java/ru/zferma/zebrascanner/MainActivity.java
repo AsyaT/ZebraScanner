@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -322,82 +321,74 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 String weightBarcode = result.substring(0,7);
                 String currentWeight = result.substring(7,12);
 
-                Toast.makeText(MainActivity.this,
-                        currentWeight,
-                        Toast.LENGTH_SHORT).show();
-
-                IncomeCollectionModel weightSearchResult = orderCollection.get(weightBarcode);
-
-                try{
-                    if(weightSearchResult != null){
-                        OrderModel existingTableModel =  dataTable.stream().filter(x->result.equals(x.getBarCode())).findAny().orElse(null);
-                        if(existingTableModel == null)
-                        {
-                            OrderModel tableModel = new OrderModel(weightSearchResult.Nomenklature, result, weightSearchResult.Coefficient.toString(), currentWeight.substring(0,2) + "." + currentWeight.substring(2));
-                            dataTable.add(tableModel);
-                            whatever.notifyDataSetChanged();
-                        }
-                        else{
-                            dataTable.remove(existingTableModel);
-
-                            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + weightSearchResult.Coefficient;
-                            Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + Double.parseDouble(currentWeight.substring(0,2) + "." + currentWeight.substring(2));
-                            OrderModel tableModel = new OrderModel(weightSearchResult.Nomenklature, result, newCoefficient.toString(), newWeight.toString() );
-                            dataTable.add(tableModel);
-                            whatever.notifyDataSetChanged();
-                        }
-                    }
-                }
-                catch (Exception ex){}
+                InsertDataIntoListView(weightBarcode,currentWeight);
             }
             else{
-                IncomeCollectionModel searchResult = (IncomeCollectionModel) orderCollection.get(result);
-
-                try
-                {
-                    if(searchResult!=null)
-                    {
-                        OrderModel existingTableModel =  dataTable.stream().filter(x->result.equals(x.getBarCode())).findAny().orElse(null);
-
-                        if(existingTableModel == null)
-                        {
-                            OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result,searchResult.Coefficient.toString(), searchResult.Weight.toString());
-                            dataTable.add(tableModel);
-                            whatever.notifyDataSetChanged();
-                        }
-                        else
-                        {
-                            dataTable.remove(existingTableModel);
-
-                            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
-                            Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + searchResult.Weight;
-                            OrderModel tableModel = new OrderModel(searchResult.Nomenklature, result, newCoefficient.toString(), newWeight.toString() );
-                            dataTable.add(tableModel);
-                            whatever.notifyDataSetChanged();
-                        }
-                    }
-                    else{
-                        OrderModel alarmModel = new OrderModel("Штрих-код не распознан",result,"","");
-                        dataTable.add(alarmModel);
-                        whatever.notifyDataSetChanged();
-
-                        // DOES NOT WORK
-                        //View addedLine = getViewByPosition(0,listView);
-                        //addedLine.setBackgroundColor(Color.RED);
-
-                        Toast.makeText(MainActivity.this,
-                                "Такой штрихкод не найден в коллекции",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-                catch (Exception ex){
-
-                }
+                InsertDataIntoListView(result,"");
             }
         }
 
-        public View getViewByPosition(int pos, ListView listView) {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        void InsertDataIntoListView(String barCode, String weight )
+        {
+            IncomeCollectionModel searchResult = orderCollection.get(barCode);
+            try
+            {
+                Double currentWeight = 0.0;
+                if(weight.isEmpty() == false)
+                {
+                    currentWeight = Double.parseDouble( weight.substring(0,2) + "." + weight.substring(2) );
+                }
+                else {
+                    currentWeight = searchResult.Weight;
+                }
+
+                if(searchResult!=null)
+                {
+                    OrderModel existingTableModel =  dataTable.stream().filter(x->barCode.equals(x.getBarCode())).findAny().orElse(null);
+
+                    if(existingTableModel == null)
+                    {
+                        CreateNewLineInListView(searchResult.Nomenklature, barCode,searchResult.Coefficient.toString(), currentWeight.toString());
+                    }
+                    else
+                    {
+                        dataTable.remove(existingTableModel);
+
+                        Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
+                        Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
+
+                        CreateNewLineInListView(searchResult.Nomenklature, barCode, newCoefficient.toString(), newWeight.toString() );
+                    }
+                }
+                else
+                    {
+                        CreateNewLineInListView("Штрих-код не распознан",barCode,"","");
+
+
+                    // DOES NOT WORK
+                    //View addedLine = getViewByPosition(0,listView);
+                    //addedLine.setBackgroundColor(Color.RED);
+
+                    Toast.makeText(MainActivity.this,
+                            "Такой штрихкод не найден в коллекции",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            catch (Exception ex){
+
+            }
+        }
+
+        void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
+        {
+            OrderModel tableModel = new OrderModel(nomenclature, barcode, coefficient, weight );
+            dataTable.add(tableModel);
+            whatever.notifyDataSetChanged();
+        }
+
+        /*public View getViewByPosition(int pos, ListView listView) {
             final int firstListItemPosition = listView.getFirstVisiblePosition();
             final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
@@ -407,7 +398,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 final int childIndex = pos - firstListItemPosition;
                 return listView.getChildAt(childIndex);
             }
-        }
+        }*/
 
         @Override
         protected void onPreExecute() {
