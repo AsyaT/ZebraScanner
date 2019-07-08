@@ -77,6 +77,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         orderCollection.put("7322540387483",new IncomeCollectionModel("Libress Super",1, 0.01));
         orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
         orderCollection.put("2203383",new IncomeCollectionModel("Пимидоры весовые на веточках",1, 0.0));
+        orderCollection.put("2203233",new IncomeCollectionModel("Кабачки",1, 0.0));
     }
 
     private List<OrderModel> getModel() {
