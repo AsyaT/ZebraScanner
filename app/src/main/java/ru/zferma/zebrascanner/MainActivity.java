@@ -115,6 +115,15 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 whatever.notifyDataSetChanged();
             }
         });
+
+        Button btnDelAll = (Button) findViewById(R.id.btnRenoveAll);
+        btnDelAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataTable.clear();
+                whatever.notifyDataSetChanged();
+            }
+        });
     }
 
     private List<OrderModel> getModel() {
