@@ -1,12 +1,16 @@
 package ru.zferma.zebrascanner;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +53,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
     Map<String, IncomeCollectionModel> orderCollection;
 
+    ArrayList<Integer> ItemsToDelete= null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +84,37 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
         orderCollection.put("2203383",new IncomeCollectionModel("Пимидоры весовые на веточках",1, 0.0));
         orderCollection.put("2203233",new IncomeCollectionModel("Кабачки",1, 0.0));
+
+        ItemsToDelete = new ArrayList<Integer>();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                if(ItemsToDelete.contains(position))
+                    {
+                        view.setBackgroundColor(Color.GREEN);
+                        ItemsToDelete.remove((Integer) position);
+                    }
+                else
+                    {
+                        view.setBackgroundColor(Color.RED);
+                        ItemsToDelete.add(position);
+                    }
+            }
+        });
+
+        Button btnDel = (Button) findViewById(R.id.btnRemoveOne);
+        btnDel.setOnClickListener(new View.OnClickListener() {
+            
+            @Override
+            public void onClick(View view) {
+                for (Integer x : ItemsToDelete) {
+                    dataTable.remove((int) x);
+                };
+                ItemsToDelete.clear();
+                whatever.notifyDataSetChanged();
+            }
+        });
     }
 
     private List<OrderModel> getModel() {
