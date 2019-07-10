@@ -92,7 +92,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
                 if(ItemsToDelete.contains(position))
                     {
-                        view.setBackgroundColor(Color.GREEN);
+                        view.setBackgroundColor(Color.WHITE);
                         ItemsToDelete.remove((Integer) position);
                     }
                 else
@@ -105,7 +105,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
         Button btnDel = (Button) findViewById(R.id.btnRemoveOne);
         btnDel.setOnClickListener(new View.OnClickListener() {
-            
+
             @Override
             public void onClick(View view) {
                 for (Integer x : ItemsToDelete) {
