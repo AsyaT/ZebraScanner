@@ -1,6 +1,8 @@
 package ru.zferma.zebrascanner;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -408,12 +410,16 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
             else
                 {
-                    CreateNewLineInListView("Штрих-код не распознан",barCode,"","");
-
-
-                    // DOES NOT WORK
-                    //View addedLine = getViewByPosition(0,listView);
-                    //addedLine.setBackgroundColor(Color.RED);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                    alert.setTitle("Неверный штрих-код!");
+                    alert.setMessage("Этот штрих-код не найден в коллекции");
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    alert.show();
 
                     Toast.makeText(MainActivity.this,
                             "Такой штрихкод не найден в коллекции",
@@ -427,18 +433,6 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             dataTable.add(tableModel);
             whatever.notifyDataSetChanged();
         }
-
-        /*public View getViewByPosition(int pos, ListView listView) {
-            final int firstListItemPosition = listView.getFirstVisiblePosition();
-            final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-            if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-                return listView.getAdapter().getView(pos, null, listView);
-            } else {
-                final int childIndex = pos - firstListItemPosition;
-                return listView.getChildAt(childIndex);
-            }
-        }*/
 
         @Override
         protected void onPreExecute() {
