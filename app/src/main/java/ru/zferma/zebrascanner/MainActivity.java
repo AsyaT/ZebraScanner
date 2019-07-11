@@ -28,6 +28,11 @@ import com.symbol.emdk.barcode.Scanner.StatusListener;
 import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
+import com.symbol.emdk.notification.DeviceInfo;
+import com.symbol.emdk.notification.Notification;
+import com.symbol.emdk.notification.NotificationDevice;
+import com.symbol.emdk.notification.NotificationException;
+import com.symbol.emdk.notification.NotificationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +62,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
     ArrayList<Integer> ItemsToDelete= null;
 
+    private TextView txtViewStatus = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +84,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         whatever = new CustomListAdapter(this,getModel() );
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(whatever);
+
+        txtViewStatus = (TextView)findViewById(R.id.textViewStatus);
 
         orderCollection = new HashMap<String,IncomeCollectionModel>();
         orderCollection.put("9785389076990",new IncomeCollectionModel("Cat-cat",1, 0.2));
@@ -298,7 +307,9 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         protected void onPostExecute(String result) {
             // Update the status text view on UI thread with current scanner
             // state
-            statusTextView.setText(result);
+
+            //TODO: comment out back
+            //statusTextView.setText(result);
         }
 
         @Override
@@ -410,12 +421,47 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
             else
                 {
+                    Notification notification = new Notification();
+                    notification.led.color = 0x0000FF;
+                    notification.led.onTime=  250;
+                    notification.led.offTime= 250;
+                    notification.led.repeatCount= 3;
+
+                   NotificationManager notificationManager = (NotificationManager) emdkManager.getInstance(EMDKManager.FEATURE_TYPE.NOTIFICATION);
+
+                    NotificationDevice notificationDevice = initDevice(notificationManager);
+                    if(notificationDevice != null) {
+                        txtViewStatus.setText("notificationDevice is NOT null !");
+                        if(notificationDevice.isConnected()) {
+                            txtViewStatus.setText("notificationDevice is connected !");
+                            try {
+                                notificationDevice.notify(notification);
+                            } catch (Exception ex) {
+                                txtViewStatus.setText("Exception !");
+                            }
+                        }
+                    }
+/*
+                    try
+                    {
+                        scanner.disable();
+                    }
+                    catch (Exception ex)
+                    {}
+*/
                     AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                     alert.setTitle("Неверный штрих-код!");
-                    alert.setMessage("Этот штрих-код не найден в коллекции");
+                    alert.setMessage("Штрих-код "+ barCode+" не найден в коллекции");
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            /*
+                            try{
+                                scanner.read();
+                            }
+                            catch(Exception ex)
+                            {}
+                            */
                             dialogInterface.dismiss();
                         }
                     });
@@ -425,6 +471,71 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                             "Такой штрихкод не найден в коллекции",
                             Toast.LENGTH_SHORT).show();
                 }
+        }
+
+        private NotificationDevice initDevice(NotificationManager notificationManager)
+        {
+
+            int deviceIndex = 0;
+            List<DeviceInfo> deviceInfoList = notificationManager.getSupportedDevicesInfo();
+            DeviceInfo  deviceInfo = deviceInfoList.get(deviceIndex);
+
+            NotificationDevice notificationDevice = null;
+
+            if (notificationDevice == null) {
+
+                if ((deviceInfoList != null) && (deviceInfoList.size() != 0)) {
+                    try {
+                        //Getting a notification device instance
+                        notificationDevice = notificationManager.getDevice(deviceInfo);
+
+                        // Device Info test
+                        String info = "FriendlyName = " + deviceInfo.getFriendlyName()
+                                + "\r\nModelNumber = " + deviceInfo.getModelNumber()
+                                + "\r\nDeviceType = " + deviceInfo.getDeviceType().toString()
+                                + "\r\nConnectionType = " + deviceInfo.getConnectionType().toString()
+                                + "\r\nisConnected = " + notificationDevice.isConnected()
+                                + "\r\nisDefaultDevice = " + deviceInfo.isDefaultDevice()
+                                + "\r\nisLEDSupported = " + deviceInfo.isLEDSupported()
+                                + "\r\nisBeepSupported = " + deviceInfo.isBeepSupported()
+                                + "\r\nisVibrateSupported = " + deviceInfo.isVibrateSupported();
+
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                        alertDialog.setTitle("Notification Device Info");
+                        alertDialog.setMessage(info);
+                        alertDialog.show();
+                        // ------------
+
+                    } catch (NotificationException e) {
+
+                        txtViewStatus.append("Status_1: " + e.getMessage());
+                        return null;
+                    }
+                }
+                else {
+                    txtViewStatus.append("Status_2: Failed to get the specified device! Please close and restart the application!");
+                    //return null;
+                }
+            }
+
+            if (notificationDevice != null) {
+
+                try {
+                    //Enabling notification device
+                    notificationDevice.enable();
+                    txtViewStatus.setText("Status: " + deviceInfo.getFriendlyName() + " is enabled!");
+                    return notificationDevice;
+
+                } catch (NotificationException e) {
+
+                    txtViewStatus.setText("Status_3: " + e.getMessage());
+                    return null;
+                }
+            }else{
+                txtViewStatus.setText("Status: Failed to initialize the notification device!");
+                return null;
+            }
         }
 
         void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
