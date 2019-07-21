@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     // Text view to display status of EMDK and Barcode Scanning Operations
     private TextView statusTextView = null;
 
+    MediaPlayer mediaPlayer = null;
 
     private ListView listView = null;
     private List<OrderModel> dataTable = null;
@@ -73,6 +75,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
             statusTextView.setText("EMDKManager Request Failed");
         }
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
 
         whatever = new CustomListAdapter(this,getModel() );
         listView = (ListView) findViewById(R.id.listView);
@@ -410,12 +414,26 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
             else
                 {
+                    try {
+                        scanner.disable();
+                    } catch (ScannerException e) {
+                        e.printStackTrace();
+                    }
+
+                    mediaPlayer.start();
+
                     AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                     alert.setTitle("Неверный штрих-код!");
                     alert.setMessage("Этот штрих-код не найден в коллекции");
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            try {
+                                scanner.enable();
+                                scanner.read();
+                            } catch (ScannerException e) {
+                                e.printStackTrace();
+                            }
                             dialogInterface.dismiss();
                         }
                     });
