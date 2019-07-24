@@ -349,10 +349,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
-                        String barcodeData = data.getData();
-
-                        // Concatenate barcode data and label type
-                        statusStr = barcodeData;
+                        statusStr = data.getData();
                     }
                 }
 
