@@ -214,9 +214,66 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
     @Override
     public void onData(ScanDataCollection scanDataCollection) {
-// Use the scanned data, process it on background thread using AsyncTask
-// and update the UI thread with the scanned results
-        new AsyncDataUpdate().execute(scanDataCollection);
+
+        String barCodeString = "";
+        String weightFromBarcode = "";
+        try {
+            // The ScanDataCollection object gives scanning result and the
+            // collection of ScanData. So check the data and its status
+            if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS) {
+
+                ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
+
+                // Iterate through scanned data and prepare the statusStr
+                for (ScanDataCollection.ScanData data : scanData) {
+                    // Get the scanned data
+                    barCodeString = data.getData();
+                }
+            }
+
+            if (barCodeString.startsWith("2")) {
+                weightFromBarcode = barCodeString.substring(7, 12);
+                barCodeString = barCodeString.substring(0, 7);
+            }
+        }
+        catch(Exception ex)
+        {}
+
+        IncomeCollectionModel searchResult = orderCollection.get(barCodeString);
+
+        if (searchResult == null)
+        {
+            try {
+                scanner.disable();
+            } catch (ScannerException e) {
+                e.printStackTrace();
+            }
+
+            mediaPlayer.start();
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            alert.setTitle("Неверный штрих-код!");
+            alert.setMessage("Этот штрих-код не найден в коллекции");
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    try {
+                        scanner.enable();
+                        scanner.read();
+                    } catch (ScannerException e) {
+                        e.printStackTrace();
+                    }
+                    dialogInterface.dismiss();
+                }
+            });
+            alert.show();
+
+            Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
+        }
+        else
+            {
+            new AsyncDataUpdate().execute(searchResult, barCodeString, weightFromBarcode);
+            }
     }
 
     @Override
@@ -319,127 +376,69 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     // AsyncTask that configures the scanned data on background
 // thread and updated the result on UI thread with scanned data and type of
 // label
-    private class AsyncDataUpdate extends
-            AsyncTask<ScanDataCollection, Void, String> {
+    private class AsyncDataUpdate extends AsyncTask<Object, Void, Void> {
 
+        IncomeCollectionModel CollectionSearchResult = null;
+        String BarCode="";
+        String WeightBarCode="";
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
-        protected String doInBackground(ScanDataCollection... params) {
+        protected Void doInBackground(Object... params) {
 
-            // Status string that contains both barcode data and type of barcode
-            // that is being scanned
-            String statusStr = "";
+            this.CollectionSearchResult = (IncomeCollectionModel) params[0];
+            this.BarCode = (String) params[1];
+            this.WeightBarCode = (String) params[2];
 
-            try {
+            statusTextView.setText("Barcode passed: "+this.BarCode);
 
-                // Starts an asynchronous Scan. The method will not turn ON the
-                // scanner. It will, however, put the scanner in a state in
-                // which
-                // the scanner can be turned ON either by pressing a hardware
-                // trigger or can be turned ON automatically.
-                scanner.read();
+            try{
+                if(WeightBarCode.isEmpty())
+                {
+                    InsertDataIntoListView(CollectionSearchResult, BarCode,WeightBarCode);
+                }
+                else
+                    {
+                        InsertDataIntoListView(CollectionSearchResult,BarCode,"");
+                }
+            }
+            catch(Exception ex)
+            {}
+            return null;
+        }
 
-                ScanDataCollection scanDataCollection = params[0];
 
-                // The ScanDataCollection object gives scanning result and the
-                // collection of ScanData. So check the data and its status
-                if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS) {
 
-                    ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        void InsertDataIntoListView(IncomeCollectionModel searchResult, String barCode, String weight )
+        {
 
-                    // Iterate through scanned data and prepare the statusStr
-                    for (ScanDataCollection.ScanData data : scanData) {
-                        // Get the scanned data
-                        statusStr = data.getData();
-                    }
+            Double currentWeight = 0.0;
+            if(weight.isEmpty() == false)
+                {
+                    currentWeight = Double.parseDouble( weight.substring(0,2) + "." + weight.substring(2) );
+                }
+            else {
+                    currentWeight = searchResult.Weight;
                 }
 
-            } catch (ScannerException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            OrderModel existingTableModel =  dataTable.stream().filter(x->barCode.equals(x.getBarCode())).findAny().orElse(null);
 
-            // Return result to populate on UI thread
-            return statusStr;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        protected void onPostExecute(String result) {
-
-            if(result.startsWith("2"))
+            if(existingTableModel == null)
             {
-                String weightBarcode = result.substring(0,7);
-                String currentWeight = result.substring(7,12);
-
-                InsertDataIntoListView(weightBarcode,currentWeight);
-            }
-            else{
-                InsertDataIntoListView(result,"");
-            }
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        void InsertDataIntoListView(String barCode, String weight )
-        {
-            IncomeCollectionModel searchResult = orderCollection.get(barCode);
-            if(searchResult!=null)
-            {
-                    Double currentWeight = 0.0;
-                    if(weight.isEmpty() == false)
-                        {
-                            currentWeight = Double.parseDouble( weight.substring(0,2) + "." + weight.substring(2) );
-                        }
-                    else {
-                            currentWeight = searchResult.Weight;
-                        }
-
-                    OrderModel existingTableModel =  dataTable.stream().filter(x->barCode.equals(x.getBarCode())).findAny().orElse(null);
-
-                    if(existingTableModel == null)
-                    {
-                        CreateNewLineInListView(searchResult.Nomenklature, barCode,searchResult.Coefficient.toString(), currentWeight.toString());
-                    }
-                    else
-                    {
-                        dataTable.remove(existingTableModel);
-
-                        Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
-                        Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
-
-                        CreateNewLineInListView(searchResult.Nomenklature, barCode, newCoefficient.toString(), newWeight.toString() );
-                    }
+                CreateNewLineInListView(searchResult.Nomenklature, barCode,searchResult.Coefficient.toString(), currentWeight.toString());
             }
             else
-                {
-                    try {
-                        scanner.disable();
-                    } catch (ScannerException e) {
-                        e.printStackTrace();
-                    }
+            {
+                dataTable.remove(existingTableModel);
+                whatever.notifyDataSetChanged();
 
-                    mediaPlayer.start();
+                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
+                Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
 
-                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                    alert.setTitle("Неверный штрих-код!");
-                    alert.setMessage("Этот штрих-код не найден в коллекции");
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            try {
-                                scanner.enable();
-                                scanner.read();
-                            } catch (ScannerException e) {
-                                e.printStackTrace();
-                            }
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    alert.show();
+                CreateNewLineInListView(searchResult.Nomenklature, barCode, newCoefficient.toString(), newWeight.toString() );
+            }
 
-                    Toast.makeText(MainActivity.this,
-                            "Такой штрихкод не найден в коллекции",
-                            Toast.LENGTH_SHORT).show();
-                }
         }
 
         void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
@@ -449,12 +448,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             whatever.notifyDataSetChanged();
         }
 
-        @Override
-        protected void onPreExecute() {
-        }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
+
     }
 }
