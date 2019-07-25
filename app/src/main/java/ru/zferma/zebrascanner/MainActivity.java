@@ -251,22 +251,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
             mediaPlayer.start();
 
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Неверный штрих-код!");
-            alert.setMessage("Этот штрих-код не найден в коллекции");
-            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    try {
-                        scanner.enable();
-                        scanner.read();
-                    } catch (ScannerException e) {
-                        e.printStackTrace();
-                    }
-                    dialogInterface.dismiss();
-                }
-            });
-            alert.show();
+            new AsyncCaller().execute();
 
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
@@ -448,8 +433,43 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             dataTable.add(tableModel);
             whatever.notifyDataSetChanged();
         }
+    }
 
+    private class AsyncCaller extends AsyncTask<Void, Void, Void>
+    {
 
+        AlertDialog.Builder alertDialog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            alertDialog = new AlertDialog.Builder(MainActivity.this);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            alertDialog.setTitle("Неверный штрих-код!");
+            alertDialog.setMessage("Этот штрих-код не найден в коллекции");
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    try {
+                        scanner.enable();
+                        scanner.read();
+                    } catch (ScannerException e) {
+                        e.printStackTrace();
+                    }
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialog.show();
+            super.onPostExecute(aVoid);
+        }
     }
 }
