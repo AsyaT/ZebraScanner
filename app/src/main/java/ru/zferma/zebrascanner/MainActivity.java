@@ -251,7 +251,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
             mediaPlayer.start();
 
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Неверный штрих-код!");
             alert.setMessage("Этот штрих-код не найден в коллекции");
             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -382,7 +382,6 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         String BarCode="";
         String WeightBarCode="";
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected Void doInBackground(Object... params) {
 
@@ -390,24 +389,26 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             this.BarCode = (String) params[1];
             this.WeightBarCode = (String) params[2];
 
-            statusTextView.setText("Barcode passed: "+this.BarCode);
+            return null;
+        }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
             try{
                 if(WeightBarCode.isEmpty())
                 {
                     InsertDataIntoListView(CollectionSearchResult, BarCode,WeightBarCode);
                 }
                 else
-                    {
-                        InsertDataIntoListView(CollectionSearchResult,BarCode,"");
+                {
+                    InsertDataIntoListView(CollectionSearchResult,BarCode,"");
                 }
             }
             catch(Exception ex)
             {}
-            return null;
         }
-
-
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         void InsertDataIntoListView(IncomeCollectionModel searchResult, String barCode, String weight )
