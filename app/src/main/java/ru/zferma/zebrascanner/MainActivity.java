@@ -370,6 +370,12 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         @Override
         protected Void doInBackground(Object... params) {
 
+            try {
+                scanner.read();
+            } catch (ScannerException e) {
+                e.printStackTrace();
+            }
+
             this.CollectionSearchResult = (IncomeCollectionModel) params[0];
             this.BarCode = (String) params[1];
             this.WeightBarCode = (String) params[2];
@@ -381,50 +387,31 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            try{
-                if(WeightBarCode.isEmpty())
-                {
-                    InsertDataIntoListView(CollectionSearchResult, BarCode,WeightBarCode);
-                }
-                else
-                {
-                    InsertDataIntoListView(CollectionSearchResult,BarCode,"");
-                }
-            }
-            catch(Exception ex)
-            {}
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        void InsertDataIntoListView(IncomeCollectionModel searchResult, String barCode, String weight )
-        {
-
             Double currentWeight = 0.0;
-            if(weight.isEmpty() == false)
-                {
-                    currentWeight = Double.parseDouble( weight.substring(0,2) + "." + weight.substring(2) );
-                }
+            if(WeightBarCode.isEmpty() == false)
+            {
+                currentWeight = Double.parseDouble( WeightBarCode.substring(0,2) + "." + WeightBarCode.substring(2) );
+            }
             else {
-                    currentWeight = searchResult.Weight;
-                }
+                currentWeight = CollectionSearchResult.Weight;
+            }
 
-            OrderModel existingTableModel =  dataTable.stream().filter(x->barCode.equals(x.getBarCode())).findAny().orElse(null);
+            OrderModel existingTableModel =  dataTable.stream().filter(x->BarCode.equals(x.getBarCode())).findAny().orElse(null);
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(searchResult.Nomenklature, barCode,searchResult.Coefficient.toString(), currentWeight.toString());
+                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, CollectionSearchResult.Coefficient.toString(), currentWeight.toString());
             }
             else
             {
                 dataTable.remove(existingTableModel);
                 whatever.notifyDataSetChanged();
 
-                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + searchResult.Coefficient;
+                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + CollectionSearchResult.Coefficient;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
 
-                CreateNewLineInListView(searchResult.Nomenklature, barCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, newCoefficient.toString(), newWeight.toString() );
             }
-
         }
 
         void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
