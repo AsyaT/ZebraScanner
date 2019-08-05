@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".OperationSelectionActivity"
+    tools:showIn="@layout/activity_operation_selection">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="179dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Выбор вида операции"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/operationTable"
+        layout="@layout/operation_table"
+        android:layout_width="370dp"
+        android:layout_height="332dp"
+        tools:layout_editor_absoluteY="52dp" />
+
+    <Button
+        android:id="@+id/Cancel"
+        android:layout_width="174dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:background="#00FC0000"
+        android:text="Отмена"
+        android:textColorLink="#00FFFEFE"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="399dp" />
+
+    <Button
+        android:id="@+id/OKButton"
+        android:layout_width="174dp"
+        android:layout_height="62dp"
+        android:text="ОК"
+        tools:layout_editor_absoluteX="195dp"
+        tools:layout_editor_absoluteY="399dp" />
+
+</android.support.constraint.ConstraintLayout>
