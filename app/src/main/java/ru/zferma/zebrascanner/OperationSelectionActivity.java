@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
     Map<Integer,AccountingAreaModel> AccountingAreaIncomeData;
     Map<String,String> OperationsList;
 
+    String SelectedOperationType;
     Button okButton;
 
     @Override
@@ -40,7 +42,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
         for (Map.Entry<Integer,AccountingAreaModel> accountingArea:AccountingAreaIncomeData.entrySet())
         {
             listItem.add( accountingArea.getValue().OperationType );
-            OperationsList.put(accountingArea.getValue().GuideOperationType, accountingArea.getValue().OperationType);
+            OperationsList.put(accountingArea.getValue().OperationType, accountingArea.getValue().GuideOperationType);
         }
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem);
@@ -51,7 +53,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
               @Override
               public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                   view.setBackgroundColor(Color.YELLOW);
-
+                  SelectedOperationType = ((TextView)view).getText().toString();
 
               }
           });
@@ -59,8 +61,9 @@ public class OperationSelectionActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent goToAreaSelectoinIntent = new Intent(getBaseContext(),MainActivity.class);
-                startActivity( goToAreaSelectoinIntent );
+                Intent goToAreaSelectionIntent = new Intent(getBaseContext(),AccountAreaSelection.class);
+                goToAreaSelectionIntent.putExtra("operation_guid", OperationsList.get(SelectedOperationType));
+                startActivity( goToAreaSelectionIntent );
             }
         });
     }
