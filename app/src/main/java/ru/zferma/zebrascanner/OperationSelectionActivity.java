@@ -24,6 +24,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
 
     String SelectedOperationType = "";
     Button okButton;
+    Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
 
         operationsListView = (ListView)findViewById(R.id.OperationListView);
         okButton = (Button) findViewById(R.id.OKButton);
+        cancelButton = (Button) findViewById(R.id.CancelButton);
 
         AccountingAreaIncomeData = new HashMap<Integer,AccountingAreaModel>();
         AccountingAreaIncomeData.put(1, new AccountingAreaModel("Инвентаризация", "gr-bbg-erb-r","Инвентаризация склад 12-1","gv8df-bdfb8dfb-dfb8"));
@@ -45,7 +47,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
             OperationsList.put(accountingArea.getValue().OperationType, accountingArea.getValue().GuideOperationType);
         }
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
 
         operationsListView.setAdapter(adapter);
 
@@ -82,6 +84,18 @@ public class OperationSelectionActivity extends AppCompatActivity {
                 startActivity( goToAreaSelectionIntent );
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (int i = 0; i < operationsListView.getChildCount(); i++) {
+                    View listItem = operationsListView.getChildAt(i);
+                    listItem.setBackgroundColor(Color.WHITE);
+                }
+                SelectedOperationType = "";
+            }
+        });
+
     }
 
 }
