@@ -22,7 +22,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
     Map<Integer,AccountingAreaModel> AccountingAreaIncomeData;
     Map<String,String> OperationsList;
 
-    String SelectedOperationType;
+    String SelectedOperationType = "";
     Button okButton;
 
     @Override
@@ -52,8 +52,23 @@ public class OperationSelectionActivity extends AppCompatActivity {
         operationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
               @Override
               public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                  view.setBackgroundColor(Color.YELLOW);
-                  SelectedOperationType = ((TextView)view).getText().toString();
+
+                  String tap = ((TextView)view).getText().toString();
+
+                  if(SelectedOperationType.isEmpty() || SelectedOperationType != tap)
+                  {
+                      for (int i = 0; i < operationsListView.getChildCount(); i++) {
+                          View listItem = operationsListView.getChildAt(i);
+                          listItem.setBackgroundColor(Color.WHITE);
+                      }
+
+                    view.setBackgroundColor(Color.YELLOW);
+                    SelectedOperationType = tap;
+                  }
+                  else{
+                      view.setBackgroundColor(Color.WHITE);
+                      SelectedOperationType = "";
+                  }
 
               }
           });
@@ -63,6 +78,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent goToAreaSelectionIntent = new Intent(getBaseContext(),AccountAreaSelection.class);
                 goToAreaSelectionIntent.putExtra("operation_guid", OperationsList.get(SelectedOperationType));
+                goToAreaSelectionIntent.putExtra("operation_name", SelectedOperationType);
                 startActivity( goToAreaSelectionIntent );
             }
         });

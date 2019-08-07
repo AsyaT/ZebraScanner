@@ -11,8 +11,9 @@ public class AccountAreaSelection extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        String savedExtra = getIntent().getStringExtra("operation_guid");
+        String operationGuid = getIntent().getStringExtra("operation_guid");
+        String operationName = getIntent().getStringExtra("operation_name");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
-        operationTypeTextView.setText(savedExtra);
+        operationTypeTextView.setText(operationName);
     }
 }
