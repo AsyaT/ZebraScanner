@@ -90,6 +90,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
         orderCollection.put("2203383",new IncomeCollectionModel("Пимидоры весовые на веточках",1, 0.0));
         orderCollection.put("2203233",new IncomeCollectionModel("Кабачки",1, 0.0));
+        orderCollection.put("04630037036817",new IncomeCollectionModel("Филе цыпленка",1, 0.0));
 
         ItemsToDelete = new ArrayList<Integer>();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -235,6 +236,13 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 weightFromBarcode = barCodeString.substring(7, 12);
                 barCodeString = barCodeString.substring(0, 7);
             }
+
+            if(barCodeString.startsWith("01")) {
+                weightFromBarcode = barCodeString.substring(20,26);
+                barCodeString = barCodeString.substring(2,16);
+            }
+
+            statusTextView.setText("Barcode: "+barCodeString+"\n"+"Weight: "+weightFromBarcode );
         }
         catch(Exception ex)
         {}
@@ -344,7 +352,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         protected void onPostExecute(String result) {
             // Update the status text view on UI thread with current scanner
             // state
-            statusTextView.setText(result);
+            //statusTextView.setText(result);  // TODO comment out
         }
 
         @Override
