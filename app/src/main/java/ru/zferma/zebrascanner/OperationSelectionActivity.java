@@ -1,6 +1,8 @@
 package ru.zferma.zebrascanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -39,13 +41,28 @@ public class OperationSelectionActivity extends AppCompatActivity {
         AccountingAreaIncomeData.put(1, new AccountingAreaModel("Инвентаризация", "gr-bbg-erb-r","Инвентаризация склад 12-1","gv8df-bdfb8dfb-dfb8"));
         AccountingAreaIncomeData.put(2, new AccountingAreaModel("Перемещение", "6r-ne-6jme2-0lbd1r","Межцеховой учет УПК",",qpr7-bvnt0-3y5n-dit"));
 
+        SharedPreferences operationTypesSP = getSharedPreferences("OperationTypes", Context.MODE_PRIVATE);
+        SharedPreferences.Editor operationTypeEditor = operationTypesSP.edit();
+
+        SharedPreferences accountAreasSP = getSharedPreferences("AccountAreas", Context.MODE_PRIVATE);
+        SharedPreferences.Editor accountAreasEditor = accountAreasSP.edit();
+
+        SharedPreferences relationsAccountAreaOperationType = getSharedPreferences("RealtionsTypeArea",Context.MODE_PRIVATE);
+        SharedPreferences.Editor relationsAccountAreaOperationTypeEditor = relationsAccountAreaOperationType.edit();
+
         listItem = new ArrayList<>();
         OperationsList = new HashMap<String,String>();
-        for (Map.Entry<Integer,AccountingAreaModel> accountingArea:AccountingAreaIncomeData.entrySet())
+        for (Map.Entry<Integer,AccountingAreaModel> accountingArea : AccountingAreaIncomeData.entrySet())
         {
             listItem.add( accountingArea.getValue().OperationType );
             OperationsList.put(accountingArea.getValue().OperationType, accountingArea.getValue().GuideOperationType);
+            operationTypeEditor.putString(accountingArea.getValue().GuideOperationType,accountingArea.getValue().OperationType);
+            accountAreasEditor.putString(accountingArea.getValue().GuideAccountingArea,accountingArea.getValue().AccountingArea);
+            relationsAccountAreaOperationTypeEditor.putString(accountingArea.getValue().GuideOperationType,accountingArea.getValue().GuideAccountingArea);
         }
+        operationTypeEditor.commit();
+        accountAreasEditor.commit();
+        relationsAccountAreaOperationTypeEditor.commit();
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
 
