@@ -228,7 +228,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
-                        barCode = new BarcodeStructure(data.getData());
+                        barCode = new BarcodeStructure(data.getData(), data.getLabelType());
                     }
                 }
 
@@ -254,9 +254,9 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
         else
-            {
+        {
             new AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
-            }
+        }
     }
 
     @Override

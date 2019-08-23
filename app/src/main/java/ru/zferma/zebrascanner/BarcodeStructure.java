@@ -1,8 +1,11 @@
 package ru.zferma.zebrascanner;
 
+import com.symbol.emdk.barcode.ScanDataCollection;
+
 public class BarcodeStructure {
     private String UniqueIdentifier;
     private String Weight;
+    private ScanDataCollection.LabelType LabelType;
 
     public String getUniqueIdentifier()
     {
@@ -14,8 +17,10 @@ public class BarcodeStructure {
         return Weight;
     }
 
-    public BarcodeStructure(String fullBarcode)
+    public BarcodeStructure(String fullBarcode, ScanDataCollection.LabelType labelType)
     {
+        LabelType = labelType;
+
         // Type of barcode id Weight Barcode
         if (fullBarcode.startsWith("2")) {
             Weight = fullBarcode.substring(7, 12);
