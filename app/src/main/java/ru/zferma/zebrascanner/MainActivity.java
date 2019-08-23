@@ -232,7 +232,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     }
                 }
 
-                statusTextView.setText("Barcode: "+barCode.getUniqueIdentifier()+"\n"+"Weight: "+barCode.getWeight() );
+                statusTextView.setText("Type: "+barCode.getLabelType()+"\nBarcode: "+barCode.getUniqueIdentifier()+"\n"+"Weight: "+barCode.getWeight() );
             }
         catch(Exception ex)
         {}
@@ -255,7 +255,16 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         }
         else
         {
-            new AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
+            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight().isEmpty() == false) {
+                new WeightEan13AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
+            }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight().isEmpty() == true) {
+
+                new Ean13AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
+            }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.DATABAR_COUPON){
+                new BarcodeAsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
+            }
         }
     }
 
@@ -356,10 +365,38 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
     int dataLength = 0;
 
+
+    private class BarcodeAsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return Double.parseDouble( WeightBarCode.substring(0,3) + "." + WeightBarCode.substring(3) );
+        }
+    }
+
+    private class WeightEan13AsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return Double.parseDouble( WeightBarCode.substring(0,2) + "." + WeightBarCode.substring(2) );
+        }
+    }
+
+    private class Ean13AsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return CollectionSearchResult.Weight;
+        }
+    }
+
     // AsyncTask that configures the scanned data on background
 // thread and updated the result on UI thread with scanned data and type of
 // label
-    private class AsyncDataUpdate extends AsyncTask<Object, Void, Void> {
+    private abstract class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
 
         IncomeCollectionModel CollectionSearchResult = null;
         String BarCode="";
@@ -381,18 +418,13 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             return null;
         }
 
+        protected abstract Double WeightCalculator();
+
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            Double currentWeight = 0.0;
-            if(WeightBarCode.isEmpty() == false)
-            {
-                currentWeight = Double.parseDouble( WeightBarCode.substring(0,2) + "." + WeightBarCode.substring(2) );
-            }
-            else {
-                currentWeight = CollectionSearchResult.Weight;
-            }
+            Double currentWeight = WeightCalculator();
 
             OrderModel existingTableModel =  dataTable.stream().filter(x->BarCode.equals(x.getBarCode())).findAny().orElse(null);
 

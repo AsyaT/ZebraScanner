@@ -9,12 +9,17 @@ public class BarcodeStructure {
 
     public String getUniqueIdentifier()
     {
-        return UniqueIdentifier;
+        return this.UniqueIdentifier;
     }
 
     public String getWeight()
     {
-        return Weight;
+        return this.Weight;
+    }
+
+    public ScanDataCollection.LabelType getLabelType()
+    {
+        return this.LabelType;
     }
 
     public BarcodeStructure(String fullBarcode, ScanDataCollection.LabelType labelType)
