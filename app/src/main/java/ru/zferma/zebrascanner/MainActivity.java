@@ -216,38 +216,28 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     @Override
     public void onData(ScanDataCollection scanDataCollection) {
 
-        String barCodeString = "";
-        String weightFromBarcode = "";
+        BarcodeStructure barCode = null;
+
         try {
             // The ScanDataCollection object gives scanning result and the
             // collection of ScanData. So check the data and its status
-            if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS) {
+            if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS)
+                {
+                    ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
 
-                ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
-
-                // Iterate through scanned data and prepare the statusStr
-                for (ScanDataCollection.ScanData data : scanData) {
-                    // Get the scanned data
-                    barCodeString = data.getData();
+                    // Iterate through scanned data and prepare the statusStr
+                    for (ScanDataCollection.ScanData data : scanData) {
+                        // Get the scanned data
+                        barCode = new BarcodeStructure(data.getData());
+                    }
                 }
-            }
 
-            if (barCodeString.startsWith("2")) {
-                weightFromBarcode = barCodeString.substring(7, 12);
-                barCodeString = barCodeString.substring(0, 7);
+                statusTextView.setText("Barcode: "+barCode.getUniqueIdentifier()+"\n"+"Weight: "+barCode.getWeight() );
             }
-
-            if(barCodeString.startsWith("01")) {
-                weightFromBarcode = barCodeString.substring(20,26);
-                barCodeString = barCodeString.substring(2,16);
-            }
-
-            statusTextView.setText("Barcode: "+barCodeString+"\n"+"Weight: "+weightFromBarcode );
-        }
         catch(Exception ex)
         {}
 
-        IncomeCollectionModel searchResult = orderCollection.get(barCodeString);
+        IncomeCollectionModel searchResult = orderCollection.get(barCode.getUniqueIdentifier());
 
         if (searchResult == null)
         {
@@ -265,7 +255,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         }
         else
             {
-            new AsyncDataUpdate().execute(searchResult, barCodeString, weightFromBarcode);
+            new AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
             }
     }
 
