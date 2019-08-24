@@ -262,7 +262,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
             }
-            else if(barCode.getLabelType() == ScanDataCollection.LabelType.DATABAR_COUPON){
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
                 new BarcodeAsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
             }
         }
@@ -351,7 +351,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         protected void onPostExecute(String result) {
             // Update the status text view on UI thread with current scanner
             // state
-            //statusTextView.setText(result);  // TODO comment out
+            statusTextView.setText(result);
         }
 
         @Override
