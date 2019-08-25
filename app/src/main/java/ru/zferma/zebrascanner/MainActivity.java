@@ -90,6 +90,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
         orderCollection.put("2203383",new IncomeCollectionModel("Пимидоры весовые на веточках",1, 0.0));
         orderCollection.put("2203233",new IncomeCollectionModel("Кабачки",1, 0.0));
+        orderCollection.put("04630037036817",new IncomeCollectionModel("Филе цыпленка",1, 0.0));
 
         ItemsToDelete = new ArrayList<Integer>();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -215,31 +216,28 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     @Override
     public void onData(ScanDataCollection scanDataCollection) {
 
-        String barCodeString = "";
-        String weightFromBarcode = "";
+        BarcodeStructure barCode = null;
+
         try {
             // The ScanDataCollection object gives scanning result and the
             // collection of ScanData. So check the data and its status
-            if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS) {
+            if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS)
+                {
+                    ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
 
-                ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
-
-                // Iterate through scanned data and prepare the statusStr
-                for (ScanDataCollection.ScanData data : scanData) {
-                    // Get the scanned data
-                    barCodeString = data.getData();
+                    // Iterate through scanned data and prepare the statusStr
+                    for (ScanDataCollection.ScanData data : scanData) {
+                        // Get the scanned data
+                        barCode = new BarcodeStructure(data.getData(), data.getLabelType());
+                    }
                 }
-            }
 
-            if (barCodeString.startsWith("2")) {
-                weightFromBarcode = barCodeString.substring(7, 12);
-                barCodeString = barCodeString.substring(0, 7);
+                statusTextView.setText("Type: "+barCode.getLabelType()+"\nBarcode: "+barCode.getUniqueIdentifier()+"\n"+"Weight: "+barCode.getWeight() );
             }
-        }
         catch(Exception ex)
         {}
 
-        IncomeCollectionModel searchResult = orderCollection.get(barCodeString);
+        IncomeCollectionModel searchResult = orderCollection.get(barCode.getUniqueIdentifier());
 
         if (searchResult == null)
         {
@@ -256,9 +254,18 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
         else
-            {
-            new AsyncDataUpdate().execute(searchResult, barCodeString, weightFromBarcode);
+        {
+            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
+                new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
             }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight()== null) {
+
+                new Ean13AsyncDataUpdate().execute(searchResult, barCode);
+            }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
+                new DatabarAsyncDataUpdate().execute(searchResult, barCode);
+            }
+        }
     }
 
     @Override
@@ -358,14 +365,42 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
     int dataLength = 0;
 
+
+    private class DatabarAsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return WeightBarCode;
+        }
+    }
+
+    private class WeightEan13AsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return WeightBarCode;
+        }
+    }
+
+    private class Ean13AsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return CollectionSearchResult.Weight;
+        }
+    }
+
     // AsyncTask that configures the scanned data on background
 // thread and updated the result on UI thread with scanned data and type of
 // label
-    private class AsyncDataUpdate extends AsyncTask<Object, Void, Void> {
+    private abstract class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
 
         IncomeCollectionModel CollectionSearchResult = null;
-        String BarCode="";
-        String WeightBarCode="";
+        String UniqueCode ="";
+        Double WeightBarCode;
 
         @Override
         protected Void doInBackground(Object... params) {
@@ -377,30 +412,25 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
 
             this.CollectionSearchResult = (IncomeCollectionModel) params[0];
-            this.BarCode = (String) params[1];
-            this.WeightBarCode = (String) params[2];
+            this.UniqueCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
+            this.WeightBarCode = ((BarcodeStructure) params[1]).getWeight();
 
             return null;
         }
+
+        protected abstract Double WeightCalculator();
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            Double currentWeight = 0.0;
-            if(WeightBarCode.isEmpty() == false)
-            {
-                currentWeight = Double.parseDouble( WeightBarCode.substring(0,2) + "." + WeightBarCode.substring(2) );
-            }
-            else {
-                currentWeight = CollectionSearchResult.Weight;
-            }
+            Double currentWeight = WeightCalculator();
 
-            OrderModel existingTableModel =  dataTable.stream().filter(x->BarCode.equals(x.getBarCode())).findAny().orElse(null);
+            OrderModel existingTableModel =  dataTable.stream().filter(x-> UniqueCode.equals(x.getBarCode())).findAny().orElse(null);
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, CollectionSearchResult.Coefficient.toString(), currentWeight.toString());
+                CreateNewLineInListView(CollectionSearchResult.Nomenklature, UniqueCode, CollectionSearchResult.Coefficient.toString(), currentWeight.toString());
             }
             else
             {
@@ -410,7 +440,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + CollectionSearchResult.Coefficient;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
 
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(CollectionSearchResult.Nomenklature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }
         }
 
