@@ -255,15 +255,15 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         }
         else
         {
-            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight().isEmpty() == false) {
+            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
                 new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
             }
-            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight().isEmpty() == true) {
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight()== null) {
 
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
-                new BarcodeAsyncDataUpdate().execute(searchResult, barCode);
+                new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
         }
     }
@@ -366,12 +366,12 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     int dataLength = 0;
 
 
-    private class BarcodeAsyncDataUpdate extends BaseAsyncDataUpdate
+    private class DatabarAsyncDataUpdate extends BaseAsyncDataUpdate
     {
         @Override
         protected  Double WeightCalculator()
         {
-            return Double.parseDouble( WeightBarCode.substring(0,3) + "." + WeightBarCode.substring(3) );
+            return WeightBarCode;
         }
     }
 
@@ -380,7 +380,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         @Override
         protected  Double WeightCalculator()
         {
-            return Double.parseDouble( WeightBarCode.substring(0,2) + "." + WeightBarCode.substring(2) );
+            return WeightBarCode;
         }
     }
 
@@ -400,7 +400,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
         IncomeCollectionModel CollectionSearchResult = null;
         String UniqueCode ="";
-        String WeightBarCode="";
+        Double WeightBarCode;
 
         @Override
         protected Void doInBackground(Object... params) {
@@ -413,7 +413,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
             this.CollectionSearchResult = (IncomeCollectionModel) params[0];
             this.UniqueCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
-            this.WeightBarCode = ((BarcodeStructure) params[2]).getWeight();
+            this.WeightBarCode = ((BarcodeStructure) params[1]).getWeight();
 
             return null;
         }

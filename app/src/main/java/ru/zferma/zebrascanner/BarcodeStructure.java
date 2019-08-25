@@ -4,7 +4,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 
 public class BarcodeStructure {
     private String UniqueIdentifier;
-    private String Weight;
+    private Double Weight;
     private ScanDataCollection.LabelType LabelType;
 
     public String getUniqueIdentifier()
@@ -12,7 +12,7 @@ public class BarcodeStructure {
         return this.UniqueIdentifier;
     }
 
-    public String getWeight()
+    public Double getWeight()
     {
         return this.Weight;
     }
@@ -28,13 +28,15 @@ public class BarcodeStructure {
 
         if(LabelType == ScanDataCollection.LabelType.GS1_DATABAR_EXP)
         {
-            Weight = fullBarcode.substring(20,26);
+            String stringWeight = fullBarcode.substring(20,26);
+            Weight = Double.parseDouble(stringWeight.substring(0,3) + "." + stringWeight.substring(3)) ;
             UniqueIdentifier = fullBarcode.substring(2,16);
         }
         else if( LabelType == ScanDataCollection.LabelType.EAN13)
         {
             if (fullBarcode.startsWith("2")) {
-                Weight = fullBarcode.substring(7, 12);
+                String stringWeight = fullBarcode.substring(7, 12);
+                Weight = Double.parseDouble( stringWeight.substring(0,2) + "." + stringWeight.substring(2) );
                 UniqueIdentifier = fullBarcode.substring(0, 7);
             }
             else
