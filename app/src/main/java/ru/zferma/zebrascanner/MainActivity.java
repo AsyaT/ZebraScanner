@@ -256,14 +256,14 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         else
         {
             if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight().isEmpty() == false) {
-                new WeightEan13AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
+                new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight().isEmpty() == true) {
 
-                new Ean13AsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
+                new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
-                new BarcodeAsyncDataUpdate().execute(searchResult, barCode.getUniqueIdentifier(), barCode.getWeight());
+                new BarcodeAsyncDataUpdate().execute(searchResult, barCode);
             }
         }
     }
@@ -412,8 +412,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
 
             this.CollectionSearchResult = (IncomeCollectionModel) params[0];
-            this.BarCode = (String) params[1];
-            this.WeightBarCode = (String) params[2];
+            this.BarCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
+            this.WeightBarCode = ((BarcodeStructure) params[2]).getWeight();
 
             return null;
         }
