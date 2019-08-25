@@ -399,7 +399,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     private abstract class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
 
         IncomeCollectionModel CollectionSearchResult = null;
-        String BarCode="";
+        String UniqueCode ="";
         String WeightBarCode="";
 
         @Override
@@ -412,7 +412,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
 
             this.CollectionSearchResult = (IncomeCollectionModel) params[0];
-            this.BarCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
+            this.UniqueCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
             this.WeightBarCode = ((BarcodeStructure) params[2]).getWeight();
 
             return null;
@@ -426,11 +426,11 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         {
             Double currentWeight = WeightCalculator();
 
-            OrderModel existingTableModel =  dataTable.stream().filter(x->BarCode.equals(x.getBarCode())).findAny().orElse(null);
+            OrderModel existingTableModel =  dataTable.stream().filter(x-> UniqueCode.equals(x.getBarCode())).findAny().orElse(null);
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, CollectionSearchResult.Coefficient.toString(), currentWeight.toString());
+                CreateNewLineInListView(CollectionSearchResult.Nomenklature, UniqueCode, CollectionSearchResult.Coefficient.toString(), currentWeight.toString());
             }
             else
             {
@@ -440,7 +440,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + CollectionSearchResult.Coefficient;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
 
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(CollectionSearchResult.Nomenklature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }
         }
 
