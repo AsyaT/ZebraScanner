@@ -228,7 +228,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
-                        barCode = new BarcodeStructure(data.getData(), data.getLabelType());
+                        barCode = new BarcodeStructure( data.getData(), data.getLabelType());
                     }
                 }
 
@@ -263,6 +263,16 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
+                String lotNumber = barCode.GetFullBarcode().substring(28, 32);
+                String productionDate = barCode.GetFullBarcode().substring(34, 40);
+                String expirationDate = barCode.GetFullBarcode().substring(42,48);
+                String serialnumber = barCode.GetFullBarcode().substring(50,55);
+                String internalProducer = barCode.GetFullBarcode().substring(57,58);
+                String internalEquipment = barCode.GetFullBarcode().substring(58,61);
+
+                SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
+                dbHandler.insertDatabar(barCode.getUniqueIdentifier(),barCode.getWeight().toString(),lotNumber,productionDate,expirationDate,serialnumber,internalProducer,internalEquipment );
+
                 new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
         }
