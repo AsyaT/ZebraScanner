@@ -131,6 +131,14 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 whatever.notifyDataSetChanged();
             }
         });
+
+        Button showRow = findViewById(R.id.ShowRowBtn);
+        showRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DataBaseCaller().execute();
+            }
+        });
     }
 
     private List<OrderModel> getModel() {
@@ -492,6 +500,40 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     } catch (ScannerException e) {
                         e.printStackTrace();
                     }
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialog.show();
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class DataBaseCaller extends AsyncTask<Void, Void, Void>
+    {
+
+        AlertDialog.Builder alertDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            alertDialog = new AlertDialog.Builder(MainActivity.this);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            alertDialog.setTitle("Info from DB");
+            SQLiteDBHelper dbHandler = new SQLiteDBHelper(MainActivity.this);
+            alertDialog.setMessage(dbHandler.getData(1));
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
                     dialogInterface.dismiss();
                 }
             });

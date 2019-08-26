@@ -61,9 +61,19 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Cursor getData(int id) {
+    public String getData(int id) {
+        String s1="null";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + DATABAR_TABLE_NAME + " where " + DATABAR_COLUMN_ID + "=" + id + "", null );
-        return res;
+        if (res.moveToFirst())
+        {
+            do
+            {
+                s1 = res.getString(res.getColumnIndex(DATABAR_GTIN));
+
+            }while (res.moveToNext());
+        }
+
+        return s1;
     }
 }
