@@ -57,4 +57,16 @@
         android:layout_marginStart="176dp"
         android:layout_marginLeft="176dp"
         android:text="Удалить всё" />
+
+    <Button
+        android:id="@+id/ShowRowBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="37dp"
+        android:layout_marginLeft="37dp"
+        android:layout_marginTop="83dp"
+        android:text="Button" />
 </RelativeLayout>

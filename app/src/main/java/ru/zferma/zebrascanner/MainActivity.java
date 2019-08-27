@@ -131,6 +131,14 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 whatever.notifyDataSetChanged();
             }
         });
+
+        Button showRow = findViewById(R.id.ShowRowBtn);
+        showRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DataBaseCaller().execute();
+            }
+        });
     }
 
     private List<OrderModel> getModel() {
@@ -228,7 +236,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
-                        barCode = new BarcodeStructure(data.getData(), data.getLabelType());
+                        barCode = new BarcodeStructure( data.getData(), data.getLabelType());
                     }
                 }
 
@@ -263,6 +271,16 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
+                String lotNumber = barCode.GetFullBarcode().substring(28, 32);
+                String productionDate = barCode.GetFullBarcode().substring(34, 40);
+                String expirationDate = barCode.GetFullBarcode().substring(42,48);
+                String serialnumber = barCode.GetFullBarcode().substring(50,55);
+                String internalProducer = barCode.GetFullBarcode().substring(57,58);
+                String internalEquipment = barCode.GetFullBarcode().substring(58,61);
+
+                SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
+                dbHandler.insertDatabar(barCode.getUniqueIdentifier(),barCode.getWeight().toString(),lotNumber,productionDate,expirationDate,serialnumber,internalProducer,internalEquipment );
+
                 new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
         }
@@ -482,6 +500,40 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     } catch (ScannerException e) {
                         e.printStackTrace();
                     }
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialog.show();
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class DataBaseCaller extends AsyncTask<Void, Void, Void>
+    {
+
+        AlertDialog.Builder alertDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            alertDialog = new AlertDialog.Builder(MainActivity.this);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            alertDialog.setTitle("Info from DB");
+            SQLiteDBHelper dbHandler = new SQLiteDBHelper(MainActivity.this);
+            alertDialog.setMessage(dbHandler.getData(1));
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
                     dialogInterface.dismiss();
                 }
             });

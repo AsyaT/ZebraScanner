@@ -7,6 +7,8 @@ public class BarcodeStructure {
     private Double Weight;
     private ScanDataCollection.LabelType LabelType;
 
+    private String FullBarcode;
+
     public String getUniqueIdentifier()
     {
         return this.UniqueIdentifier;
@@ -22,8 +24,14 @@ public class BarcodeStructure {
         return this.LabelType;
     }
 
-    public BarcodeStructure(String fullBarcode, ScanDataCollection.LabelType labelType)
+    public String GetFullBarcode()
     {
+        return FullBarcode;
+    }
+
+    public BarcodeStructure( String fullBarcode, ScanDataCollection.LabelType labelType)
+    {
+        FullBarcode = fullBarcode;
         LabelType = labelType;
 
         if(LabelType == ScanDataCollection.LabelType.GS1_DATABAR_EXP)
