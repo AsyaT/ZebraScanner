@@ -419,6 +419,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         IncomeCollectionModel CollectionSearchResult = null;
         String UniqueCode ="";
         Double WeightBarCode;
+        String Nomenclature;
+        Integer Quantity;
 
         @Override
         protected Void doInBackground(Object... params) {
@@ -432,6 +434,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             this.CollectionSearchResult = (IncomeCollectionModel) params[0];
             this.UniqueCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
             this.WeightBarCode = ((BarcodeStructure) params[1]).getWeight();
+            this.Nomenclature = CollectionSearchResult.Nomenklature;
+            this.Quantity = CollectionSearchResult.Coefficient;
 
             return null;
         }
@@ -448,17 +452,17 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, UniqueCode, CollectionSearchResult.Coefficient.toString(), currentWeight.toString());
+                CreateNewLineInListView(Nomenclature, UniqueCode, Quantity.toString(), currentWeight.toString());
             }
             else
             {
                 dataTable.remove(existingTableModel);
                 whatever.notifyDataSetChanged();
 
-                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + CollectionSearchResult.Coefficient;
+                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + Quantity;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
 
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }
         }
 
