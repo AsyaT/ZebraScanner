@@ -1,6 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -9,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends Activity implements EMDKListener, StatusListener, DataListener {
+public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
     // Declare a variable to store EMDKManager object
     private EMDKManager emdkManager = null;
