@@ -2,6 +2,7 @@ package ru.zferma.zebrascanner;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         return dataTable;
     }
+
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
         if (scanner == null) {
@@ -185,6 +187,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsActivityIntent);
+
             return true;
         }
 
