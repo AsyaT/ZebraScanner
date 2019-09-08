@@ -21,8 +21,8 @@
         android:id="@+id/editTxt1CUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="16dp"
         android:contentDescription="Имя пользователя"
         android:ems="10"
@@ -59,8 +59,8 @@
         android:id="@+id/txt1CPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="16dp"
         android:text="Пароль"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginLeft="28dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="16dp"
         android:text="Выбор участка учёта:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -81,10 +81,12 @@
         android:id="@+id/txt1CDBConnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="16dp"
         android:text="Детали подключения к базе 1С"
-        app:layout_constraintTop_toBottomOf="@+id/snrSelectionAccountArea"
-        tools:layout_editor_absoluteX="28dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/snrSelectionAccountArea" />
 
     <TextView
         android:id="@+id/txt1CUserName"
