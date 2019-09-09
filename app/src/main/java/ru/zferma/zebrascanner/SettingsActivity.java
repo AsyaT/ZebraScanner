@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -64,10 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
                 e.putString(APP_1C_USERNAME, et1CUsername.getText().toString());
                 e.putString(APP_1C_PASSWORD, et1CPassword.getText().toString());
                 e.commit();
-
-                Toast.makeText(SettingsActivity.this,
-                        et1CUsername.getText().toString(),
-                        Toast.LENGTH_SHORT).show();
+                
             }
         });
 
