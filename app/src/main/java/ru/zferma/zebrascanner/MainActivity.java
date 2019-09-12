@@ -214,6 +214,22 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 Toast.LENGTH_SHORT).show();
     }
 
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+
+        try {
+            // Call this method to enable Scanner and its listeners
+            initializeScanner();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+
     @Override
     public void onClosed() {
 // The EMDK closed abruptly. // Clean up the objects created by EMDK

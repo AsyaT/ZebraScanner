@@ -63,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
                 e.putString(APP_1C_USERNAME, et1CUsername.getText().toString());
                 e.putString(APP_1C_PASSWORD, et1CPassword.getText().toString());
                 e.commit();
-                
+
             }
         });
 
