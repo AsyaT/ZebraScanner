@@ -1,14 +1,15 @@
 package ru.zferma.zebrascanner;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends Activity implements EMDKListener, StatusListener, DataListener {
+public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
     // Declare a variable to store EMDKManager object
     private EMDKManager emdkManager = null;
@@ -146,6 +147,7 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
         return dataTable;
     }
+
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
         if (scanner == null) {
@@ -185,6 +187,10 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsActivityIntent);
+
             return true;
         }
 
@@ -207,6 +213,22 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 "Нажмите жёлтую кнопку на рукоятке для начала сканирования...",
                 Toast.LENGTH_SHORT).show();
     }
+
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+
+        try {
+            // Call this method to enable Scanner and its listeners
+            initializeScanner();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
 
     @Override
     public void onClosed() {
