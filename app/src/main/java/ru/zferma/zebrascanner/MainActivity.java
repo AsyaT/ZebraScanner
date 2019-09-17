@@ -1,6 +1,9 @@
 package ru.zferma.zebrascanner;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     ArrayList<Integer> ItemsToDelete= null;
 
+    private DevicePolicyManager devicePolicyManager;
+    private ComponentName compName;
+    public static final int RESULT_ENABLE = 11;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
             statusTextView.setText("EMDKManager Request Failed");
         }
+
+        devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+        compName = new ComponentName(this, MyAdmin.class);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
 
@@ -137,7 +147,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         showRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DataBaseCaller().execute();
+
+                // Enable admin
+
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
+                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Additional text explaining why we need this permission");
+                startActivityForResult(intent, RESULT_ENABLE);
+
+                // End enable admin
+
+                //new DataBaseCaller().execute();
             }
         });
     }
@@ -188,6 +208,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
+            boolean active = devicePolicyManager.isAdminActive(compName);
+
+            if (active) {
+                devicePolicyManager.lockNow();
+            } else {
+                Toast.makeText(this, "You need to enable the Admin Device Features", Toast.LENGTH_SHORT).show();
+            }
+
             Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsActivityIntent);
 
@@ -195,6 +223,21 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case RESULT_ENABLE :
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(MainActivity.this, "You have enabled the Admin Device features", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Problem to enable the Admin Device features. Result code "+ resultCode, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -228,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    
+
 
     @Override
     public void onClosed() {
