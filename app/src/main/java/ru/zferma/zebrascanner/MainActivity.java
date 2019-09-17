@@ -211,7 +211,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         if (id == R.id.action_settings) {
 
             lockScreen();
-
+            Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsActivityIntent);
             return true;
         }
 
