@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -149,12 +151,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
 
                 // Enable admin
-
+/*
                 Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
                 intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
                 intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Additional text explaining why we need this permission");
                 startActivityForResult(intent, RESULT_ENABLE);
-
+*/
                 // End enable admin
 
                 //new DataBaseCaller().execute();
@@ -208,21 +210,34 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
-            boolean active = devicePolicyManager.isAdminActive(compName);
-
-            if (active) {
-                devicePolicyManager.lockNow();
-            } else {
-                Toast.makeText(this, "You need to enable the Admin Device Features", Toast.LENGTH_SHORT).show();
-            }
-
-            Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
-            startActivity(settingsActivityIntent);
+            lockScreen();
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void lockScreen() {
+        PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        if (pm.isScreenOn()) {
+            DevicePolicyManager policy = (DevicePolicyManager)
+                    getSystemService(Context.DEVICE_POLICY_SERVICE);
+            try {
+                policy.lockNow();
+            } catch (SecurityException ex) {
+                Toast.makeText(
+                        this,
+                        "You must enable this app as a device administrator\n\n" +
+                                "Please enable it and press back button to return here.",
+                        Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(
+                        DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).putExtra(
+                        DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
+                startActivityForResult(intent, RESULT_ENABLE);
+            }
+        }
     }
 
     @Override
