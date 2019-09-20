@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.Date;
+
 public class SQLiteDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "Barcodes.db";
@@ -45,14 +47,22 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean insertDatabar (String gtin, String netWeight, String lotNumber, String productionDate, String expirationDate, String serialNumber, String internalProducer, String internalEquipment) {
+    public boolean insertDatabar (String gtin,
+                                  String netWeight,
+                                  String lotNumber,
+                                  Date productionDate,
+                                  Date expirationDate,
+                                  Integer serialNumber,
+                                  Short internalProducer,
+                                  Short internalEquipment)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATABAR_GTIN, gtin);
         contentValues.put(DATABAR_WEIGHT, netWeight);
         contentValues.put(DATABAR_LOT_NUMBER, lotNumber);
-        contentValues.put(DATABAR_PRODUCTION_DATE, productionDate);
-        contentValues.put(DATABAR_EXPIRATION_DATE, expirationDate);
+        contentValues.put(DATABAR_PRODUCTION_DATE, String.valueOf(productionDate));
+        contentValues.put(DATABAR_EXPIRATION_DATE, String.valueOf(expirationDate));
         contentValues.put(DATABAR_SERIAL_NUMBER, serialNumber);
         contentValues.put(DATABAR_INTERNAL_PRODUCER, internalProducer);
         contentValues.put(DATABAR_INTERNAL_EQUIPMENT, internalEquipment);

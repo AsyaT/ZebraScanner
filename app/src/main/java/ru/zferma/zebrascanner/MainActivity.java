@@ -34,6 +34,7 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -323,22 +324,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
-                String productionDate = barCode.GetFullBarcode().substring(34, 40);
-                String expirationDate = barCode.GetFullBarcode().substring(42,48);
-                String serialnumber = barCode.GetFullBarcode().substring(50,55);
-                String internalProducer = barCode.GetFullBarcode().substring(57,58);
-                String internalEquipment = barCode.GetFullBarcode().substring(58,61);
 
                 SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
                 dbHandler.insertDatabar(
                         barCode.getUniqueIdentifier(),
                         barCode.getWeight().toString(),
                         barCode.getLotNumber(),
-                        productionDate,
-                        expirationDate,
-                        serialnumber,
-                        internalProducer,
-                        internalEquipment );
+                        barCode.getProductionDate(),
+                        barCode.getExpirationDate(),
+                        barCode.getSerialNumber(),
+                        barCode.getInternalProducer(),
+                        barCode.getInternalEquipment() );
 
                 new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
@@ -357,8 +353,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 resultText=
                         "Штрих-код: "+barCode.getUniqueIdentifier()
                                 + "\nНоменклатура: "+searchResult.Nomenklature
-                                + "\nВес: "+barCode.getWeight()
-                                +"\nНомер партии: "+barCode.getLotNumber();
+                                + "\nВес: "+barCode.getWeight()+" кг"
+                                + "\nНомер партии: "+barCode.getLotNumber()
+                                + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(barCode.getProductionDate())
+                                + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(barCode.getExpirationDate())
+                                + "\nСерийный номер: " + barCode.getSerialNumber()
+                                + "\nВнутренний код производителя: " + barCode.getInternalProducer()
+                                + "\nВнутренний код оборудования: " + barCode.getInternalEquipment();
             }
 
             new AsyncBarcodeInfoUpdate().execute(resultText);
