@@ -8,10 +8,14 @@
 
     <FrameLayout
         android:id="@+id/frBarcodeInfo"
+        android:layout_width="290dp"
+        android:layout_height="392dp"
         android:layout_gravity="top"
-        android:layout_height="200dp"
-        android:layout_width="300dp">
-    </FrameLayout>
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:elevation="12dp"
+        android:background="#00FCFAFA"></FrameLayout>
 
     <TextView
         android:id="@+id/textViewStatus"
