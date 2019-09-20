@@ -61,7 +61,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     Map<String, IncomeCollectionModel> orderCollection;
 
-    ArrayList<Integer> ItemsToDelete= null;
+    ArrayList<Integer> ItemsToDelete = null;
+
+    Boolean BarcodeInfoIsShowed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,11 +151,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             @Override
             public void onClick(View view) {
-                // Go to activity BarcodeInfo
-
                 try{
                     Fragment infoFragemnt = new BarcodeInfoFragment();
                     replaceFragment(infoFragemnt);
+                    BarcodeInfoIsShowed = true;
                 }
                 catch (Exception ex){
                     statusTextView.setText(ex.getMessage());
@@ -312,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
-        else
+        else if(BarcodeInfoIsShowed == false)
         {
             if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
                 new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
@@ -341,6 +342,27 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                 new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
+        }
+        else if (BarcodeInfoIsShowed == true)
+        {
+            String resultText="";
+
+            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature+"\nВес: "+barCode.getWeight();
+            }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight()== null){
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature;
+            }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
+                resultText=
+                        "Штрих-код: "+barCode.getUniqueIdentifier()
+                                + "\nНоменклатура: "+searchResult.Nomenklature
+                                + "\nВес: "+barCode.getWeight()
+                                +"\nНомер партии: "+barCode.getLotNumber();
+            }
+
+            new AsyncBarcodeInfoUpdate().execute(resultText);
+
         }
 
     }
@@ -381,6 +403,22 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
         } catch (ScannerException e) {
             e.printStackTrace();
+        }
+    }
+
+    class AsyncBarcodeInfoUpdate extends  AsyncTask<String,Void,String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            String finalText = params[0];
+
+            return finalText;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            BarcodeInfoFragment barcodeInfoFragment = (BarcodeInfoFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+            barcodeInfoFragment.UpdateText(result);
         }
     }
 
