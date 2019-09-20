@@ -6,6 +6,7 @@ public class BarcodeStructure {
     private String UniqueIdentifier;
     private Double Weight;
     private ScanDataCollection.LabelType LabelType;
+    private String LotNumber;
 
     private String FullBarcode;
 
@@ -24,6 +25,8 @@ public class BarcodeStructure {
         return this.LabelType;
     }
 
+    public String getLotNumber(){return this.LotNumber;}
+
     public String GetFullBarcode()
     {
         return FullBarcode;
@@ -39,6 +42,7 @@ public class BarcodeStructure {
             String stringWeight = fullBarcode.substring(20,26);
             Weight = Double.parseDouble(stringWeight.substring(0,3) + "." + stringWeight.substring(3)) ;
             UniqueIdentifier = fullBarcode.substring(2,16);
+            LotNumber = fullBarcode.substring(28, 32);
         }
         else if( LabelType == ScanDataCollection.LabelType.EAN13)
         {

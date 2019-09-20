@@ -9,6 +9,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -140,7 +143,33 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 new DataBaseCaller().execute();
             }
         });
+
+        Button btnBarcodeInfo = findViewById(R.id.btnBarcodeInfo);
+        btnBarcodeInfo.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                // Go to activity BarcodeInfo
+
+                try{
+                Fragment infoFragemnt = new BarcodeInfoFragment();
+                replaceFragment((Fragment)infoFragemnt);
+                }
+                catch (Exception ex){
+                    statusTextView.setText(ex.getMessage());
+                }
+            }
+        });
     }
+
+    public void replaceFragment(Fragment destFragment)
+    {
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frBarcodeInfo, destFragment);
+        fragmentTransaction.commit();
+    }
+
 
     private List<OrderModel> getModel() {
         dataTable = new ArrayList<OrderModel>();
@@ -293,7 +322,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
-                String lotNumber = barCode.GetFullBarcode().substring(28, 32);
                 String productionDate = barCode.GetFullBarcode().substring(34, 40);
                 String expirationDate = barCode.GetFullBarcode().substring(42,48);
                 String serialnumber = barCode.GetFullBarcode().substring(50,55);
@@ -301,11 +329,20 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 String internalEquipment = barCode.GetFullBarcode().substring(58,61);
 
                 SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
-                dbHandler.insertDatabar(barCode.getUniqueIdentifier(),barCode.getWeight().toString(),lotNumber,productionDate,expirationDate,serialnumber,internalProducer,internalEquipment );
+                dbHandler.insertDatabar(
+                        barCode.getUniqueIdentifier(),
+                        barCode.getWeight().toString(),
+                        barCode.getLotNumber(),
+                        productionDate,
+                        expirationDate,
+                        serialnumber,
+                        internalProducer,
+                        internalEquipment );
 
                 new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
         }
+
     }
 
     @Override

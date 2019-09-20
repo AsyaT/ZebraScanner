@@ -6,6 +6,13 @@
     android:padding="16dip"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/frBarcodeInfo"
+        android:layout_gravity="top"
+        android:layout_height="200dp"
+        android:layout_width="300dp">
+    </FrameLayout>
+
     <TextView
         android:id="@+id/textViewStatus"
         android:layout_width="178dp"
@@ -37,7 +44,7 @@
 
     <Button
         android:id="@+id/btnRemoveOne"
-        android:layout_width="wrap_content"
+        android:layout_width="98dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -49,13 +56,14 @@
 
     <Button
         android:id="@+id/btnRenoveAll"
-        android:layout_width="wrap_content"
+        android:layout_width="92dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="176dp"
-        android:layout_marginLeft="176dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/btnRemoveOne"
+        android:layout_toRightOf="@+id/btnRemoveOne"
         android:text="Удалить всё" />
 
     <Button
@@ -69,4 +77,18 @@
         android:layout_toEndOf="@+id/textViewStatus"
         android:layout_toRightOf="@+id/textViewStatus"
         android:text="Button" />
+
+    <Button
+        android:id="@+id/btnBarcodeInfo"
+        android:layout_width="119dp"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/btnRenoveAll"
+        android:layout_toRightOf="@+id/btnRenoveAll"
+        android:text="Штрихкод" />
 </RelativeLayout>
