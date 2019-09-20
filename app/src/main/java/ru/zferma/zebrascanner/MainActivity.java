@@ -152,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 // Go to activity BarcodeInfo
 
                 try{
-                Fragment infoFragemnt = new BarcodeInfoFragment();
-                replaceFragment((Fragment)infoFragemnt);
+                    Fragment infoFragemnt = new BarcodeInfoFragment();
+                    replaceFragment(infoFragemnt);
                 }
                 catch (Exception ex){
                     statusTextView.setText(ex.getMessage());
