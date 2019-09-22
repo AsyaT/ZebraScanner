@@ -310,6 +310,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             new AsyncCaller().execute();
 
+            if (IsBarcodeInfoFragmentShowed)
+            {
+                new AsyncBarcodeInfoUpdate().execute("Такой штрихкод не найден в коллекции");
+            }
+
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
         else if(IsBarcodeInfoFragmentShowed == false)
