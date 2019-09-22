@@ -16,11 +16,14 @@ public class BarcodeInfoFragment extends Fragment {
         // Please note the third parameter should be false, otherwise a java.lang.IllegalStateException maybe thrown.
         View retView = inflater.inflate(R.layout.fragment_barcode_info, container, false);
 
+        MainActivity mainActivity = (MainActivity) getActivity();
+
         retView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
                 view.setVisibility(View.GONE);
+                mainActivity.BarcodeInfoIsShowed = false;
 
                 return false;
             }

@@ -292,8 +292,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                         barCode = new BarcodeStructure( data.getData(), data.getLabelType());
                     }
                 }
-
-                statusTextView.setText("Type: "+barCode.getLabelType()+"\nBarcode: "+barCode.getUniqueIdentifier()+"\n"+"Weight: "+barCode.getWeight() );
             }
         catch(Exception ex)
         {}
