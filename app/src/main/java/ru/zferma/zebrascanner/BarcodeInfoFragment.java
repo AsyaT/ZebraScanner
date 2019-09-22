@@ -23,7 +23,7 @@ public class BarcodeInfoFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
                 view.setVisibility(View.GONE);
-                mainActivity.BarcodeInfoIsShowed = false;
+                mainActivity.IsBarcodeInfoFragmentShowed = false;
 
                 return false;
             }

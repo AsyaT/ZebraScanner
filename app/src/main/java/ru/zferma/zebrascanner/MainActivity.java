@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     ArrayList<Integer> ItemsToDelete = null;
 
-    Boolean BarcodeInfoIsShowed = false;
+    Boolean IsBarcodeInfoFragmentShowed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 try{
                     Fragment infoFragemnt = new BarcodeInfoFragment();
                     replaceFragment(infoFragemnt);
-                    BarcodeInfoIsShowed = true;
+                    IsBarcodeInfoFragmentShowed = true;
                 }
                 catch (Exception ex){
                     statusTextView.setText(ex.getMessage());
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
-        else if(BarcodeInfoIsShowed == false)
+        else if(IsBarcodeInfoFragmentShowed == false)
         {
             if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
                 new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
         }
-        else if (BarcodeInfoIsShowed == true)
+        else if (IsBarcodeInfoFragmentShowed == true)
         {
             String resultText="";
 
