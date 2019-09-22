@@ -9,6 +9,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +34,7 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     Map<String, IncomeCollectionModel> orderCollection;
 
-    ArrayList<Integer> ItemsToDelete= null;
+    ArrayList<Integer> ItemsToDelete = null;
+
+    Boolean IsBarcodeInfoFragmentShowed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +146,32 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 new DataBaseCaller().execute();
             }
         });
+
+        Button btnBarcodeInfo = findViewById(R.id.btnBarcodeInfo);
+        btnBarcodeInfo.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                try{
+                    Fragment infoFragemnt = new BarcodeInfoFragment();
+                    replaceFragment(infoFragemnt);
+                    IsBarcodeInfoFragmentShowed = true;
+                }
+                catch (Exception ex){
+                    statusTextView.setText(ex.getMessage());
+                }
+            }
+        });
     }
+
+    public void replaceFragment(Fragment destFragment)
+    {
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frBarcodeInfo, destFragment);
+        fragmentTransaction.commit();
+    }
+
 
     private List<OrderModel> getModel() {
         dataTable = new ArrayList<OrderModel>();
@@ -261,8 +292,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                         barCode = new BarcodeStructure( data.getData(), data.getLabelType());
                     }
                 }
-
-                statusTextView.setText("Type: "+barCode.getLabelType()+"\nBarcode: "+barCode.getUniqueIdentifier()+"\n"+"Weight: "+barCode.getWeight() );
             }
         catch(Exception ex)
         {}
@@ -281,9 +310,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             new AsyncCaller().execute();
 
+            if (IsBarcodeInfoFragmentShowed)
+            {
+                new AsyncBarcodeInfoUpdate().execute("Такой штрихкод не найден в коллекции");
+            }
+
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
-        else
+        else if(IsBarcodeInfoFragmentShowed == false)
         {
             if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
                 new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
@@ -293,19 +327,48 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
             else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
-                String lotNumber = barCode.GetFullBarcode().substring(28, 32);
-                String productionDate = barCode.GetFullBarcode().substring(34, 40);
-                String expirationDate = barCode.GetFullBarcode().substring(42,48);
-                String serialnumber = barCode.GetFullBarcode().substring(50,55);
-                String internalProducer = barCode.GetFullBarcode().substring(57,58);
-                String internalEquipment = barCode.GetFullBarcode().substring(58,61);
 
                 SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
-                dbHandler.insertDatabar(barCode.getUniqueIdentifier(),barCode.getWeight().toString(),lotNumber,productionDate,expirationDate,serialnumber,internalProducer,internalEquipment );
+                dbHandler.insertDatabar(
+                        barCode.getUniqueIdentifier(),
+                        barCode.getWeight().toString(),
+                        barCode.getLotNumber(),
+                        barCode.getProductionDate(),
+                        barCode.getExpirationDate(),
+                        barCode.getSerialNumber(),
+                        barCode.getInternalProducer(),
+                        barCode.getInternalEquipment() );
 
                 new DatabarAsyncDataUpdate().execute(searchResult, barCode);
             }
         }
+        else if (IsBarcodeInfoFragmentShowed == true)
+        {
+            String resultText="";
+
+            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature+"\nВес: "+barCode.getWeight();
+            }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight()== null){
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature;
+            }
+            else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
+                resultText=
+                        "Штрих-код: "+barCode.getUniqueIdentifier()
+                                + "\nНоменклатура: "+searchResult.Nomenklature
+                                + "\nВес: "+barCode.getWeight()+" кг"
+                                + "\nНомер партии: "+barCode.getLotNumber()
+                                + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(barCode.getProductionDate())
+                                + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(barCode.getExpirationDate())
+                                + "\nСерийный номер: " + barCode.getSerialNumber()
+                                + "\nВнутренний код производителя: " + barCode.getInternalProducer()
+                                + "\nВнутренний код оборудования: " + barCode.getInternalEquipment();
+            }
+
+            new AsyncBarcodeInfoUpdate().execute(resultText);
+
+        }
+
     }
 
     @Override
@@ -344,6 +407,22 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
         } catch (ScannerException e) {
             e.printStackTrace();
+        }
+    }
+
+    class AsyncBarcodeInfoUpdate extends  AsyncTask<String,Void,String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            String finalText = params[0];
+
+            return finalText;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            BarcodeInfoFragment barcodeInfoFragment = (BarcodeInfoFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+            barcodeInfoFragment.UpdateText(result);
         }
     }
 
