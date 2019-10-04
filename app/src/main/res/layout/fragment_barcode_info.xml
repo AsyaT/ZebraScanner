@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FFEB3B"
+    tools:context=".BarcodeInfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/textViewBarcodeInfo"
+        android:layout_width="244dp"
+        android:layout_height="390dp"
+        android:layout_marginTop="60dp"
+        android:gravity="center_horizontal"
+        android:text="... Scaning ..."
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtWelcomeScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="clip_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:text="Сканируйте штрих-код"
+        android:textSize="24sp" />
+
+</FrameLayout>
