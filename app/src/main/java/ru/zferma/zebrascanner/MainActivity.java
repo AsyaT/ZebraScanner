@@ -1,10 +1,9 @@
 package ru.zferma.zebrascanner;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,7 +11,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -68,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private DevicePolicyManager devicePolicyManager;
     private ComponentName compName;
     public static final int RESULT_ENABLE = 11;
+    public static final int INTENT_AUTHENTICATE = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,50 +210,27 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
-            lockScreen();
-            Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
-            startActivity(settingsActivityIntent);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+
+                if (km.isKeyguardSecure()) {
+                    Intent authIntent = km.createConfirmDeviceCredentialIntent("Пожалуйста, авторизуйтесь", "Введите пароль администратора");
+                    startActivityForResult(authIntent, INTENT_AUTHENTICATE);
+                }
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void lockScreen() {
-        PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-        if (pm.isScreenOn()) {
-            DevicePolicyManager policy = (DevicePolicyManager)
-                    getSystemService(Context.DEVICE_POLICY_SERVICE);
-            try {
-                policy.lockNow();
-            } catch (SecurityException ex) {
-                Toast.makeText(
-                        this,
-                        "You must enable this app as a device administrator\n\n" +
-                                "Please enable it and press back button to return here.",
-                        Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(
-                        DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).putExtra(
-                        DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
-                startActivityForResult(intent, RESULT_ENABLE);
-            }
-        }
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
-            case RESULT_ENABLE :
-                if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(MainActivity.this, "You have enabled the Admin Device features", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Problem to enable the Admin Device features. Result code "+ resultCode, Toast.LENGTH_SHORT).show();
-                }
-                break;
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == INTENT_AUTHENTICATE)
+        {
+            Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
