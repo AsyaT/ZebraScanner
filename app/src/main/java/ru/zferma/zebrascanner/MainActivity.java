@@ -259,8 +259,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == INTENT_AUTHENTICATE)
         {
-            Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
-            startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
+            if (resultCode == RESULT_OK)
+            {
+                Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
+            }
         }
     }
 
