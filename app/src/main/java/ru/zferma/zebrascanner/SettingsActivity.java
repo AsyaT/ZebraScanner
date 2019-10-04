@@ -1,6 +1,8 @@
 package ru.zferma.zebrascanner;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -19,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String APP_1C_USERNAME = "Username";
     public static final String APP_1C_PASSWORD = "Password";
 
+    public static final int RESULT_ENABLE = 11;
 
     String[] AccountAreas = new String[]{"Ишалино", "Свинокомплекс", "Турбослинский бройлер"};
 
@@ -69,6 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -77,6 +82,22 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case RESULT_ENABLE :
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(SettingsActivity.this, "You have enabled the Admin Device features", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SettingsActivity.this, "Problem to enable the Admin Device features. Result code "+ resultCode, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }
