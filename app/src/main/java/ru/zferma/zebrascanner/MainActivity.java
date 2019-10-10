@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
-                        barCode = new BarcodeStructure( data.getData(), data.getLabelType());
+                        barCode = new BarcodeStructure( data.getData(), BarcodeTypes.GetType(data.getLabelType()));
                     }
                 }
             }
@@ -358,14 +358,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
         else if(IsBarcodeInfoFragmentShowed == false)
         {
-            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
+            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
                 new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
             }
-            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight()== null) {
+            else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null) {
 
                 new Ean13AsyncDataUpdate().execute(searchResult, barCode);
             }
-            else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
+            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
 
                 SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
                 dbHandler.insertDatabar(
@@ -385,13 +385,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         {
             String resultText="";
 
-            if (barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight() != null) {
+            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
                 resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature+"\nВес: "+barCode.getWeight();
             }
-            else if(barCode.getLabelType() == ScanDataCollection.LabelType.EAN13 && barCode.getWeight()== null){
+            else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null){
                 resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature;
             }
-            else if(barCode.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR_EXP){
+            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
                 resultText=
                         "Штрих-код: "+barCode.getUniqueIdentifier()
                                 + "\nНоменклатура: "+searchResult.Nomenklature

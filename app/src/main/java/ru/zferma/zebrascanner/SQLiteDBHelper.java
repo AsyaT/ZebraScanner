@@ -52,8 +52,8 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                                   String lotNumber,
                                   Date productionDate,
                                   Date expirationDate,
-                                  Integer serialNumber,
-                                  Short internalProducer,
+                                  String serialNumber,
+                                  Byte internalProducer,
                                   Short internalEquipment)
     {
         SQLiteDatabase db = this.getWritableDatabase();
