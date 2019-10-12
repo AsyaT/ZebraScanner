@@ -40,9 +40,7 @@ import com.symbol.emdk.barcode.StatusData;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private List<OrderModel> dataTable = null;
     CustomListAdapter whatever = null;
 
-    Map<String, IncomeCollectionModel> orderCollection;
+    OrderCollection orderCollection;
 
     ArrayList<Integer> ItemsToDelete = null;
 
@@ -101,15 +99,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(whatever);
 
-        orderCollection = new HashMap<String,IncomeCollectionModel>();
-        orderCollection.put("9785389076990",new IncomeCollectionModel("Cat-cat",1, 0.2));
-        orderCollection.put("9785431508530",new IncomeCollectionModel("Little car",1, 0.01));
-        orderCollection.put("4607097079818",new IncomeCollectionModel("Corn flacks",1, 0.5));
-        orderCollection.put("7322540387483",new IncomeCollectionModel("Libress Super",1, 0.01));
-        orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
-        orderCollection.put("2203383",new IncomeCollectionModel("Пимидоры весовые на веточках",1, 0.0));
-        orderCollection.put("2203233",new IncomeCollectionModel("Кабачки",1, 0.0));
-        orderCollection.put("04630037036817",new IncomeCollectionModel("Филе цыпленка",1, 0.0));
+        orderCollection = new OrderCollection();
 
         ItemsToDelete = new ArrayList<Integer>();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -335,8 +325,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         catch(Exception ex)
         {}
 
-        IncomeCollectionModel searchResult = orderCollection.get(barCode.getUniqueIdentifier());
-
+        IncomeCollectionModel searchResult = orderCollection.IsBarcodeExists(barCode.getUniqueIdentifier());
+        
         if (searchResult == null)
         {
             try {
