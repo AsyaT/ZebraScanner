@@ -3,7 +3,6 @@ package ru.zferma.zebrascanner;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     private ListView listView = null;
     private List<OrderModel> dataTable = null;
-    CustomListAdapter whatever = null;
+    CustomListAdapter customListAdapter = null;
 
     OrderCollection orderCollection;
 
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     Boolean IsBarcodeInfoFragmentShowed = false;
 
     private DevicePolicyManager devicePolicyManager;
-    private ComponentName compName;
     public static final int RESULT_ENABLE = 11;
     public static final int INTENT_AUTHENTICATE = 12;
 
@@ -91,13 +89,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
 
         devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
-        compName = new ComponentName(this, MyAdmin.class);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
 
-        whatever = new CustomListAdapter(this,getModel() );
+        customListAdapter = new CustomListAdapter(this,getModel() );
         listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(whatever);
+        listView.setAdapter(customListAdapter);
 
         orderCollection = new OrderCollection();
 
@@ -128,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     dataTable.remove((int) x);
                 };
                 ItemsToDelete.clear();
-                whatever.notifyDataSetChanged();
+                customListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -137,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onClick(View view) {
                 dataTable.clear();
-                whatever.notifyDataSetChanged();
+                customListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -145,15 +142,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         showRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // Enable admin
-/*
-                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
-                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Additional text explaining why we need this permission");
-                startActivityForResult(intent, RESULT_ENABLE);
-*/
-                // End enable admin
 
                 //new DataBaseCaller().execute();
             }
@@ -326,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         {}
 
         IncomeCollectionModel searchResult = orderCollection.IsBarcodeExists(barCode.getUniqueIdentifier());
-        
+
         if (searchResult == null)
         {
             try {
@@ -337,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             mediaPlayer.start();
 
-            new AsyncCaller().execute();
+            new MessageDialog().execute();
 
             if (IsBarcodeInfoFragmentShowed)
             {
@@ -587,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             else
             {
                 dataTable.remove(existingTableModel);
-                whatever.notifyDataSetChanged();
+                customListAdapter.notifyDataSetChanged();
 
                 Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + Quantity;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
@@ -600,11 +588,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         {
             OrderModel tableModel = new OrderModel(nomenclature, barcode, coefficient, weight );
             dataTable.add(tableModel);
-            whatever.notifyDataSetChanged();
+            customListAdapter.notifyDataSetChanged();
         }
     }
 
-    private class AsyncCaller extends AsyncTask<Void, Void, Void>
+    private class MessageDialog extends AsyncTask<Void, Void, Void>
     {
 
         AlertDialog.Builder alertDialog;
