@@ -1,10 +1,10 @@
 package ru.zferma.zebrascanner;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,20 +14,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class OperationSelectionActivity extends AppCompatActivity {
 
     ListView operationsListView;
     ArrayList<String> listItem;
-    Map<Integer,AccountingAreaModel> AccountingAreaIncomeData;
+    OperationTypes AccountingAreaIncomeData;
     Map<String,String> OperationsList;
 
     String SelectedOperationType = "";
     Button okButton;
     Button cancelButton;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,32 +37,18 @@ public class OperationSelectionActivity extends AppCompatActivity {
         okButton = (Button) findViewById(R.id.OKButton);
         cancelButton = (Button) findViewById(R.id.CancelButton);
 
-        AccountingAreaIncomeData = new HashMap<Integer,AccountingAreaModel>();
-        AccountingAreaIncomeData.put(1, new AccountingAreaModel("Инвентаризация", "gr-bbg-erb-r","Инвентаризация склад 12-1","gv8df-bdfb8dfb-dfb8"));
-        AccountingAreaIncomeData.put(2, new AccountingAreaModel("Перемещение", "6r-ne-6jme2-0lbd1r","Межцеховой учет УПК",",qpr7-bvnt0-3y5n-dit"));
-
-        SharedPreferences operationTypesSP = getSharedPreferences("OperationTypes", Context.MODE_PRIVATE);
-        SharedPreferences.Editor operationTypeEditor = operationTypesSP.edit();
-
-        SharedPreferences accountAreasSP = getSharedPreferences("AccountAreas", Context.MODE_PRIVATE);
-        SharedPreferences.Editor accountAreasEditor = accountAreasSP.edit();
-
-        SharedPreferences relationsAccountAreaOperationType = getSharedPreferences("RealtionsTypeArea",Context.MODE_PRIVATE);
-        SharedPreferences.Editor relationsAccountAreaOperationTypeEditor = relationsAccountAreaOperationType.edit();
-
         listItem = new ArrayList<>();
-        OperationsList = new HashMap<String,String>();
-        for (Map.Entry<Integer,AccountingAreaModel> accountingArea : AccountingAreaIncomeData.entrySet())
+
+        AccountingAreaIncomeData = new OperationTypes();
+        OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
+
+        if(data.Error == false)
         {
-            listItem.add( accountingArea.getValue().OperationType );
-            OperationsList.put(accountingArea.getValue().OperationType, accountingArea.getValue().GuideOperationType);
-            operationTypeEditor.putString(accountingArea.getValue().GuideOperationType,accountingArea.getValue().OperationType);
-            accountAreasEditor.putString(accountingArea.getValue().GuideAccountingArea,accountingArea.getValue().AccountingArea);
-            relationsAccountAreaOperationTypeEditor.putString(accountingArea.getValue().GuideOperationType,accountingArea.getValue().GuideAccountingArea);
+            for (OperationTypesAndAccountingAreasModel.OperationTypeModel operationType : data.AccountingAreasAndTypes )
+            {
+                listItem.add(operationType.OperationType);
+            }
         }
-        operationTypeEditor.commit();
-        accountAreasEditor.commit();
-        relationsAccountAreaOperationTypeEditor.commit();
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
 
@@ -95,7 +81,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent goToAreaSelectionIntent = new Intent(getBaseContext(),AccountAreaSelection.class);
+                Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
                 goToAreaSelectionIntent.putExtra("operation_guid", OperationsList.get(SelectedOperationType));
                 goToAreaSelectionIntent.putExtra("operation_name", SelectedOperationType);
                 startActivity( goToAreaSelectionIntent );

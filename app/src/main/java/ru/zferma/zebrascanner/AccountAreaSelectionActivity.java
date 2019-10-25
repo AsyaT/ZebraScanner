@@ -1,16 +1,12 @@
 package ru.zferma.zebrascanner;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class AccountAreaSelection extends AppCompatActivity {
+public class AccountAreaSelectionActivity extends AppCompatActivity {
 
     ListView accountAreasListView;
     ArrayList<String> listItem;
@@ -19,7 +15,7 @@ public class AccountAreaSelection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
-
+/*
         String operationGuid = getIntent().getStringExtra("operation_guid");
         String operationName = getIntent().getStringExtra("operation_name");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
@@ -34,5 +30,7 @@ public class AccountAreaSelection extends AppCompatActivity {
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
 
         accountAreasListView.setAdapter(adapter);
+
+ */
     }
 }
