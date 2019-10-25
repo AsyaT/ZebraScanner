@@ -1,7 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import com.symbol.emdk.barcode.ScanDataCollection;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,12 +7,12 @@ import java.util.Date;
 public class BarcodeStructure {
     private String UniqueIdentifier;
     private Double Weight;
-    private ScanDataCollection.LabelType LabelType;
+    private BarcodeTypes LabelType;
     private String LotNumber;
     private Date ProductionDate;
     private Date ExpirationDate;
-    private Integer SerialNumber;
-    private Short InternalProducer;
+    private String SerialNumber;
+    private Byte InternalProducer;
     private Short InternalEquipment;
 
     private String FullBarcode;
@@ -29,7 +27,7 @@ public class BarcodeStructure {
         return this.Weight;
     }
 
-    public ScanDataCollection.LabelType getLabelType()
+    public BarcodeTypes getLabelType()
     {
         return this.LabelType;
     }
@@ -45,29 +43,29 @@ public class BarcodeStructure {
 
     public Date getExpirationDate() {return this.ExpirationDate; }
 
-    public Integer getSerialNumber() {return this.SerialNumber;}
+    public String getSerialNumber() {return this.SerialNumber;}
 
-    public Short getInternalProducer() {return this.InternalProducer;}
+    public Byte getInternalProducer() {return this.InternalProducer;}
 
     public Short getInternalEquipment() {return this.InternalEquipment;}
 
-    public BarcodeStructure( String fullBarcode, ScanDataCollection.LabelType labelType) throws ParseException {
+    public BarcodeStructure( String fullBarcode, BarcodeTypes labelType) throws ParseException {
         FullBarcode = fullBarcode;
         LabelType = labelType;
 
-        if(LabelType == ScanDataCollection.LabelType.GS1_DATABAR_EXP)
+        if(LabelType == BarcodeTypes.LocalGS1_EXP)
         {
             String stringWeight = fullBarcode.substring(20,26);
             Weight = Double.parseDouble(stringWeight.substring(0,3) + "." + stringWeight.substring(3)) ;
             UniqueIdentifier = fullBarcode.substring(2,16);
             LotNumber = fullBarcode.substring(28, 32);
-            ProductionDate = (new SimpleDateFormat("yyMMdd")).parse( fullBarcode.substring(34, 40) );
-            ExpirationDate = (new SimpleDateFormat("yyMMdd")).parse(fullBarcode.substring(42,48));
-            SerialNumber = Integer.parseInt(fullBarcode.substring(50,55));
-            InternalProducer = Short.parseShort(fullBarcode.substring(57,58));
+            ExpirationDate = (new SimpleDateFormat("yyMMdd")).parse( fullBarcode.substring(42, 48) );
+            ProductionDate = (new SimpleDateFormat("yyMMdd")).parse(fullBarcode.substring(34,40));
+            SerialNumber = fullBarcode.substring(50,55);
+            InternalProducer = Byte.parseByte(fullBarcode.substring(57,58));
             InternalEquipment = Short.parseShort(fullBarcode.substring(58,61));
         }
-        else if( LabelType == ScanDataCollection.LabelType.EAN13)
+        else if( LabelType == BarcodeTypes.LocalEAN13)
         {
             if (fullBarcode.startsWith("2")) {
                 String stringWeight = fullBarcode.substring(7, 12);
