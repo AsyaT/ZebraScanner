@@ -1,14 +1,20 @@
 package ru.zferma.zebrascanner;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
+import android.app.admin.DevicePolicyManager;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,12 +36,10 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class MainActivity extends Activity implements EMDKListener, StatusListener, DataListener {
+public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
     // Declare a variable to store EMDKManager object
     private EMDKManager emdkManager = null;
@@ -51,13 +55,17 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
     MediaPlayer mediaPlayer = null;
 
+    DataTableControl dataTableControl;
     private ListView listView = null;
-    private List<OrderModel> dataTable = null;
-    CustomListAdapter whatever = null;
+    CustomListAdapter customListAdapter = null;
 
-    Map<String, IncomeCollectionModel> orderCollection;
+    OrderCollection orderCollection;
 
-    ArrayList<Integer> ItemsToDelete= null;
+    Boolean IsBarcodeInfoFragmentShowed = false;
+
+    private DevicePolicyManager devicePolicyManager;
+    public static final int RESULT_ENABLE = 11;
+    public static final int INTENT_AUTHENTICATE = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,36 +84,22 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             statusTextView.setText("EMDKManager Request Failed");
         }
 
+        devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+
         mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
 
-        whatever = new CustomListAdapter(this,getModel() );
+        dataTableControl = new DataTableControl();
+        customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataControl() );
         listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(whatever);
+        listView.setAdapter(customListAdapter);
 
-        orderCollection = new HashMap<String,IncomeCollectionModel>();
-        orderCollection.put("9785389076990",new IncomeCollectionModel("Cat-cat",1, 0.2));
-        orderCollection.put("9785431508530",new IncomeCollectionModel("Little car",1, 0.01));
-        orderCollection.put("4607097079818",new IncomeCollectionModel("Corn flacks",1, 0.5));
-        orderCollection.put("7322540387483",new IncomeCollectionModel("Libress Super",1, 0.01));
-        orderCollection.put("7322540581171",new IncomeCollectionModel("Libress Night",1, 0.01));
-        orderCollection.put("2203383",new IncomeCollectionModel("Пимидоры весовые на веточках",1, 0.0));
-        orderCollection.put("2203233",new IncomeCollectionModel("Кабачки",1, 0.0));
+        orderCollection = new OrderCollection();
 
-        ItemsToDelete = new ArrayList<Integer>();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                if(ItemsToDelete.contains(position))
-                    {
-                        view.setBackgroundColor(Color.WHITE);
-                        ItemsToDelete.remove((Integer) position);
-                    }
-                else
-                    {
-                        view.setBackgroundColor(Color.RED);
-                        ItemsToDelete.add(position);
-                    }
+                dataTableControl.ItemClicked(view,position);
             }
         });
 
@@ -114,11 +108,8 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
             @Override
             public void onClick(View view) {
-                for (Integer x : ItemsToDelete) {
-                    dataTable.remove((int) x);
-                };
-                ItemsToDelete.clear();
-                whatever.notifyDataSetChanged();
+                dataTableControl.RemoveSelected();
+                customListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -126,17 +117,46 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
         btnDelAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dataTable.clear();
-                whatever.notifyDataSetChanged();
+                dataTableControl.RemoveAll();
+                customListAdapter.notifyDataSetChanged();
+            }
+        });
+
+        Button showRow = findViewById(R.id.ShowRowBtn);
+        showRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //new DataBaseCaller().execute();
+            }
+        });
+
+        Button btnBarcodeInfo = findViewById(R.id.btnBarcodeInfo);
+        btnBarcodeInfo.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                try{
+                    Fragment barcodeInfoFragment = new BarcodeInfoFragment();
+                    replaceFragment(barcodeInfoFragment);
+                    IsBarcodeInfoFragmentShowed = true;
+                }
+                catch (Exception ex){
+                    statusTextView.setText(ex.getMessage());
+                }
             }
         });
     }
 
-    private List<OrderModel> getModel() {
-        dataTable = new ArrayList<OrderModel>();
-
-        return dataTable;
+    public void replaceFragment(Fragment destFragment)
+    {
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frBarcodeInfo, destFragment);
+        fragmentTransaction.commit();
     }
+
+
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
         if (scanner == null) {
@@ -176,10 +196,31 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+
+                if (km.isKeyguardSecure()) {
+                    Intent authIntent = km.createConfirmDeviceCredentialIntent("Пожалуйста, авторизуйтесь", "Введите пароль администратора");
+                    startActivityForResult(authIntent, INTENT_AUTHENTICATE);
+                }
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == INTENT_AUTHENTICATE)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
+            }
+        }
     }
 
     @Override
@@ -199,6 +240,22 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                 Toast.LENGTH_SHORT).show();
     }
 
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+
+        try {
+            // Call this method to enable Scanner and its listeners
+            initializeScanner();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     @Override
     public void onClosed() {
 // The EMDK closed abruptly. // Clean up the objects created by EMDK
@@ -215,31 +272,26 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
     @Override
     public void onData(ScanDataCollection scanDataCollection) {
 
-        String barCodeString = "";
-        String weightFromBarcode = "";
+        BarcodeStructure barCode = null;
+
         try {
             // The ScanDataCollection object gives scanning result and the
             // collection of ScanData. So check the data and its status
-            if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS) {
+            if (scanDataCollection != null && scanDataCollection.getResult() == ScannerResults.SUCCESS)
+                {
+                    ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
 
-                ArrayList<ScanDataCollection.ScanData> scanData = scanDataCollection.getScanData();
-
-                // Iterate through scanned data and prepare the statusStr
-                for (ScanDataCollection.ScanData data : scanData) {
-                    // Get the scanned data
-                    barCodeString = data.getData();
+                    // Iterate through scanned data and prepare the statusStr
+                    for (ScanDataCollection.ScanData data : scanData) {
+                        // Get the scanned data
+                        barCode = new BarcodeStructure( data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+                    }
                 }
             }
-
-            if (barCodeString.startsWith("2")) {
-                weightFromBarcode = barCodeString.substring(7, 12);
-                barCodeString = barCodeString.substring(0, 7);
-            }
-        }
         catch(Exception ex)
         {}
 
-        IncomeCollectionModel searchResult = orderCollection.get(barCodeString);
+        IncomeCollectionModel searchResult = orderCollection.IsBarcodeExists(barCode.getUniqueIdentifier());
 
         if (searchResult == null)
         {
@@ -251,14 +303,67 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
             mediaPlayer.start();
 
-            new AsyncCaller().execute();
+            new MessageDialog().execute();
+
+            if (IsBarcodeInfoFragmentShowed)
+            {
+                new AsyncBarcodeInfoUpdate().execute("Такой штрихкод не найден в коллекции");
+            }
 
             Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
         }
-        else
-            {
-            new AsyncDataUpdate().execute(searchResult, barCodeString, weightFromBarcode);
+        else if(IsBarcodeInfoFragmentShowed == false)
+        {
+            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
+                new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
             }
+            else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null) {
+
+                new Ean13AsyncDataUpdate().execute(searchResult, barCode);
+            }
+            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
+
+                SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
+                dbHandler.insertDatabar(
+                        barCode.getUniqueIdentifier(),
+                        barCode.getWeight().toString(),
+                        barCode.getLotNumber(),
+                        barCode.getProductionDate(),
+                        barCode.getExpirationDate(),
+                        barCode.getSerialNumber(),
+                        barCode.getInternalProducer(),
+                        barCode.getInternalEquipment() );
+
+                new DatabarAsyncDataUpdate().execute(searchResult, barCode);
+            }
+        }
+        else if (IsBarcodeInfoFragmentShowed == true)
+        {
+            String resultText="";
+
+            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature+"\nВес: "+barCode.getWeight();
+            }
+            else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null){
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature;
+            }
+            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
+                resultText=
+                        "Штрих-код: "+barCode.getUniqueIdentifier()
+                                + "\nНоменклатура: "+searchResult.Nomenklature
+                                + "\nВес: "+barCode.getWeight()+" кг"
+                                + "\nНомер партии: "+barCode.getLotNumber()
+                                + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(barCode.getProductionDate())
+                                + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(barCode.getExpirationDate())
+                                + "\nСерийный номер: " + barCode.getSerialNumber()
+                                + "\nВнутренний код производителя: " + barCode.getInternalProducer()
+                                + "\nВнутренний код оборудования: " + barCode.getInternalEquipment();
+            }
+
+            new AsyncBarcodeInfoUpdate().execute(resultText);
+
+        }
+
     }
 
     @Override
@@ -297,6 +402,22 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
         } catch (ScannerException e) {
             e.printStackTrace();
+        }
+    }
+
+    class AsyncBarcodeInfoUpdate extends  AsyncTask<String,Void,String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            String finalText = params[0];
+
+            return finalText;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            BarcodeInfoFragment barcodeInfoFragment = (BarcodeInfoFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+            barcodeInfoFragment.UpdateText(result);
         }
     }
 
@@ -358,14 +479,44 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
 
     int dataLength = 0;
 
+
+    private class DatabarAsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return WeightBarCode;
+        }
+    }
+
+    private class WeightEan13AsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return WeightBarCode;
+        }
+    }
+
+    private class Ean13AsyncDataUpdate extends BaseAsyncDataUpdate
+    {
+        @Override
+        protected  Double WeightCalculator()
+        {
+            return CollectionSearchResult.Weight;
+        }
+    }
+
     // AsyncTask that configures the scanned data on background
 // thread and updated the result on UI thread with scanned data and type of
 // label
-    private class AsyncDataUpdate extends AsyncTask<Object, Void, Void> {
+    private abstract class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
 
         IncomeCollectionModel CollectionSearchResult = null;
-        String BarCode="";
-        String WeightBarCode="";
+        String UniqueCode ="";
+        Double WeightBarCode;
+        String Nomenclature;
+        Integer Quantity;
 
         @Override
         protected Void doInBackground(Object... params) {
@@ -377,52 +528,49 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
             }
 
             this.CollectionSearchResult = (IncomeCollectionModel) params[0];
-            this.BarCode = (String) params[1];
-            this.WeightBarCode = (String) params[2];
+            this.UniqueCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
+            this.WeightBarCode = ((BarcodeStructure) params[1]).getWeight();
+            this.Nomenclature = CollectionSearchResult.Nomenklature;
+            this.Quantity = CollectionSearchResult.Coefficient;
 
             return null;
         }
+
+        protected abstract Double WeightCalculator();
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            Double currentWeight = 0.0;
-            if(WeightBarCode.isEmpty() == false)
-            {
-                currentWeight = Double.parseDouble( WeightBarCode.substring(0,2) + "." + WeightBarCode.substring(2) );
-            }
-            else {
-                currentWeight = CollectionSearchResult.Weight;
-            }
+            Double currentWeight = WeightCalculator();
 
-            OrderModel existingTableModel =  dataTable.stream().filter(x->BarCode.equals(x.getBarCode())).findAny().orElse(null);
+            OrderModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode);
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, CollectionSearchResult.Coefficient.toString(), currentWeight.toString());
+                CreateNewLineInListView(Nomenclature, UniqueCode, Quantity.toString(), currentWeight.toString());
             }
             else
             {
-                dataTable.remove(existingTableModel);
-                whatever.notifyDataSetChanged();
+                dataTableControl.RemoveOne(existingTableModel);
+                customListAdapter.notifyDataSetChanged();
 
-                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + CollectionSearchResult.Coefficient;
+                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + Quantity;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
 
-                CreateNewLineInListView(CollectionSearchResult.Nomenklature, BarCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }
         }
 
         void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
         {
             OrderModel tableModel = new OrderModel(nomenclature, barcode, coefficient, weight );
-            dataTable.add(tableModel);
-            whatever.notifyDataSetChanged();
+            dataTableControl.AddOne(tableModel);
+            customListAdapter.notifyDataSetChanged();
         }
     }
 
-    private class AsyncCaller extends AsyncTask<Void, Void, Void>
+    private class MessageDialog extends AsyncTask<Void, Void, Void>
     {
 
         AlertDialog.Builder alertDialog;
@@ -452,6 +600,40 @@ public class MainActivity extends Activity implements EMDKListener, StatusListen
                     } catch (ScannerException e) {
                         e.printStackTrace();
                     }
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialog.show();
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class DataBaseCaller extends AsyncTask<Void, Void, Void>
+    {
+
+        AlertDialog.Builder alertDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            alertDialog = new AlertDialog.Builder(MainActivity.this);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            alertDialog.setTitle("Info from DB");
+            SQLiteDBHelper dbHandler = new SQLiteDBHelper(MainActivity.this);
+            alertDialog.setMessage(dbHandler.getData(1));
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
                     dialogInterface.dismiss();
                 }
             });
