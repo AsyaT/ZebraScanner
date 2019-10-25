@@ -8,23 +8,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String APP_PREFERENCES = "spSettings";
-    public static final String APP_ACCOUNT_AREA_NAME = "Account area name";
-    public static final String APP_ACCOUNT_AREA_INDEX = "Account area index";
     public static final String APP_1C_USERNAME = "Username";
     public static final String APP_1C_PASSWORD = "Password";
 
     public static final int RESULT_ENABLE = 11;
-
-    String[] AccountAreas = new String[]{"Ишалино", "Свинокомплекс", "Турбослинский бройлер"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +31,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        Spinner spinner = (Spinner) findViewById(R.id.spnrSelectionAccountArea);
-        ArrayAdapter<String> accountAreaAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AccountAreas);
-        spinner.setAdapter(accountAreaAdapter);
-
-        long selectedSpinner = spSettings.getLong(APP_ACCOUNT_AREA_INDEX, (long) 0.0);
-        spinner.setSelection((int) selectedSpinner, true);
 
         EditText et1CUsername = (EditText) findViewById(R.id.editTxt1CUserName);
         if(spSettings.contains(APP_1C_USERNAME))
@@ -62,8 +49,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SharedPreferences.Editor e = spSettings.edit();
-                e.putString(APP_ACCOUNT_AREA_NAME, spinner.getSelectedItem().toString());
-                e.putLong(APP_ACCOUNT_AREA_INDEX, spinner.getSelectedItemId());
                 e.putString(APP_1C_USERNAME, et1CUsername.getText().toString());
                 e.putString(APP_1C_PASSWORD, et1CPassword.getText().toString());
                 e.commit();
