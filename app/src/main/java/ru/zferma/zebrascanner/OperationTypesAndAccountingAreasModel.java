@@ -10,7 +10,7 @@ public class OperationTypesAndAccountingAreasModel {
     public class  OperationTypeModel
     {
         String OperationType;
-        List<AccountingAreaModel> AccountingAreasList;
+        List<AccountingAreaModel> AccountingAreas;
 
         public String getName()
         {

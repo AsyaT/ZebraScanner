@@ -1,5 +1,8 @@
 package ru.zferma.zebrascanner;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import com.google.gson.Gson;
 
 public class OperationTypes {
@@ -19,5 +22,19 @@ public class OperationTypes {
     public OperationTypesAndAccountingAreasModel GetData()
     {
         return InputModel;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public boolean HasSeveralAccountingAreas(String operationTypeName)
+    {
+        for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes)
+        {
+            if (otModel.OperationType == operationTypeName && otModel.AccountingAreas.size()>1)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
