@@ -14,14 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class OperationSelectionActivity extends AppCompatActivity {
 
     ListView operationsListView;
     ArrayList<String> listItem;
     OperationTypes AccountingAreaIncomeData;
-    Map<String,String> OperationsList;
 
     String SelectedOperationType = "";
     Button okButton;
@@ -84,12 +82,12 @@ public class OperationSelectionActivity extends AppCompatActivity {
                 if(AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedOperationType))
                 {
                     Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
-                   // goToAreaSelectionIntent.putExtra("operation_guid", OperationsList.get(SelectedOperationType));
-                   // goToAreaSelectionIntent.putExtra("operation_name", SelectedOperationType);
+                    goToAreaSelectionIntent.putExtra("operation_name", SelectedOperationType);
                     startActivity(goToAreaSelectionIntent);
                 }
                 else {
                     Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
+                    goToMainActivityIntent.putExtra("operation_name", SelectedOperationType);
                     startActivity(goToMainActivityIntent);
                 }
             }

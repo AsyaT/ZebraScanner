@@ -6,34 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".AccountAreaSelectionActivity">
 
-    <TextView
-        android:id="@+id/TitleAccountAreaTextView"
-        android:layout_width="179dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="20dp"
-        android:text="Выбор участка учёта"
-        app:layout_constraintBottom_toTopOf="@+id/accountAreaTable"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <include
-        android:id="@+id/accountAreaTable"
-        layout="@layout/account_area_table"
-        android:layout_width="350dp"
-        android:layout_height="223dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="114dp" />
-
     <Button
         android:id="@+id/CancelButton"
         android:layout_width="107dp"
         android:layout_height="59dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:background="#F00622"
         android:text="Отмена"
         android:textColorLink="#FFFFFF"
@@ -46,23 +25,45 @@
         android:layout_height="63dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:background="#22E02A"
         android:text="ОК"
         app:layout_constraintStart_toEndOf="@+id/CancelButton"
         app:layout_constraintTop_toBottomOf="@+id/accountAreaTable" />
 
     <TextView
+        android:id="@+id/TitleAccountAreaTextView"
+        android:layout_width="179dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="20dp"
+        android:text="Выбор участка учёта"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OperationTypeTextView" />
+
+    <TextView
         android:id="@+id/OperationTypeTextView"
-        android:layout_width="181dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_width="357dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/accountAreaTable"
+        layout="@layout/account_area_table"
+        android:layout_width="362dp"
+        android:layout_height="265dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TitleAccountAreaTextView" />
 
 </android.support.constraint.ConstraintLayout>
