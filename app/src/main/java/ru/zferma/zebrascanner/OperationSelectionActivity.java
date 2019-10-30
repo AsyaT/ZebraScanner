@@ -79,16 +79,17 @@ public class OperationSelectionActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedOperationType))
+                if (SelectedOperationType.isEmpty() == false)
                 {
-                    Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
-                    goToAreaSelectionIntent.putExtra("operation_name", SelectedOperationType);
-                    startActivity(goToAreaSelectionIntent);
-                }
-                else {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
-                    goToMainActivityIntent.putExtra("operation_name", SelectedOperationType);
-                    startActivity(goToMainActivityIntent);
+                    if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedOperationType)) {
+                        Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
+                        goToAreaSelectionIntent.putExtra("operation_name", SelectedOperationType);
+                        startActivity(goToAreaSelectionIntent);
+                    } else {
+                        Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
+                        goToMainActivityIntent.putExtra("operation_name", SelectedOperationType);
+                        startActivity(goToMainActivityIntent);
+                    }
                 }
             }
         });

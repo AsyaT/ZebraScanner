@@ -68,11 +68,12 @@ public class AccountAreaSelectionActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-            Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
-            goToMainActivityIntent.putExtra("accounting_area_name", SelectedAccountingArea);
-            startActivity(goToMainActivityIntent);
-
+                if(SelectedAccountingArea.isEmpty() == false)
+                {
+                    Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
+                    goToMainActivityIntent.putExtra("accounting_area_name", SelectedAccountingArea);
+                    startActivity(goToMainActivityIntent);
+                }
             }
         });
 
