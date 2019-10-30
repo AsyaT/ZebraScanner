@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AccountAreaSelectionActivity">
+
+    <Button
+        android:id="@+id/CancelButtonAA"
+        android:layout_width="107dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:background="#F00622"
+        android:text="Отмена"
+        android:textColorLink="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountAreaTable" />
+
+    <Button
+        android:id="@+id/OKButtonAA"
+        android:layout_width="107dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:background="#22E02A"
+        android:text="ОК"
+        app:layout_constraintStart_toEndOf="@+id/CancelButtonAA"
+        app:layout_constraintTop_toBottomOf="@+id/accountAreaTable" />
+
+    <TextView
+        android:id="@+id/TitleAccountAreaTextView"
+        android:layout_width="179dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Выбор участка учёта"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OperationTypeTextView" />
+
+    <TextView
+        android:id="@+id/OperationTypeTextView"
+        android:layout_width="357dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/accountAreaTable"
+        layout="@layout/account_area_table"
+        android:layout_width="256dp"
+        android:layout_height="210dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TitleAccountAreaTextView" />
+
+</android.support.constraint.ConstraintLayout>
