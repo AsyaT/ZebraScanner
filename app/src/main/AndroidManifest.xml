@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.zferma.zebrascanner">
 
-    <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,11 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity"></activity>
-        <activity android:name=".AccountAreaSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".OperationSelectionActivity"
+            android:name=".PreSettingsActivity"
             android:label="Zebra Scanner"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -24,25 +19,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".AccountAreaSelectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OperationSelectionActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".MainActivity"
-            android:label="Сканирование продукции">
-        </activity>
+            android:label="Сканирование продукции"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <receiver
-            android:name="ru.zferma.zebrascanner.MyAdmin"
+            android:name=".MyAdmin"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/policies" />
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
-        </receiver>
 
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/policies" />
+        </receiver>
 
         <uses-library android:name="com.symbol.emdk" />
     </application>
     <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
 
 </manifest>
