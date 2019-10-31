@@ -2,14 +2,13 @@ package ru.zferma.zebrascanner;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class BarcodeInfoFragment extends Fragment {
+public class BarcodeInfoFragment extends  FragmentWithText {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,6 +31,7 @@ public class BarcodeInfoFragment extends Fragment {
         return retView;
     }
 
+    @Override
     public void UpdateText(String data)
     {
         TextView textViewBarcodeInfo =  (TextView)  getView().findViewById(R.id.textViewBarcodeInfo);
