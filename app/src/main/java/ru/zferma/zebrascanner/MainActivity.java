@@ -6,6 +6,8 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     OrderCollection orderCollection;
 
     Boolean IsBarcodeInfoFragmentShowed = false;
-
+    Boolean IsOrderScanning = false;
 
 
     @Override
@@ -138,6 +140,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Fragment scanOrderFragment = new ScanOrderFragment();
+        replaceFragment(scanOrderFragment);
+        IsOrderScanning = true;
+    }
+
     public void replaceFragment(Fragment destFragment)
     {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
@@ -146,6 +157,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         fragmentTransaction.commit();
     }
 
+    public void closeFragment(Fragment fragment)
+    {
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        fragmentTransaction.hide(fragment);
+        fragmentTransaction.commit();
+    }
 
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
@@ -232,86 +251,108 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
-                        barCode = new BarcodeStructure( data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+
+                        if(IsOrderScanning)
+                        {
+                            ScanOrderFragment orderInfoFragment = (ScanOrderFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+                            new AsyncBarcodeInfoUpdate().execute("GUID заказа:"+data.getData());
+
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            Runnable runnable
+                                     = new Runnable() {
+                                @Override
+                                public void run() {
+                                    closeFragment(orderInfoFragment);
+                                    IsOrderScanning = false;
+                                }
+                            };
+                            handler.postDelayed(runnable,5000);
+
+                        }
+                        else
+                        {
+                            barCode = new BarcodeStructure( data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+
+                            IncomeCollectionModel searchResult = orderCollection.IsBarcodeExists(barCode.getUniqueIdentifier());
+
+                            if (searchResult == null)
+                            {
+                                try {
+                                    scanner.disable();
+                                } catch (ScannerException e) {
+                                    e.printStackTrace();
+                                }
+
+                                mediaPlayer.start();
+
+                                new MessageDialog().execute();
+
+                                if (IsBarcodeInfoFragmentShowed)
+                                {
+                                    new AsyncBarcodeInfoUpdate().execute("Такой штрихкод не найден в коллекции");
+                                }
+
+                                Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
+                            }
+                            else if(IsBarcodeInfoFragmentShowed == false)
+                            {
+                                if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
+                                    new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
+                                }
+                                else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null) {
+
+                                    new Ean13AsyncDataUpdate().execute(searchResult, barCode);
+                                }
+                                else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
+
+                                    SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
+                                    dbHandler.insertDatabar(
+                                            barCode.getUniqueIdentifier(),
+                                            barCode.getWeight().toString(),
+                                            barCode.getLotNumber(),
+                                            barCode.getProductionDate(),
+                                            barCode.getExpirationDate(),
+                                            barCode.getSerialNumber(),
+                                            barCode.getInternalProducer(),
+                                            barCode.getInternalEquipment() );
+
+                                    new DatabarAsyncDataUpdate().execute(searchResult, barCode);
+                                }
+                            }
+                            else if (IsBarcodeInfoFragmentShowed == true)
+                            {
+                                String resultText="";
+
+                                if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
+                                    resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature+"\nВес: "+barCode.getWeight();
+                                }
+                                else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null){
+                                    resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature;
+                                }
+                                else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
+                                    resultText=
+                                            "Штрих-код: "+barCode.getUniqueIdentifier()
+                                                    + "\nНоменклатура: "+searchResult.Nomenklature
+                                                    + "\nВес: "+barCode.getWeight()+" кг"
+                                                    + "\nНомер партии: "+barCode.getLotNumber()
+                                                    + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(barCode.getProductionDate())
+                                                    + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(barCode.getExpirationDate())
+                                                    + "\nСерийный номер: " + barCode.getSerialNumber()
+                                                    + "\nВнутренний код производителя: " + barCode.getInternalProducer()
+                                                    + "\nВнутренний код оборудования: " + barCode.getInternalEquipment();
+                                }
+
+                                new AsyncBarcodeInfoUpdate().execute(resultText);
+
+                            }
+                        }
                     }
                 }
             }
         catch(Exception ex)
-        {}
-
-        IncomeCollectionModel searchResult = orderCollection.IsBarcodeExists(barCode.getUniqueIdentifier());
-
-        if (searchResult == null)
         {
-            try {
-                scanner.disable();
-            } catch (ScannerException e) {
-                e.printStackTrace();
-            }
-
-            mediaPlayer.start();
-
-            new MessageDialog().execute();
-
-            if (IsBarcodeInfoFragmentShowed)
-            {
-                new AsyncBarcodeInfoUpdate().execute("Такой штрихкод не найден в коллекции");
-            }
-
-            Toast.makeText(MainActivity.this, "Такой штрихкод не найден в коллекции", Toast.LENGTH_SHORT).show();
+            ex.getMessage();
         }
-        else if(IsBarcodeInfoFragmentShowed == false)
-        {
-            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
-                new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
-            }
-            else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null) {
-
-                new Ean13AsyncDataUpdate().execute(searchResult, barCode);
-            }
-            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
-
-                SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
-                dbHandler.insertDatabar(
-                        barCode.getUniqueIdentifier(),
-                        barCode.getWeight().toString(),
-                        barCode.getLotNumber(),
-                        barCode.getProductionDate(),
-                        barCode.getExpirationDate(),
-                        barCode.getSerialNumber(),
-                        barCode.getInternalProducer(),
-                        barCode.getInternalEquipment() );
-
-                new DatabarAsyncDataUpdate().execute(searchResult, barCode);
-            }
-        }
-        else if (IsBarcodeInfoFragmentShowed == true)
-        {
-            String resultText="";
-
-            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
-                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature+"\nВес: "+barCode.getWeight();
-            }
-            else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null){
-                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature;
-            }
-            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
-                resultText=
-                        "Штрих-код: "+barCode.getUniqueIdentifier()
-                                + "\nНоменклатура: "+searchResult.Nomenklature
-                                + "\nВес: "+barCode.getWeight()+" кг"
-                                + "\nНомер партии: "+barCode.getLotNumber()
-                                + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(barCode.getProductionDate())
-                                + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(barCode.getExpirationDate())
-                                + "\nСерийный номер: " + barCode.getSerialNumber()
-                                + "\nВнутренний код производителя: " + barCode.getInternalProducer()
-                                + "\nВнутренний код оборудования: " + barCode.getInternalEquipment();
-            }
-
-            new AsyncBarcodeInfoUpdate().execute(resultText);
-
-        }
-
     }
 
     @Override
@@ -364,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         @Override
         protected void onPostExecute(String result) {
-            BarcodeInfoFragment barcodeInfoFragment = (BarcodeInfoFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+            FragmentWithText barcodeInfoFragment = (FragmentWithText) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
             barcodeInfoFragment.UpdateText(result);
         }
     }
