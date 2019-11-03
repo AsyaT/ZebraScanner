@@ -17,6 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "spSettings";
     public static final String APP_1C_USERNAME = "Username";
     public static final String APP_1C_PASSWORD = "Password";
+    public static final String APP_1C_SERVER = "Server";
 
     public static final int RESULT_ENABLE = 11;
 
@@ -31,6 +32,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        EditText etServer = (EditText) findViewById(R.id.editTxtServer);
+        if(spSettings.contains((APP_1C_SERVER)))
+        {
+            etServer.setText(spSettings.getString(APP_1C_SERVER,""));
+        }
 
         EditText et1CUsername = (EditText) findViewById(R.id.editTxt1CUserName);
         if(spSettings.contains(APP_1C_USERNAME))
@@ -51,8 +58,9 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences.Editor e = spSettings.edit();
                 e.putString(APP_1C_USERNAME, et1CUsername.getText().toString());
                 e.putString(APP_1C_PASSWORD, et1CPassword.getText().toString());
+                e.putString(APP_1C_SERVER, etServer.getText().toString());
                 e.commit();
-
+                Toast.makeText(SettingsActivity.this, "Настройки сохранены", Toast.LENGTH_SHORT).show();
             }
         });
 
