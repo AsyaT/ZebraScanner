@@ -1,6 +1,8 @@
 package ru.zferma.zebrascanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
 
 public class AccountAreaSelectionActivity extends AppCompatActivity {
 
@@ -35,7 +42,8 @@ public class AccountAreaSelectionActivity extends AppCompatActivity {
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        OperationTypes AccountingAreaIncomeData = new OperationTypes();
+        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        OperationTypes AccountingAreaIncomeData = new OperationTypes(spSettings.getString(APP_1C_SERVER,""),spSettings.getString(APP_1C_USERNAME,""), spSettings.getString(APP_1C_PASSWORD,""));
         listItem = AccountingAreaIncomeData.GetAccountingAreas(operationName);
 
         accountAreasListView = (ListView)findViewById(R.id.AccountAreaListView);

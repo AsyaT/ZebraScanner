@@ -34,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         EditText etServer = (EditText) findViewById(R.id.editTxtServer);
-        if(spSettings.contains((APP_1C_SERVER)))
+        if(spSettings.contains(APP_1C_SERVER))
         {
             etServer.setText(spSettings.getString(APP_1C_SERVER,""));
         }
