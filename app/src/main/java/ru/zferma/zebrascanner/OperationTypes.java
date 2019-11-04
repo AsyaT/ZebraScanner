@@ -9,8 +9,17 @@ public class OperationTypes {
     private OperationTypesAndAccountingAreasModel InputModel;
 
 
-    public OperationTypes(String jsonString)
+    public OperationTypes(String url, String userpass)
     {
+        String jsonString = "";
+
+        try {
+            jsonString = (new WebService()).execute(url,userpass).get();
+        }
+        catch (Exception ex)
+        {
+            ex.getMessage();
+        }
 
         Gson g = new Gson();
         OperationTypesAndAccountingAreasModel inputModel = g.fromJson(jsonString, OperationTypesAndAccountingAreasModel.class);

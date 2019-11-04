@@ -1,34 +1,16 @@
 package ru.zferma.zebrascanner;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
 
-public class AccountAreaSelectionActivity extends AppCompatActivity {
-
-    ListView accountAreasListView;
-    ArrayList<String> listItem;
-    String SelectedAccountingArea="";
-
-    Button okButton;
-    Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,70 +25,29 @@ public class AccountAreaSelectionActivity extends AppCompatActivity {
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String jsonString="";
-        String userpass = spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
-        String url = "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetList?UserName="+ spSettings.getString(APP_1C_USERNAME,"");
-        try {
-            jsonString = (new WebService()).execute(url,userpass).get();
-        }
-        catch (Exception ex)
-        {
-            ex.getMessage();
-        }
-
-        OperationTypes AccountingAreaIncomeData = new OperationTypes(jsonString);
+        OperationTypes AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass());
         listItem = AccountingAreaIncomeData.GetAccountingAreas(operationName);
 
-        accountAreasListView = (ListView)findViewById(R.id.AccountAreaListView);
+        listView = (ListView)findViewById(R.id.AccountAreaListView);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
 
-        accountAreasListView.setAdapter(adapter);
+        listView.setAdapter(adapter);
 
-        accountAreasListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String tap = ((TextView)view).getText().toString();
-
-                if(SelectedAccountingArea.isEmpty() || SelectedAccountingArea != tap)
-                {
-                    for (int i = 0; i < accountAreasListView.getChildCount(); i++) {
-                        View listItem = accountAreasListView.getChildAt(i);
-                        listItem.setBackgroundColor(Color.WHITE);
-                    }
-
-                    view.setBackgroundColor(Color.YELLOW);
-                    SelectedAccountingArea = tap;
-                }
-                else{
-                    view.setBackgroundColor(Color.WHITE);
-                    SelectedAccountingArea = "";
-                }
-            }
-        });
+        listView.setOnItemClickListener(ClickAction);
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SelectedAccountingArea.isEmpty() == false)
+                if(SelectedType.isEmpty() == false)
                 {
                     Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
-                    goToMainActivityIntent.putExtra("accounting_area_name", SelectedAccountingArea);
+                    goToMainActivityIntent.putExtra("accounting_area_name", SelectedType);
                     startActivity(goToMainActivityIntent);
                 }
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (int i = 0; i < accountAreasListView.getChildCount(); i++) {
-                    View listItem = accountAreasListView.getChildAt(i);
-                    listItem.setBackgroundColor(Color.WHITE);
-                }
-                SelectedAccountingArea = "";
-            }
-        });
+        cancelButton.setOnClickListener(clickListener);
 
 
     }
