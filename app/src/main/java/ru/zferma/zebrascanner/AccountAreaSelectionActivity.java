@@ -46,13 +46,9 @@ public class AccountAreaSelectionActivity extends AppCompatActivity {
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String jsonString="";
         String userpass = spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
-        String url = "http://"+ userpass+"@"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetListUserName="+ spSettings.getString(APP_1C_USERNAME,"");
+        String url = "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetList?UserName="+ spSettings.getString(APP_1C_USERNAME,"");
         try {
-            jsonString =  (new WebService()).execute(url).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            jsonString = (new WebService()).execute(url,userpass).get();
         }
         catch (Exception ex)
         {

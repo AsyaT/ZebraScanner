@@ -59,7 +59,7 @@ public class OperationSelectionActivity extends AppCompatActivity {
         AccountingAreaIncomeData = new OperationTypes(jsonString );
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
-        if(data.Error == false)
+        if(data.Error == false) // TODO: Action if error is true
         {
             for (OperationTypesAndAccountingAreasModel.OperationTypeModel operationType : data.AccountingAreasAndTypes )
             {
