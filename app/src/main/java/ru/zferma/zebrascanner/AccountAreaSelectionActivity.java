@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
 import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
@@ -43,7 +44,22 @@ public class AccountAreaSelectionActivity extends AppCompatActivity {
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        OperationTypes AccountingAreaIncomeData = new OperationTypes(spSettings.getString(APP_1C_SERVER,""),spSettings.getString(APP_1C_USERNAME,""), spSettings.getString(APP_1C_PASSWORD,""));
+        String jsonString="";
+        String userpass = spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
+        String url = "http://"+ userpass+"@"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetListUserName="+ spSettings.getString(APP_1C_USERNAME,"");
+        try {
+            jsonString =  (new WebService()).execute(url).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        catch (Exception ex)
+        {
+            ex.getMessage();
+        }
+
+        OperationTypes AccountingAreaIncomeData = new OperationTypes(jsonString);
         listItem = AccountingAreaIncomeData.GetAccountingAreas(operationName);
 
         accountAreasListView = (ListView)findViewById(R.id.AccountAreaListView);

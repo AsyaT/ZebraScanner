@@ -45,7 +45,18 @@ public class OperationSelectionActivity extends AppCompatActivity {
         listItem = new ArrayList<>();
 
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        AccountingAreaIncomeData = new OperationTypes(spSettings.getString(APP_1C_SERVER,""),spSettings.getString(APP_1C_USERNAME,""), spSettings.getString(APP_1C_PASSWORD,""));
+        String jsonString="";
+        String userpass = spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
+        String url = "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetList?UserName="+ spSettings.getString(APP_1C_USERNAME,"");
+        try {
+            jsonString = (new WebService()).execute(url,userpass).get();
+        }
+        catch (Exception ex)
+        {
+            ex.getMessage();
+        }
+
+        AccountingAreaIncomeData = new OperationTypes(jsonString );
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
         if(data.Error == false)
