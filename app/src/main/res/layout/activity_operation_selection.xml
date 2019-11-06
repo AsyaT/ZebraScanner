@@ -8,14 +8,14 @@
 
     <FrameLayout
         android:id="@+id/frConnectionInfo"
-        android:layout_width="290dp"
-        android:layout_height="392dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="top"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:elevation="12dp"
-        android:background="#00FCFAFA"></FrameLayout>
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#00FCFAFA"
+        android:elevation="12dp"></FrameLayout>
     <include layout="@layout/content_operation_selection" />
 
 </android.support.design.widget.CoordinatorLayout>
