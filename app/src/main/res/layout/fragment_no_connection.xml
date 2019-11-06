@@ -8,12 +8,13 @@
 
     <TextView
         android:id="@+id/txtNoConnectionInfo"
-        android:layout_width="145dp"
+        android:layout_width="245dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="310dp"
         android:text="@string/no_connection"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="22sp" />
 
 </RelativeLayout>

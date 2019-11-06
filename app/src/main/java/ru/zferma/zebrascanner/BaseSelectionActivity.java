@@ -3,6 +3,7 @@ package ru.zferma.zebrascanner;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -35,6 +36,23 @@ public class BaseSelectionActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frConnectionInfo, destFragment);
         fragmentTransaction.commit();
     }
+
+    class AsyncFragmentInfoUpdate extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String finalText = params[0];
+
+            return finalText;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            FragmentWithText barcodeInfoFragment = (FragmentWithText) getSupportFragmentManager().findFragmentById(R.id.frConnectionInfo);
+            barcodeInfoFragment.UpdateText(result);
+        }
+    }
+
     protected String GetConnectionUrl()
     {
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
