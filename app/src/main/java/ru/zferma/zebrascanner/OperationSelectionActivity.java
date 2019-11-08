@@ -36,7 +36,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             Fragment noConnectionFragment = new NoConnectionFragment();
             replaceFragment(noConnectionFragment);
 
-            new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствуем. Обратитесь к Системному администратору");
+            new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствуем.\n Обратитесь к Системному администратору");
         }
         else if(data.Error == true)
         {

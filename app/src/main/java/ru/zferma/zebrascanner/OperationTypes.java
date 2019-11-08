@@ -50,6 +50,10 @@ public class OperationTypes {
 
     public ArrayList<String> GetAccountingAreas(String operationTypeName)
     {
+        if(InputModel == null)
+        {
+            return null;
+        }
         ArrayList<String> result = new ArrayList<>();
         for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes)
         {

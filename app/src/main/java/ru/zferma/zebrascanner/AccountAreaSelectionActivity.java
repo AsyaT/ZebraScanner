@@ -2,6 +2,7 @@ package ru.zferma.zebrascanner;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,7 +18,6 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-
         String operationName = getIntent().getStringExtra("operation_name");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
         operationTypeTextView.setText(operationName);
@@ -27,6 +27,14 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
         OperationTypes AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass());
         listItem = AccountingAreaIncomeData.GetAccountingAreas(operationName);
+
+        if(listItem == null)
+        {
+            Fragment noConnectionFragment = new NoConnectionFragment();
+            replaceFragment(noConnectionFragment);
+
+            new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствуем.\n Обратитесь к Системному администратору");
+        }
 
         listView = (ListView)findViewById(R.id.AccountAreaListView);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
