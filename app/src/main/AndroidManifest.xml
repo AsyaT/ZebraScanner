@@ -32,18 +32,6 @@
             android:label="Сканирование продукции"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <receiver
-            android:name=".MyAdmin"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/policies" />
-        </receiver>
-
         <uses-library android:name="com.symbol.emdk" />
     </application>
     <uses-permission android:name="android.permission.VIBRATE" />

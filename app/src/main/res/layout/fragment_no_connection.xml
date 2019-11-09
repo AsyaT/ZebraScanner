@@ -24,6 +24,6 @@
         android:layout_below="@+id/txtNoConnectionInfo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Попробывать снова" />
+        android:text="Попробовать снова" />
 
 </RelativeLayout>
