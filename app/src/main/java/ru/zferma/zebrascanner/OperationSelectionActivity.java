@@ -80,4 +80,9 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
     }
 
+    public void RefreshActivity()
+    {
+        startActivity(new Intent(OperationSelectionActivity.this,OperationSelectionActivity.class)) ;
+        finish();
+    }
 }

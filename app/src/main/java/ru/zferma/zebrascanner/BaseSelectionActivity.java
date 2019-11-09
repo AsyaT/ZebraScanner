@@ -29,6 +29,7 @@ public class BaseSelectionActivity extends AppCompatActivity {
     String SelectedType = "";
     ListView listView;
 
+
     public void replaceFragment(Fragment destFragment)
     {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
