@@ -102,8 +102,8 @@
 
     <Button
         android:id="@+id/btnSaveSettings"
-        android:layout_width="229dp"
-        android:layout_height="84dp"
+        android:layout_width="167dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginLeft="28dp"
         android:layout_marginTop="20dp"
