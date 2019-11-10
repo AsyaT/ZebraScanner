@@ -6,8 +6,6 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -255,18 +253,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                         if(IsOrderScanning)
                         {
                             ScanOrderFragment orderInfoFragment = (ScanOrderFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
-                            new AsyncBarcodeInfoUpdate().execute("GUID заказа:"+data.getData());
-
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            Runnable runnable
-                                     = new Runnable() {
-                                @Override
-                                public void run() {
-                                    closeFragment(orderInfoFragment);
-                                    IsOrderScanning = false;
-                                }
-                            };
-                            handler.postDelayed(runnable,5000);
+                            closeFragment(orderInfoFragment);
+                            IsOrderScanning = false;
 
                         }
                         else
