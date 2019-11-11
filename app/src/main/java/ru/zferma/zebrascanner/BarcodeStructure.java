@@ -78,5 +78,11 @@ public class BarcodeStructure {
                 Weight = null;
             }
         }
+
+        while ( UniqueIdentifier.startsWith("0"))
+        {
+            UniqueIdentifier = UniqueIdentifier.substring(1);
+        };
+
     }
 }

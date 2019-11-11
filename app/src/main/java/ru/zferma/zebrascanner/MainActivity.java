@@ -1,7 +1,9 @@
 package ru.zferma.zebrascanner;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -33,6 +35,11 @@ import com.symbol.emdk.barcode.StatusData;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
+
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
     // Declare a variable to store EMDKManager object
@@ -53,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
 
-    OrderCollection orderCollection;
+    ProductHelper productHelper;
 
     Boolean IsBarcodeInfoFragmentShowed = false;
     Boolean IsOrderScanning = false;
@@ -83,7 +90,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(customListAdapter);
 
-        orderCollection = new OrderCollection();
+        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String userpass =  spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
+        String url= "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/Products/v1/GetList";
+        productHelper = new ProductHelper(url,userpass);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -261,7 +271,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                         {
                             barCode = new BarcodeStructure( data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-                            IncomeCollectionModel searchResult = orderCollection.IsBarcodeExists(barCode.getUniqueIdentifier());
+                            ProductModel.ProductListModel productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
+
+                            //TODO: Dialog to chose nomenclature
+
+                            //TODO: Use Quant for Weight
+                            IncomeCollectionModel searchResult = new IncomeCollectionModel(productListModel.PropertiesList.get(0).ProductName, 1, 8.0);
 
                             if (searchResult == null)
                             {
