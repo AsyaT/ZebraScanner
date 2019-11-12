@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                                 mediaPlayer.start();
 
-                                new MessageDialog().execute();
+                                new MessageDialog().execute("Такой штрихкод не найден в коллекции");
 
                                 if (IsBarcodeInfoFragmentShowed)
                                 {
@@ -354,7 +354,16 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
         catch(Exception ex)
         {
-            ex.getMessage();
+
+            try {
+                scanner.disable();
+            } catch (ScannerException e) {
+                e.printStackTrace();
+            }
+
+            mediaPlayer.start();
+            new MessageDialog().execute(ex.getMessage());
+
         }
     }
 
@@ -562,27 +571,30 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    private class MessageDialog extends AsyncTask<Void, Void, Void>
+    private class MessageDialog extends AsyncTask<String, Void, String>
     {
 
         AlertDialog.Builder alertDialog;
+
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             alertDialog = new AlertDialog.Builder(MainActivity.this);
+
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
+        protected String doInBackground(String... params)
+        {
+            return params[0];
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(String message) {
 
-            alertDialog.setTitle("Неверный штрих-код!");
-            alertDialog.setMessage("Этот штрих-код не найден в коллекции");
+            alertDialog.setTitle("Ошибка при сканировании штрих-кода!");
+            alertDialog.setMessage(message);
             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -596,7 +608,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 }
             });
             alertDialog.show();
-            super.onPostExecute(aVoid);
+            super.onPostExecute(message);
         }
     }
 
