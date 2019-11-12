@@ -1,13 +1,22 @@
 package ru.zferma.zebrascanner;
 
+import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
+import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
 
 public class PreSettingsActivity extends AppCompatActivity {
 
@@ -20,6 +29,23 @@ public class PreSettingsActivity extends AppCompatActivity {
     Button btnSelectOperationType;
     Button btnSettings;
 
+    private Boolean AreSettingsFill()
+    {
+        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        if(spSettings.getString(APP_1C_USERNAME,"").isEmpty())
+        {
+            return false;
+        }
+        if(spSettings.getString(APP_1C_PASSWORD,"").isEmpty())
+        {
+            return false;
+        }
+        if(spSettings.getString(APP_1C_SERVER,"").isEmpty())
+        {
+            return false;
+        }
+        return true;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +59,23 @@ public class PreSettingsActivity extends AppCompatActivity {
         btnSelectOperationType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent goToOperationTypeSelection = new Intent(getBaseContext(), OperationSelectionActivity.class);
-                startActivity(goToOperationTypeSelection);
+                if(AreSettingsFill() == false)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PreSettingsActivity.this);
+                    builder.setTitle("Настройки не заданы!").setMessage("Дабавьте детили соединения с сервером");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                else
+                    {
+                    Intent goToOperationTypeSelection = new Intent(getBaseContext(), OperationSelectionActivity.class);
+                    startActivity(goToOperationTypeSelection);
+                }
             }
         });
 
