@@ -10,8 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -138,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
                 try{
                     Fragment barcodeInfoFragment = new BarcodeInfoFragment();
-                    replaceFragment(barcodeInfoFragment);
+                    FragmentHelper fragmentHelper = new FragmentHelper(MainActivity.this);
+                    fragmentHelper.replaceFragment(barcodeInfoFragment);
                     IsBarcodeInfoFragmentShowed = true;
                 }
                 catch (Exception ex){
@@ -153,26 +152,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         super.onStart();
 
         Fragment scanOrderFragment = new ScanOrderFragment();
-        replaceFragment(scanOrderFragment);
+        FragmentHelper fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.replaceFragment(scanOrderFragment);
         IsOrderScanning = true;
     }
 
-    public void replaceFragment(Fragment destFragment)
-    {
-        FragmentManager fragmentManager = this.getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frBarcodeInfo, destFragment);
-        fragmentTransaction.commit();
-    }
 
-    public void closeFragment(Fragment fragment)
-    {
-        FragmentManager fragmentManager = this.getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-        fragmentTransaction.hide(fragment);
-        fragmentTransaction.commit();
-    }
 
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
@@ -263,7 +248,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                         if(IsOrderScanning)
                         {
                             ScanOrderFragment orderInfoFragment = (ScanOrderFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
-                            closeFragment(orderInfoFragment);
+                            FragmentHelper fragmentHelper = new FragmentHelper(this);
+                            fragmentHelper.closeFragment(orderInfoFragment);
                             IsOrderScanning = false;
 
                         }
