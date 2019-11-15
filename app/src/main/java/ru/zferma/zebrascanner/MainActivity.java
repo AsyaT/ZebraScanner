@@ -392,13 +392,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    class AsyncBarcodeInfoUpdate extends  AsyncTask<String,Void,String>{
+    class AsyncBarcodeInfoUpdate extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {
-            String finalText = params[0];
-
-            return finalText;
+            return params[0];
         }
 
         @Override
@@ -464,9 +462,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    int dataLength = 0;
-
-
+    // Classes for table update
     private class DatabarAsyncDataUpdate extends BaseAsyncDataUpdate
     {
         @Override
@@ -597,7 +593,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             super.onPostExecute(message);
         }
     }
-
+/*
     private class DataBaseCaller extends AsyncTask<Void, Void, Void>
     {
 
@@ -631,4 +627,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             super.onPostExecute(aVoid);
         }
     }
+
+ */
 }
