@@ -1,18 +1,19 @@
 package ru.zferma.zebrascanner;
 
-import com.google.gson.Gson;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ProductHelper {
 
     private ProductModel Model;
 
-    public ProductHelper(String url, String userpass)
-    {
-        String jsonString = "";
-
+    public ProductHelper(String url, String userpass) throws ExecutionException, InterruptedException, UnsupportedEncodingException {
+        //String jsonString = "";
+        List<ProductModel.ProductListModel> result = (new WebServiceStream()).execute(url,userpass).get();
         try {
           //  jsonString = (new WebService()).execute(url,userpass).get();
-
+/*
 jsonString="{\n" +
         "\"BarCodeList\": [\n" +
         "{\n" +
@@ -57,7 +58,7 @@ jsonString="{\n" +
         "}\n" +
         "]\n" +
         "}]}";
-
+*/
 
         }
         catch (Exception ex)
@@ -65,9 +66,10 @@ jsonString="{\n" +
             ex.getMessage();
         }
 
-        Gson g = new Gson();
-        ProductModel model = g.fromJson(jsonString, ProductModel.class);
-        this.Model = model;
+
+        //ProductModel model = g.fromJson(jsonString, ProductModel.class);
+        this.Model = new ProductModel();
+        this.Model.BarCodeList = result;
     }
 
     public ProductModel.ProductListModel FindProductByBarcode(String barcodeUniqueIdentifier)

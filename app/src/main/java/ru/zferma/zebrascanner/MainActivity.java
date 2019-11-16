@@ -30,8 +30,10 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
 import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
@@ -91,7 +93,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String userpass =  spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
         String url= "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/Products/v1/GetList";
-        productHelper = new ProductHelper(url,userpass);
+        try {
+            productHelper = new ProductHelper(url,userpass);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
