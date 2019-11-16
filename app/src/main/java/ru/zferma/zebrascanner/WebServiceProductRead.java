@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebServiceStream  extends AsyncTask<String, Void, List<ProductModel.ProductListModel>> {
+public class WebServiceProductRead extends AsyncTask<String, Void, List<ProductModel.ProductListModel>> {
 
     @Override
     protected List<ProductModel.ProductListModel> doInBackground(String... urlString) {
@@ -52,10 +52,11 @@ public class WebServiceStream  extends AsyncTask<String, Void, List<ProductModel
                     reader.endArray();
                 }
                 reader.endObject();
+                urlConnection.disconnect();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         } catch (ProtocolException exception) {
             exception.printStackTrace();
         } catch (MalformedURLException exception) {

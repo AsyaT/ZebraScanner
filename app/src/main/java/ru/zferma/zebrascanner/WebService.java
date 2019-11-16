@@ -16,15 +16,13 @@ public class WebService extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... urlString) {
         try {
-
-           URL url= new URL(urlString[0] );
+            URL url= new URL(urlString[0] );
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setConnectTimeout(5000);
 
             String header = "Basic " + new String(android.util.Base64.encode(urlString[1].getBytes(), android.util.Base64.NO_WRAP));
-                urlConnection.setRequestProperty ("Authorization", header);
-
+            urlConnection.setRequestProperty ("Authorization", header);
             InputStream inputStream = urlConnection.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -37,9 +35,7 @@ public class WebService extends AsyncTask<String, Void, String> {
                 }
                 result += line;
             }
-
             urlConnection.disconnect();
-
             return result;
 
             } catch (ProtocolException exception) {

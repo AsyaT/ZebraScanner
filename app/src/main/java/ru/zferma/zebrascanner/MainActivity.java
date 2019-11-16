@@ -30,7 +30,6 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -98,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
