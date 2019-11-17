@@ -61,12 +61,15 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                 @Override
                 public void onClick(View view) {
                     if (SelectedType.isEmpty() == false) {
+
                         if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType)) {
                             Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
                             goToAreaSelectionIntent.putExtra("operation_name", SelectedType);
                             startActivity(goToAreaSelectionIntent);
-                        } else {
-                            Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
+                        }
+                        else
+                        {
+                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum().getActivityClass());
                             goToMainActivityIntent.putExtra("operation_name", SelectedType);
                             startActivity(goToMainActivityIntent);
                         }

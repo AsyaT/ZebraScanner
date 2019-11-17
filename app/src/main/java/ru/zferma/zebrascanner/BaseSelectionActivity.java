@@ -29,6 +29,24 @@ public class BaseSelectionActivity extends AppCompatActivity {
     String SelectedType = "";
     ListView listView;
 
+    OperationsEnum getOperationsEnum()
+    {
+        if (SelectedType.isEmpty() == false)
+        {
+            OperationsEnum operationsEnum = null;
+
+            for(OperationsEnum item : OperationsEnum.values())
+            {
+                if(item.getRussianName().equalsIgnoreCase(SelectedType))
+                {
+                    operationsEnum = item;
+                };
+            }
+            return operationsEnum;}
+        else {
+            return null;
+        }
+    }
 
     public void replaceFragment(Fragment destFragment)
     {

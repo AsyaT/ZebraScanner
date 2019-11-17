@@ -48,7 +48,7 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
             public void onClick(View view) {
                 if(SelectedType.isEmpty() == false)
                 {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
+                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum().getActivityClass());
                     goToMainActivityIntent.putExtra("accounting_area_name", SelectedType);
                     startActivity(goToMainActivityIntent);
                 }
