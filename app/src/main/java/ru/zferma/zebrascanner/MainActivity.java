@@ -154,17 +154,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+    protected void ShowFragmentScanOrder()
+    {
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
         fragmentHelper.replaceFragment(scanOrderFragment);
         IsOrderScanning = true;
     }
-
-
 
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
