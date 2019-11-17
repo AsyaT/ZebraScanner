@@ -235,8 +235,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     @Override
     public void onData(ScanDataCollection scanDataCollection) {
 
-        BarcodeStructure barCode = null;
-
         try {
             // The ScanDataCollection object gives scanning result and the
             // collection of ScanData. So check the data and its status
@@ -253,12 +251,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                             ScanOrderFragment orderInfoFragment = (ScanOrderFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
                             FragmentHelper fragmentHelper = new FragmentHelper(this);
                             fragmentHelper.closeFragment(orderInfoFragment);
+
+                            //TODO : parse data and save
+
                             IsOrderScanning = false;
 
                         }
                         else
                         {
-                            barCode = new BarcodeStructure( data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+                            BarcodeStructure barCode = new BarcodeStructure( data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
                             ProductModel.ProductListModel productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
 
