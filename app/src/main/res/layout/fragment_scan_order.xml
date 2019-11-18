@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:gravity="center"
-        android:shadowColor="#76FF03"
+        android:shadowColor="#D0D1D0"
         android:shadowRadius="5"
         android:text="@string/PleaseScanOrder"
         android:textAllCaps="true"

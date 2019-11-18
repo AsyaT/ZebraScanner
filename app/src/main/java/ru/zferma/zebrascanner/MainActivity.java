@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     ProductHelper productHelper;
 
-    Boolean IsBarcodeInfoFragmentShowed = false;
-    Boolean IsOrderScanning = false;
+    ScannerStateHelper scannerState = new ScannerStateHelper();
 
+    Boolean IsBarcodeInfoFragmentShowed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
         fragmentHelper.replaceFragment(scanOrderFragment);
-        IsOrderScanning = true;
+        scannerState.Set(ScannerState.ORDER);
     }
 
     // Method to initialize and enable Scanner and its listeners
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     for (ScanDataCollection.ScanData data : scanData) {
                         // Get the scanned data
 
-                        if(IsOrderScanning)
+                        if(scannerState.GetCurrent() == ScannerState.ORDER)
                         {
                             ScanOrderFragment orderInfoFragment = (ScanOrderFragment) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
                             FragmentHelper fragmentHelper = new FragmentHelper(this);
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                             //TODO : parse data and save
 
-                            IsOrderScanning = false;
+                            scannerState.Set(ScannerState.PRODUCT);
 
                         }
                         else
