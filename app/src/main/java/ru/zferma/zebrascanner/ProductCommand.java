@@ -34,9 +34,8 @@ public class ProductCommand implements Command   {
             ProductModel.ProductListModel productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
 
             //TODO: Dialog to chose nomenclature
-
-            //TODO: Use Quant for Weight
-            searchResult = new IncomeCollectionModel(productListModel.PropertiesList.get(0).ProductName, 1, 8.0);
+            
+            searchResult = new IncomeCollectionModel(productListModel.PropertiesList.get(0).ProductName, 1, productListModel.PropertiesList.get(0).Quantity());
         }
         catch (Exception ex)
         {
