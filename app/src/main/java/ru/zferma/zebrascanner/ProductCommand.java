@@ -45,7 +45,7 @@ public class ProductCommand implements Command   {
     }
 
     @Override
-    public void PostAction(ScannerStateHelper state, Scanner scanner) {
+    public void PostAction(Scanner scanner) {
         if (searchResult == null)
         {
             try {

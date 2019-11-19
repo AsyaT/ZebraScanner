@@ -20,7 +20,7 @@ public class OrderCommand implements Command {
     }
 
     @Override
-    public void PostAction(ScannerStateHelper stateHelper, Scanner scanner) {
-        stateHelper.Set(ScannerState.PRODUCT);
+    public void PostAction( Scanner scanner) {
+
     }
 }

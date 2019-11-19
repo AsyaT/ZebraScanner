@@ -8,5 +8,5 @@ import com.symbol.emdk.barcode.Scanner;
 public interface Command {
     public void Action(Activity activity);
     public void ParseData(ScanDataCollection.ScanData data);
-    public void PostAction(ScannerStateHelper state, Scanner scanner);
+    public void PostAction(Scanner scanner);
 }

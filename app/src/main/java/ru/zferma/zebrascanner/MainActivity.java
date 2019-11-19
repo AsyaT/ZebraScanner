@@ -240,8 +240,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     {
 
                         BarcodeExecutor executor = new BarcodeExecutor();
-                        executor.Execute(scannerState.GetCurrent(), data,this,scannerState, scanner);
-
+                        executor.Execute(scannerState.GetCurrent(), data,this, scanner);
+                        scannerState.Set(ScannerState.PRODUCT);
                     }
                 }
         }
