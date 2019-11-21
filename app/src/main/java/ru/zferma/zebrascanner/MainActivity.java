@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.symbol.emdk.EMDKManager;
@@ -50,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private Scanner scanner = null;
 
     public ProductHelper productHelper = null;
-    // Text view to display status of EMDK and Barcode Scanning Operations
-    private TextView statusTextView = null;
 
     DataTableControl dataTableControl;
     private ListView listView = null;
@@ -65,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-// Reference to UI elements
-        statusTextView = (TextView) findViewById(R.id.textViewStatus);
 
 
 // The EMDKManager object will be created and returned in the callback.
@@ -74,9 +69,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
-        if (results.statusCode != EMDKResults.STATUS_CODE.SUCCESS) {
-            statusTextView.setText("EMDKManager Request Failed");
-        }
+
         SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String userpass =  spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
         String url= "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/Products/v1/GetList";
@@ -120,14 +113,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
         });
 
-        Button showRow = findViewById(R.id.ShowRowBtn);
-        showRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //new DataBaseCaller().execute();
-            }
-        });
 
         Button btnBarcodeInfo = findViewById(R.id.btnBarcodeInfo);
         btnBarcodeInfo.setOnClickListener(new View.OnClickListener(){
@@ -141,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     IsBarcodeInfoFragmentShowed = true;
                 }
                 catch (Exception ex){
-                    statusTextView.setText(ex.getMessage());
+
                 }
             }
         });
@@ -358,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         protected void onPostExecute(String result) {
             // Update the status text view on UI thread with current scanner
             // state
-            statusTextView.setText(result);
+
         }
 
         @Override

@@ -34,7 +34,7 @@ public class ProductCommand implements Command   {
             ProductModel.ProductListModel productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
 
             //TODO: Dialog to chose nomenclature
-            
+
             searchResult = new IncomeCollectionModel(productListModel.PropertiesList.get(0).ProductName, 1, productListModel.PropertiesList.get(0).Quantity());
         }
         catch (Exception ex)
