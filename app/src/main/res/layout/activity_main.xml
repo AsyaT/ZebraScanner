@@ -1,84 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="6dp"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_height="match_parent"  android:layout_width="match_parent">
 
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal">
-    <Button
-        android:id="@+id/btnRemoveOne"
-        android:layout_width="100dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="0dp"
-        android:text="Удалить строку" />
-
-        <Button
-            android:id="@+id/btnRenoveAll"
-            android:layout_width="98dp"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp"
-            android:layout_toEndOf="@+id/btnRemoveOne"
-            android:layout_toRightOf="@+id/btnRemoveOne"
-            android:text="Удалить всё" />
-
-        <Button
-            android:id="@+id/btnBarcodeInfo"
-            android:layout_width="98dp"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="false"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_toEndOf="@+id/btnRenoveAll"
-            android:layout_toRightOf="@+id/btnRenoveAll"
-            android:text="Штрихкод" />
-    </LinearLayout>
-
-    <include
-        android:id="@+id/layoutTable"
-        layout="@layout/content_order_table"
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_marginTop="5dp" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:orientation="horizontal">
-
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="121dp"
-        android:layout_height="77dp"
-        android:layout_below="@+id/frBarcodeInfo"
-        android:layout_gravity="clip_horizontal"
-        android:background="@drawable/border_green_button"
-        android:text="@string/BackToListButton"
-        android:textColor="#76FF03" />
-
-    <Button
-        android:id="@+id/btnExecute"
-        android:layout_width="121dp"
-        android:layout_height="77dp"
-        android:layout_below="@+id/frBarcodeInfo"
-        android:layout_toEndOf="@+id/btnBack"
-        android:layout_toRightOf="@+id/btnBack"
-        android:background="@drawable/green_button"
-        android:paddingLeft="40dp"
-        android:text="@string/ExecuteButton"
-        android:textColor="#FFF" />
-</LinearLayout>
     <FrameLayout
         android:id="@+id/frBarcodeInfo"
-        android:layout_width="290dp"
-        android:layout_height="392dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="top"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
@@ -87,4 +14,81 @@
         android:elevation="12dp">
 
     </FrameLayout>
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="6dp"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnRemoveOne"
+            android:layout_width="98dp"
+            android:layout_height="70dp"
+            android:text="Удалить строку"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnRenoveAll"
+            android:layout_width="98dp"
+            android:layout_height="70dp"
+            android:text="Удалить всё"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnBarcodeInfo"
+            android:layout_width="98dp"
+            android:layout_height="70dp"
+            android:text="Штрихкод"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/layoutTable"
+        layout="@layout/content_order_table"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="5dp" />
+
+    <FrameLayout
+        android:id="@+id/frOrderInfo"
+        android:layout_width="match_parent"
+        android:layout_height="47dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:orientation="horizontal"
+        android:paddingLeft="6dp"
+        android:paddingTop="4dp">
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="121dp"
+            android:layout_height="70dp"
+            android:layout_below="@+id/frBarcodeInfo"
+            android:layout_gravity="clip_horizontal|left"
+            android:background="@drawable/border_green_button"
+            android:text="@string/BackToListButton"
+            android:textColor="#76FF03" />
+
+        <Button
+            android:id="@+id/btnExecute"
+            android:layout_width="140dp"
+            android:layout_height="70dp"
+            android:layout_gravity="clip_horizontal|right|end"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/green_button"
+            android:text="@string/ExecuteButton"
+            android:textColor="#FFF" />
+    </LinearLayout>
+
 </LinearLayout>
+</RelativeLayout>
