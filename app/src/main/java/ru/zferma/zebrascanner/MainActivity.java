@@ -355,44 +355,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    // Classes for table update
-    public  class DatabarAsyncDataUpdate extends BaseAsyncDataUpdate
-    {
-        @Override
-        protected  Double WeightCalculator()
-        {
-            return WeightBarCode;
-        }
-    }
-
-    public  class WeightEan13AsyncDataUpdate extends BaseAsyncDataUpdate
-    {
-        @Override
-        protected  Double WeightCalculator()
-        {
-            return WeightBarCode;
-        }
-    }
-
-    public  class Ean13AsyncDataUpdate extends BaseAsyncDataUpdate
-    {
-        @Override
-        protected  Double WeightCalculator()
-        {
-            return CollectionSearchResult.Weight;
-        }
-    }
 
     // AsyncTask that configures the scanned data on background
 // thread and updated the result on UI thread with scanned data and type of
 // label
-    private abstract class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
+    public class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
 
-        IncomeCollectionModel CollectionSearchResult = null;
         String UniqueCode ="";
-        Double WeightBarCode;
+        Double Weight;
         String Nomenclature;
-        Integer Quantity;
 
         @Override
         protected Void doInBackground(Object... params) {
@@ -403,36 +374,31 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 e.printStackTrace();
             }
 
-            this.CollectionSearchResult = (IncomeCollectionModel) params[0];
-            this.UniqueCode = ((BarcodeStructure) params[1]).getUniqueIdentifier();
-            this.WeightBarCode = ((BarcodeStructure) params[1]).getWeight();
-            this.Nomenclature = CollectionSearchResult.Nomenklature;
-            this.Quantity = CollectionSearchResult.Coefficient;
+            this.UniqueCode = ((IncomeCollectionModel) params[0]).UniqueCode;
+            this.Weight = ((IncomeCollectionModel) params[0]).Weight;
+            this.Nomenclature = ((IncomeCollectionModel) params[0]).Nomenclature;
 
             return null;
         }
 
-        protected abstract Double WeightCalculator();
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            Double currentWeight = WeightCalculator();
-
             OrderModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode);
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(Nomenclature, UniqueCode, Quantity.toString(), currentWeight.toString());
+                CreateNewLineInListView(Nomenclature, UniqueCode, "1", Weight.toString());
             }
             else
             {
                 dataTableControl.RemoveOne(existingTableModel);
                 customListAdapter.notifyDataSetChanged();
 
-                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + Quantity;
-                Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + currentWeight;
+                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
+                Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + Weight;
 
                 CreateNewLineInListView(Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }

@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 
 public class ProductCommand implements Command   {
 
-    IncomeCollectionModel searchResult;
+    IncomeCollectionModel viewUpdateModel;
     ProductHelper productHelper;
     MediaPlayer mediaPlayer;
     BarcodeStructure barCode;
@@ -35,7 +35,16 @@ public class ProductCommand implements Command   {
 
             //TODO: Dialog to chose nomenclature
 
-            searchResult = new IncomeCollectionModel(productListModel.PropertiesList.get(0).ProductName, 1, productListModel.PropertiesList.get(0).Quantity());
+            double weight;
+            if(barCode.getWeight() == null)
+            {
+                weight = productListModel.PropertiesList.get(0).Quantity();
+            }
+            else {
+                weight = barCode.getWeight();
+            }
+
+            viewUpdateModel = new IncomeCollectionModel(barCode.getUniqueIdentifier(), productListModel.PropertiesList.get(0).ProductName, weight);
         }
         catch (Exception ex)
         {
@@ -45,7 +54,7 @@ public class ProductCommand implements Command   {
 
     @Override
     public void PostAction(Scanner scanner) {
-        if (searchResult == null)
+        if (viewUpdateModel == null)
         {
             try {
                 scanner.disable();
@@ -66,14 +75,11 @@ public class ProductCommand implements Command   {
         }
         else if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
-            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
+            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 ) {
 
-                ((MainActivity)this.Activity).new WeightEan13AsyncDataUpdate().execute(searchResult, barCode);
+                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel, barCode);
             }
-            else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null) {
 
-                ((MainActivity)this.Activity).new Ean13AsyncDataUpdate().execute(searchResult, barCode);
-            }
             else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
 /*
                 SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
@@ -88,7 +94,7 @@ public class ProductCommand implements Command   {
                         barCode.getInternalEquipment() );
 
  */
-                ((MainActivity)this.Activity).new DatabarAsyncDataUpdate().execute(searchResult, barCode);
+                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel, barCode);
             }
         }
         else if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
@@ -96,15 +102,15 @@ public class ProductCommand implements Command   {
             String resultText="";
 
             if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight() != null) {
-                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature+"\nВес: "+barCode.getWeight();
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+ viewUpdateModel.Nomenclature +"\nВес: "+barCode.getWeight();
             }
             else if(barCode.getLabelType() == BarcodeTypes.LocalEAN13 && barCode.getWeight()== null){
-                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+searchResult.Nomenklature;
+                resultText="Штрих-код: "+barCode.getUniqueIdentifier()+"\nНоменклатура: "+ viewUpdateModel.Nomenclature;
             }
             else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
                 resultText=
                         "Штрих-код: "+barCode.getUniqueIdentifier()
-                                + "\nНоменклатура: "+searchResult.Nomenklature
+                                + "\nНоменклатура: "+ viewUpdateModel.Nomenclature
                                 + "\nВес: "+barCode.getWeight()+" кг"
                                 + "\nНомер партии: "+barCode.getLotNumber()
                                 + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(barCode.getProductionDate())
