@@ -11,10 +11,11 @@ import java.text.SimpleDateFormat;
 
 public class ProductCommand implements Command   {
 
-    IncomeCollectionModel viewUpdateModel;
+    ListViewPresentationModel viewUpdateModel;
     ProductHelper productHelper;
     MediaPlayer mediaPlayer;
     BarcodeStructure barCode;
+    ProductModel.ProductListModel productListModel;
     Activity Activity;
 
     @Override
@@ -31,20 +32,23 @@ public class ProductCommand implements Command   {
         try {
             barCode = new BarcodeStructure(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-            ProductModel.ProductListModel productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
+            productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
 
             //TODO: Dialog to chose nomenclature
 
-            double weight;
-            if(barCode.getWeight() == null)
+            if(productListModel !=null)
             {
-                weight = productListModel.PropertiesList.get(0).Quantity();
-            }
-            else {
-                weight = barCode.getWeight();
-            }
+                double weight;
+                if(barCode.getWeight() == null)
+                {
+                    weight = productListModel.PropertiesList.get(0).Quantity();
+                }
+                else {
+                    weight = barCode.getWeight();
+                }
 
-            viewUpdateModel = new IncomeCollectionModel(barCode.getUniqueIdentifier(), productListModel.PropertiesList.get(0).ProductName, weight);
+                viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), productListModel.PropertiesList.get(0).ProductName, weight);
+            }
         }
         catch (Exception ex)
         {
@@ -54,7 +58,7 @@ public class ProductCommand implements Command   {
 
     @Override
     public void PostAction(Scanner scanner) {
-        if (viewUpdateModel == null)
+        if (productListModel == null)
         {
             try {
                 scanner.disable();
@@ -77,7 +81,7 @@ public class ProductCommand implements Command   {
         {
             if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 ) {
 
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel, barCode);
+                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel);
             }
 
             else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
@@ -94,7 +98,7 @@ public class ProductCommand implements Command   {
                         barCode.getInternalEquipment() );
 
  */
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel, barCode);
+                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel);
             }
         }
         else if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)

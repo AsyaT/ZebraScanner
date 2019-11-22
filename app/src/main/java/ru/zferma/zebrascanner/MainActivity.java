@@ -374,9 +374,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 e.printStackTrace();
             }
 
-            this.UniqueCode = ((IncomeCollectionModel) params[0]).UniqueCode;
-            this.Weight = ((IncomeCollectionModel) params[0]).Weight;
-            this.Nomenclature = ((IncomeCollectionModel) params[0]).Nomenclature;
+            this.UniqueCode = ((ListViewPresentationModel) params[0]).UniqueCode;
+            this.Weight = ((ListViewPresentationModel) params[0]).Weight;
+            this.Nomenclature = ((ListViewPresentationModel) params[0]).Nomenclature;
 
             return null;
         }
