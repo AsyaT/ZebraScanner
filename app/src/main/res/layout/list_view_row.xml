@@ -11,22 +11,24 @@
         android:layout_height="50dp"
         android:padding="5dp"
         android:text="TextView"
-        android:textSize="18dp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textViewWeight"
         android:layout_width="60dp"
         android:layout_height="50dp"
+        android:layout_marginTop="6dp"
         android:padding="5dp"
         android:text="TextView"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textViewCoefficient"
         android:layout_width="48dp"
         android:layout_height="50dp"
+        android:layout_marginTop="6dp"
         android:padding="5dp"
         android:paddingLeft="5dp"
         android:text="TextView"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 </LinearLayout>

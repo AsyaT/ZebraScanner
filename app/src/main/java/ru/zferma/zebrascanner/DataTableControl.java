@@ -9,22 +9,22 @@ import java.util.ArrayList;
 
 public class DataTableControl {
 
-    private ArrayList<OrderModel> DataTable;
+    private ArrayList<ProductListViewModel> DataTable;
     private ArrayList<Integer> ItemsToDelete;
 
     public DataTableControl()
     {
-        DataTable = new ArrayList<OrderModel>();
+        DataTable = new ArrayList<ProductListViewModel>();
         ItemsToDelete = new ArrayList<Integer>();
     }
 
-    public ArrayList<OrderModel> GetDataControl()
+    public ArrayList<ProductListViewModel> GetDataControl()
     {
         return DataTable;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public OrderModel GetExistingModel(String uniqueBarcode )
+    public ProductListViewModel GetExistingModel(String uniqueBarcode )
     {
         return DataTable.stream().filter(x-> uniqueBarcode.equals(x.getBarCode())).findAny().orElse(null);
     }
@@ -38,17 +38,17 @@ public class DataTableControl {
         }
         else
         {
-            view.setBackgroundColor(Color.RED);
+            view.setBackgroundColor(Color.YELLOW);
             ItemsToDelete.add(position);
         }
     }
 
-    public void RemoveOne(OrderModel model)
+    public void RemoveOne(ProductListViewModel model)
     {
         DataTable.remove(model);
     }
 
-    public void AddOne(OrderModel model)
+    public void AddOne(ProductListViewModel model)
     {
         DataTable.add(model);
     }

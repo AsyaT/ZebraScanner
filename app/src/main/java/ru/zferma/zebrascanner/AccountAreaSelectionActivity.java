@@ -1,32 +1,22 @@
 package ru.zferma.zebrascanner;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
-public class AccountAreaSelectionActivity extends AppCompatActivity {
 
-    ListView accountAreasListView;
-    ArrayList<String> listItem;
-    String SelectedAccountingArea="";
-
-    Button okButton;
-    Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
-
 
         String operationName = getIntent().getStringExtra("operation_name");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
@@ -35,58 +25,37 @@ public class AccountAreaSelectionActivity extends AppCompatActivity {
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        OperationTypes AccountingAreaIncomeData = new OperationTypes();
+        OperationTypes AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass());
         listItem = AccountingAreaIncomeData.GetAccountingAreas(operationName);
 
-        accountAreasListView = (ListView)findViewById(R.id.AccountAreaListView);
+        if(listItem == null)
+        {
+            Fragment noConnectionFragment = new NoConnectionFragment();
+            replaceFragment(noConnectionFragment);
+
+            new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствуем.\n Обратитесь к Системному администратору");
+        }
+
+        listView = (ListView)findViewById(R.id.AccountAreaListView);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
 
-        accountAreasListView.setAdapter(adapter);
+        listView.setAdapter(adapter);
 
-        accountAreasListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String tap = ((TextView)view).getText().toString();
-
-                if(SelectedAccountingArea.isEmpty() || SelectedAccountingArea != tap)
-                {
-                    for (int i = 0; i < accountAreasListView.getChildCount(); i++) {
-                        View listItem = accountAreasListView.getChildAt(i);
-                        listItem.setBackgroundColor(Color.WHITE);
-                    }
-
-                    view.setBackgroundColor(Color.YELLOW);
-                    SelectedAccountingArea = tap;
-                }
-                else{
-                    view.setBackgroundColor(Color.WHITE);
-                    SelectedAccountingArea = "";
-                }
-            }
-        });
+        listView.setOnItemClickListener(ClickAction);
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SelectedAccountingArea.isEmpty() == false)
+                if(SelectedType.isEmpty() == false)
                 {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
-                    goToMainActivityIntent.putExtra("accounting_area_name", SelectedAccountingArea);
+                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum().getActivityClass());
+                    goToMainActivityIntent.putExtra("accounting_area_name", SelectedType);
                     startActivity(goToMainActivityIntent);
                 }
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (int i = 0; i < accountAreasListView.getChildCount(); i++) {
-                    View listItem = accountAreasListView.getChildAt(i);
-                    listItem.setBackgroundColor(Color.WHITE);
-                }
-                SelectedAccountingArea = "";
-            }
-        });
+        cancelButton.setOnClickListener(clickListener);
 
 
     }

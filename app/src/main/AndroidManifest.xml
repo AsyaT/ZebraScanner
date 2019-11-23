@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.zferma.zebrascanner">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".RealizationActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".PackageListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".PreSettingsActivity"
             android:label="Zebra Scanner"
@@ -25,29 +34,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".OperationSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="Сканирование продукции"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <receiver
-            android:name=".MyAdmin"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/policies" />
-        </receiver>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <uses-library android:name="com.symbol.emdk" />
     </application>
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
 
 </manifest>

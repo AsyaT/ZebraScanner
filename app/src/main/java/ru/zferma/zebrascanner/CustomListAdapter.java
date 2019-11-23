@@ -14,10 +14,10 @@ public class CustomListAdapter extends ArrayAdapter {
     //to reference the Activity
     private final Activity context;
 
-    private final List<OrderModel> ListOrderModel;
+    private final List<ProductListViewModel> ListOrderModel;
 
 
-    public CustomListAdapter(Activity context, List<OrderModel> list) {
+    public CustomListAdapter(Activity context, List<ProductListViewModel> list) {
         super(context, R.layout.list_view_row, list);
         this.context = context;
         this.ListOrderModel = list;

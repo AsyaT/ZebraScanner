@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/noconnection"
+    tools:context=".NoConnectionFragment">
+
+    <TextView
+        android:id="@+id/txtNoConnectionInfo"
+        android:layout_width="245dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="280dp"
+        android:text="@string/no_connection"
+        android:textAlignment="center"
+        android:textSize="22sp" />
+
+    <Button
+        android:id="@+id/btnRefreshConnection"
+        android:layout_width="183dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtNoConnectionInfo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Попробовать снова" />
+
+</RelativeLayout>

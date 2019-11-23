@@ -1,29 +1,20 @@
 package ru.zferma.zebrascanner;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class OperationSelectionActivity extends AppCompatActivity {
+public class OperationSelectionActivity extends BaseSelectionActivity{
 
-    ListView operationsListView;
-    ArrayList<String> listItem;
     OperationTypes AccountingAreaIncomeData;
-
-    String SelectedOperationType = "";
-    Button okButton;
-    Button cancelButton;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -31,80 +22,70 @@ public class OperationSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_operation_selection);
 
-        operationsListView = (ListView)findViewById(R.id.OperationListView);
+        listView = (ListView)findViewById(R.id.OperationListView);
         okButton = (Button) findViewById(R.id.OKButton);
         cancelButton = (Button) findViewById(R.id.CancelButton);
 
         listItem = new ArrayList<>();
 
-        AccountingAreaIncomeData = new OperationTypes();
+        AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass() );
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
-        if(data.Error == false)
+        if(data == null )
         {
-            for (OperationTypesAndAccountingAreasModel.OperationTypeModel operationType : data.AccountingAreasAndTypes )
-            {
+            Fragment noConnectionFragment = new NoConnectionFragment();
+            replaceFragment(noConnectionFragment);
+
+            new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствует.\n Обратитесь к Системному администратору");
+        }
+        else if(data.Error == true)
+        {
+            Fragment noConnectionFragment = new NoConnectionFragment();
+            replaceFragment(noConnectionFragment);
+
+            new AsyncFragmentInfoUpdate().execute("Сервер ответил с ошибкой.\n Обратитесь к Системному администратору");
+        }
+        else if(data.Error == false)
+        {
+            for (OperationTypesAndAccountingAreasModel.OperationTypeModel operationType : data.AccountingAreasAndTypes) {
                 listItem.add(operationType.OperationType);
             }
-        }
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
 
-        operationsListView.setAdapter(adapter);
+            listView.setAdapter(adapter);
 
-        operationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-              @Override
-              public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            listView.setOnItemClickListener(ClickAction);
 
-                  String tap = ((TextView)view).getText().toString();
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (SelectedType.isEmpty() == false) {
 
-                  if(SelectedOperationType.isEmpty() || SelectedOperationType != tap)
-                  {
-                      for (int i = 0; i < operationsListView.getChildCount(); i++) {
-                          View listItem = operationsListView.getChildAt(i);
-                          listItem.setBackgroundColor(Color.WHITE);
-                      }
-
-                    view.setBackgroundColor(Color.YELLOW);
-                    SelectedOperationType = tap;
-                  }
-                  else{
-                      view.setBackgroundColor(Color.WHITE);
-                      SelectedOperationType = "";
-                  }
-
-              }
-          });
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SelectedOperationType.isEmpty() == false)
-                {
-                    if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedOperationType)) {
-                        Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
-                        goToAreaSelectionIntent.putExtra("operation_name", SelectedOperationType);
-                        startActivity(goToAreaSelectionIntent);
-                    } else {
-                        Intent goToMainActivityIntent = new Intent(getBaseContext(), MainActivity.class);
-                        goToMainActivityIntent.putExtra("operation_name", SelectedOperationType);
-                        startActivity(goToMainActivityIntent);
+                        if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType)) {
+                            Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
+                            goToAreaSelectionIntent.putExtra("operation_name", SelectedType);
+                            startActivity(goToAreaSelectionIntent);
+                        }
+                        else
+                        {
+                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum().getActivityClass());
+                            goToMainActivityIntent.putExtra("operation_name", SelectedType);
+                            startActivity(goToMainActivityIntent);
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (int i = 0; i < operationsListView.getChildCount(); i++) {
-                    View listItem = operationsListView.getChildAt(i);
-                    listItem.setBackgroundColor(Color.WHITE);
-                }
-                SelectedOperationType = "";
-            }
-        });
+            cancelButton.setOnClickListener(clickListener);
+
+        }
 
     }
 
+    public void RefreshActivity()
+    {
+        startActivity(new Intent(OperationSelectionActivity.this,OperationSelectionActivity.class)) ;
+        finish();
+    }
 }

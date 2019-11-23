@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 
 public class ScanOrderFragment extends FragmentWithText {
@@ -32,7 +31,6 @@ public class ScanOrderFragment extends FragmentWithText {
     @Override
     public void UpdateText(String orderInfo)
     {
-        TextView textViewOrderInfo =  (TextView)  getView().findViewById(R.id.txtOrderGuid);
-        textViewOrderInfo.setText(orderInfo);
+
     }
 }
