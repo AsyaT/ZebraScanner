@@ -1,6 +1,6 @@
 package ru.zferma.zebrascanner;
 
-public class OrderModel {
+public class ProductListViewModel {
     private String Nomenclature;
     private String BarCode;
     private String Weight;
@@ -17,7 +17,7 @@ public class OrderModel {
         return Coefficient;
     }
 
-    public OrderModel(String nomenclature, String barCode, String coefficient, String weight){
+    public ProductListViewModel(String nomenclature, String barCode, String coefficient, String weight){
         this.Nomenclature = nomenclature;
         this.BarCode = barCode;
         this.Coefficient = coefficient;

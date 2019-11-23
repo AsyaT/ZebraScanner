@@ -8,16 +8,16 @@
     tools:context="ru.zferma.zebrascanner.MainActivity"
     tools:showIn="@layout/list_view_row">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#FFCC00"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="true"
             android:dividerHeight="4px"/>
-    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            OrderModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode);
+            ProductListViewModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode);
 
             if(existingTableModel == null)
             {
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
         {
-            OrderModel tableModel = new OrderModel(nomenclature, barcode, coefficient, weight );
+            ProductListViewModel tableModel = new ProductListViewModel(nomenclature, barcode, coefficient, weight );
             dataTableControl.AddOne(tableModel);
             customListAdapter.notifyDataSetChanged();
         }
