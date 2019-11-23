@@ -23,6 +23,8 @@ public class PackageListActivity extends MainActivity {
                     }
                 });
         AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
     }
 
