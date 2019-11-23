@@ -10,4 +10,9 @@
     <string name="BackToListButton">Назад к списку операций</string>
     <string name="ExecuteButton">Выполнить</string>
     <string name="ActionsNotRealized">Действия для этой операции не реализованы</string>
+    <string name="ChoseAction" >Выберете действие</string>
+    <array name="PackageListActions">
+        <item>Без документа-основания</item>
+        <item>По заказу</item>
+    </array>
 </resources>
