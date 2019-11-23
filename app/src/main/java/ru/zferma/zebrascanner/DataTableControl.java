@@ -38,7 +38,7 @@ public class DataTableControl {
         }
         else
         {
-            view.setBackgroundColor(Color.RED);
+            view.setBackgroundColor(Color.YELLOW);
             ItemsToDelete.add(position);
         }
     }

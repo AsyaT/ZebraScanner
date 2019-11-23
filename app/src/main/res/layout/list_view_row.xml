@@ -9,7 +9,6 @@
         android:id="@+id/textViewNomenclature"
         android:layout_width="176dp"
         android:layout_height="50dp"
-        android:inputType="textMultiLine"
         android:padding="5dp"
         android:text="TextView"
         android:textSize="12sp" />
