@@ -69,7 +69,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                         }
                         else
                         {
-                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum().getActivityClass());
+                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(SelectedType).getActivityClass());
                             goToMainActivityIntent.putExtra("operation_name", SelectedType);
                             startActivity(goToMainActivityIntent);
                         }

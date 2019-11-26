@@ -1,8 +1,6 @@
 package ru.zferma.zebrascanner;
 
-import android.support.v7.app.AppCompatActivity;
-
-public class AcceptanceActivity extends AppCompatActivity {
+public class AcceptanceActivity extends MainActivity {
 
     @Override
     protected void onStart() {

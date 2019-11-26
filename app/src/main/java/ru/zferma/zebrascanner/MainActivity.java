@@ -3,6 +3,7 @@ package ru.zferma.zebrascanner;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -128,6 +129,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 catch (Exception ex){
 
                 }
+            }
+        });
+
+        Button btnBackToOperationsList = findViewById(R.id.btnBack);
+        btnBackToOperationsList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
+                startActivity(operationSelectionIntent);
             }
         });
     }

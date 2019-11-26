@@ -15,8 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".StubActionActivity"></activity>
-        <activity android:name=".InventoryActivity" />
-        <activity android:name=".AcceptanceActivity" />
+        <activity android:name=".InventoryActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".AcceptanceActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".RealizationActivity"
             android:theme="@style/AppTheme.NoActionBar" />

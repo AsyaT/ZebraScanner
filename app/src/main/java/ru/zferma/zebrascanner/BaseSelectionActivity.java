@@ -29,15 +29,15 @@ public class BaseSelectionActivity extends AppCompatActivity {
     String SelectedType = "";
     ListView listView;
 
-    OperationsEnum getOperationsEnum()
+    OperationsEnum getOperationsEnum(String operationName)
     {
-        if (SelectedType.isEmpty() == false)
+        if (operationName.isEmpty() == false)
         {
             OperationsEnum operationsEnum = null;
 
             for(OperationsEnum item : OperationsEnum.values())
             {
-                if(item.getRussianName().equalsIgnoreCase(SelectedType))
+                if(item.getRussianName().equalsIgnoreCase(operationName))
                 {
                     operationsEnum = item;
                 };
