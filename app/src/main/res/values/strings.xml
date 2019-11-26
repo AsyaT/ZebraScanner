@@ -15,4 +15,5 @@
         <item>Без документа-основания</item>
         <item>По заказу</item>
     </array>
+    <string name="PleaseChoseNomenclature">Выберете номенклатуру</string>
 </resources>
