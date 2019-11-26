@@ -24,9 +24,9 @@ public class DataTableControl {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public ProductListViewModel GetExistingModel(String uniqueBarcode )
+    public ProductListViewModel GetExistingModel(String uniqueBarcode, String productGuid )
     {
-        return DataTable.stream().filter(x-> uniqueBarcode.equals(x.getBarCode())).findAny().orElse(null);
+        return DataTable.stream().filter(x-> uniqueBarcode.equalsIgnoreCase(x.getBarCode()) && productGuid.equalsIgnoreCase(x.getProductGuid())).findAny().orElse(null);
     }
 
     public void ItemClicked(View view, int position)

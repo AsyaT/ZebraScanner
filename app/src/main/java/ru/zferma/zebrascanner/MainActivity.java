@@ -364,6 +364,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         String UniqueCode ="";
         Double Weight;
         String Nomenclature;
+        String ProductGuid;
 
         @Override
         protected Void doInBackground(Object... params) {
@@ -377,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             this.UniqueCode = ((ListViewPresentationModel) params[0]).UniqueCode;
             this.Weight = ((ListViewPresentationModel) params[0]).Weight;
             this.Nomenclature = ((ListViewPresentationModel) params[0]).Nomenclature;
+            this.ProductGuid = ((ListViewPresentationModel) params[0]).ProductGuid;
 
             return null;
         }
@@ -386,11 +388,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            ProductListViewModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode);
+            ProductListViewModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode, ProductGuid);
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(Nomenclature, UniqueCode, "1", Weight.toString());
+                CreateNewLineInListView(ProductGuid, Nomenclature, UniqueCode, "1", Weight.toString());
             }
             else
             {
@@ -400,13 +402,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + Weight;
 
-                CreateNewLineInListView(Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(ProductGuid, Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }
         }
 
-        void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
+        void CreateNewLineInListView(String productGuid, String nomenclature, String barcode, String coefficient, String weight)
         {
-            ProductListViewModel tableModel = new ProductListViewModel(nomenclature, barcode, coefficient, weight );
+            ProductListViewModel tableModel = new ProductListViewModel(productGuid, nomenclature, barcode, coefficient, weight );
             dataTableControl.AddOne(tableModel);
             customListAdapter.notifyDataSetChanged();
         }

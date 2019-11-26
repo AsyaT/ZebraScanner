@@ -67,7 +67,7 @@ public class ProductCommand implements Command   {
                                             weight = barCode.getWeight();
                                         }
 
-                                        viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), result[0].ProductName, weight);
+                                        viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), result[0].ProductName, weight, result[0].ProductGUID);
 
                                         PostAction(CurrentScanner);
 
@@ -98,7 +98,7 @@ public class ProductCommand implements Command   {
                 }
 
                 mediaPlayer.start();
-                
+
             }});
 
     }
@@ -135,7 +135,7 @@ public class ProductCommand implements Command   {
                     weight = barCode.getWeight();
                 }
 
-                viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), propertiesListModel.ProductName, weight);
+                viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), propertiesListModel.ProductName, weight, propertiesListModel.ProductGUID);
 
             }
         }

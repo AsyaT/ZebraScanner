@@ -1,11 +1,13 @@
 package ru.zferma.zebrascanner;
 
 public class ProductListViewModel {
+    private String ProductGuid;
     private String Nomenclature;
     private String BarCode;
     private String Weight;
     private String Coefficient;
 
+    public String getProductGuid() { return ProductGuid;}
     public String getNomenclature() {
         return Nomenclature;
     }
@@ -17,7 +19,8 @@ public class ProductListViewModel {
         return Coefficient;
     }
 
-    public ProductListViewModel(String nomenclature, String barCode, String coefficient, String weight){
+    public ProductListViewModel(String productGuid, String nomenclature, String barCode, String coefficient, String weight){
+        this.ProductGuid = productGuid;
         this.Nomenclature = nomenclature;
         this.BarCode = barCode;
         this.Coefficient = coefficient;
