@@ -41,7 +41,7 @@ public class ProductCommand implements Command   {
 
         for(ProductModel.PropertiesListModel nomenclature : listNomenclature)
         {
-            nomenclatures.add(nomenclature.ProductName+"\n Характеристика: "+nomenclature.ProductCharactName);
+            nomenclatures.add(nomenclature.ProductName+"\n Характеристика: "+nomenclature.ProductCharactName+"\n Вес: "+nomenclature.Quant+"\n\n");
         }
 
         CharSequence[] showedNomenclatures = nomenclatures.toArray(new CharSequence[nomenclatures.size()]);
@@ -70,6 +70,13 @@ public class ProductCommand implements Command   {
                                         viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), result[0].ProductName, weight);
 
                                         PostAction(CurrentScanner);
+
+                                        try {
+                                            CurrentScanner.enable();
+                                            CurrentScanner.read();
+                                        } catch (ScannerException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 } catch (Exception ex)
                                 {
@@ -83,6 +90,15 @@ public class ProductCommand implements Command   {
                 alertDialog.setCancelable(false);
                 alertDialog.setCanceledOnTouchOutside(false);
                 alertDialog.show();
+
+                try {
+                    CurrentScanner.disable();
+                } catch (ScannerException e) {
+                    e.printStackTrace();
+                }
+
+                mediaPlayer.start();
+                
             }});
 
     }
@@ -132,7 +148,7 @@ public class ProductCommand implements Command   {
     @Override
     public void PostAction(Scanner scanner) {
 
-        if(viewUpdateModel == null)
+        if(viewUpdateModel == null && productListModel!=null)
         {
             return;
         }
