@@ -9,12 +9,17 @@ public class OperationTypesAndAccountingAreasModel {
 
     public class  OperationTypeModel
     {
-        String OperationType;
+        private String OperationTypeName;
+        private String OperationTypeID;
         List<AccountingAreaModel> AccountingAreas;
 
         public String getName()
         {
-            return this.OperationType;
+            return this.OperationTypeName;
+        }
+        public String getId()
+        {
+            return this.OperationTypeID;
         }
     }
 

@@ -48,7 +48,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         else if(data.Error == false)
         {
             for (OperationTypesAndAccountingAreasModel.OperationTypeModel operationType : data.AccountingAreasAndTypes) {
-                listItem.add(operationType.OperationType);
+                listItem.add(operationType.getName());
             }
 
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
