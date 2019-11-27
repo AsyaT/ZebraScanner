@@ -136,6 +136,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         btnBackToOperationsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (emdkManager != null) {
+
+                    emdkManager.release();
+                    emdkManager = null;
+                }
+
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
                 startActivity(operationSelectionIntent);
             }
@@ -215,8 +221,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             this.emdkManager.release();
             this.emdkManager = null;
-
-
         }
     }
 
