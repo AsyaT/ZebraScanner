@@ -55,7 +55,13 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
             }
         });
 
-        cancelButton.setOnClickListener(clickListener);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent operationSelection = new Intent(getBaseContext(), OperationSelectionActivity.class);
+                startActivity(operationSelection);
+            }
+        });
 
 
     }

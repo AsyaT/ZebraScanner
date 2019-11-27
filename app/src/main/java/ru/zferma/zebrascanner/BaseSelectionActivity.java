@@ -106,14 +106,4 @@ public class BaseSelectionActivity extends AppCompatActivity {
         }
     };
 
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            for (int i = 0; i < listView.getChildCount(); i++) {
-                View listItem = listView.getChildAt(i);
-                listItem.setBackgroundColor(Color.WHITE);
-            }
-            SelectedType = "";
-        }
-    };
 }

@@ -77,7 +77,13 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                 }
             });
 
-            cancelButton.setOnClickListener(clickListener);
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent preSettings = new Intent(getBaseContext(),PreSettingsActivity.class);
+                    startActivity(preSettings);
+                }
+            });
 
         }
 
