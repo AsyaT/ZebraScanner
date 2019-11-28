@@ -9,15 +9,15 @@
     tools:showIn="@layout/list_view_row">
 
 
-
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:divider="#FFCC00"
+            android:dividerHeight="1px"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:clickable="true"
-            android:dividerHeight="4px"/>
+            android:headerDividersEnabled="true" />
 
 </android.support.constraint.ConstraintLayout>

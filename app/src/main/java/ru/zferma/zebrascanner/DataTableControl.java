@@ -6,11 +6,17 @@ import android.support.annotation.RequiresApi;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class DataTableControl {
 
     private ArrayList<ProductListViewModel> DataTable;
     private ArrayList<Integer> ItemsToDelete;
+
+    public Integer GetSizeOfList()
+    {
+        return DataTable.size();
+    }
 
     public DataTableControl()
     {
@@ -48,9 +54,16 @@ public class DataTableControl {
         DataTable.remove(model);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void AddOne(ProductListViewModel model)
     {
         DataTable.add(model);
+        DataTable.sort(new Comparator<ProductListViewModel>() {
+            @Override
+            public int compare(ProductListViewModel product1, ProductListViewModel product2) {
+                return product1.getStringNumber().compareTo(product2.getStringNumber());
+            }
+        });
     }
 
     public void RemoveSelected()

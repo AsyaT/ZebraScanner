@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -85,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataControl() );
         listView = (ListView) findViewById(R.id.listView);
+
+        LayoutInflater inflater = getLayoutInflater();
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_view_header,listView,false);
+        listView.addHeaderView(header);
+
         listView.setAdapter(customListAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -417,7 +424,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(ProductGuid, Nomenclature, UniqueCode, "1", Weight.toString());
+                Integer newStringNumber = dataTableControl.GetSizeOfList()+1;
+                CreateNewLineInListView(ProductGuid,newStringNumber.toString(), Nomenclature, UniqueCode, "1", Weight.toString());
             }
             else
             {
@@ -427,13 +435,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + Weight;
 
-                CreateNewLineInListView(ProductGuid, Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(ProductGuid, existingTableModel.getStringNumber(), Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }
         }
 
-        void CreateNewLineInListView(String productGuid, String nomenclature, String barcode, String coefficient, String weight)
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        void CreateNewLineInListView(String productGuid, String stringNumber, String nomenclature, String barcode, String coefficient, String weight)
         {
-            ProductListViewModel tableModel = new ProductListViewModel(productGuid, nomenclature, barcode, coefficient, weight );
+            ProductListViewModel tableModel = new ProductListViewModel(productGuid, stringNumber, nomenclature, barcode, coefficient, weight);
             dataTableControl.AddOne(tableModel);
             customListAdapter.notifyDataSetChanged();
         }
