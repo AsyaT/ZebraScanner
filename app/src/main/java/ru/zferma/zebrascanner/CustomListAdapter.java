@@ -41,7 +41,7 @@ public class CustomListAdapter extends ArrayAdapter {
         holder.textStringNumber.setText(this.ListOrderModel.get(position).getStringNumber());
 
         holder.textNomenclature = (TextView) view.findViewById(R.id.textViewNomenclature);
-        holder.textNomenclature.setText(this.ListOrderModel.get(position).getNomenclature());
+        holder.textNomenclature.setText(this.ListOrderModel.get(position).getNomenclature()+"\n"+this.ListOrderModel.get(position).getCharacteristic());
 
         holder.textWeight = (TextView) view.findViewById(R.id.textViewWeight);
         holder.textWeight.setText(this.ListOrderModel.get(position).getWeight());
