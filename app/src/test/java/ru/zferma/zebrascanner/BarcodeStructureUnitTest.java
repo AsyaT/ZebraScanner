@@ -56,7 +56,7 @@ public class BarcodeStructureUnitTest {
     @Test
     public void test_GS1() throws ParseException {
         assertEquals(UnderTest_GS1_BarcodeStructure.getFullBarcode(), GS1_EXP_BARCODE);
-        assertEquals(UnderTest_GS1_BarcodeStructure.getUniqueIdentifier(), (String)"04630037036817");
+        assertEquals(UnderTest_GS1_BarcodeStructure.getUniqueIdentifier(), (String)"4630037036817");
         assertEquals(UnderTest_GS1_BarcodeStructure.getWeight(), (Double) 25.3);
         assertEquals(UnderTest_GS1_BarcodeStructure.getProductionDate(),new SimpleDateFormat("dd/MM/yyyy").parse("20/08/2019"));
         assertEquals(UnderTest_GS1_BarcodeStructure.getExpirationDate(),new SimpleDateFormat("dd/MM/yyyy").parse("25/08/2019"));
