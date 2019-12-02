@@ -393,12 +393,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // label
     public class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
 
-        String UniqueCode ="";
-        Double Weight;
-        String Nomenclature;
-        String Characteristic;
-        String ProductGuid;
+        ListViewPresentationModel Model = null;
 
+        public BaseAsyncDataUpdate(ListViewPresentationModel model)
+        {
+            this.Model = model;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected Void doInBackground(Object... params) {
 
@@ -408,46 +410,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 e.printStackTrace();
             }
 
-            this.UniqueCode = ((ListViewPresentationModel) params[0]).UniqueCode;
-            this.Weight = ((ListViewPresentationModel) params[0]).Weight;
-            this.Nomenclature = ((ListViewPresentationModel) params[0]).Nomenclature;
-            this.Characteristic = ((ListViewPresentationModel) params[0]).Characteristic;
-            this.ProductGuid = ((ListViewPresentationModel) params[0]).ProductGuid;
+            dataTableControl.AddOne(Model);
+            customListAdapter.notifyDataSetChanged();
 
             return null;
         }
 
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            ProductListViewModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode, ProductGuid);
-
-            if(existingTableModel == null)
-            {
-                Integer newStringNumber = dataTableControl.GetSizeOfList()+1;
-                CreateNewLineInListView(ProductGuid,newStringNumber.toString(),Characteristic, Nomenclature, UniqueCode, "1", Weight.toString());
-            }
-            else
-            {
-                dataTableControl.RemoveOne(existingTableModel);
-                customListAdapter.notifyDataSetChanged();
-
-                Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
-                Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + Weight;
-
-                CreateNewLineInListView(ProductGuid, existingTableModel.getStringNumber(),Characteristic, Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
-            }
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        void CreateNewLineInListView(String productGuid, String stringNumber, String characteristic, String nomenclature, String barcode, String coefficient, String weight)
-        {
-            ProductListViewModel tableModel = new ProductListViewModel(productGuid, stringNumber, characteristic, nomenclature, barcode, coefficient, weight);
-            dataTableControl.AddOne(tableModel);
-            customListAdapter.notifyDataSetChanged();
-        }
     }
 
     public class MessageDialog extends AsyncTask<String, Void, String>
