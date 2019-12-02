@@ -20,7 +20,7 @@ public class ProductModel {
         public String ProductGUID;
         public String ProductCharactName;
         public String ProductCharactGUID;
-        public String Quant; //TODO: parse to Double
+        public String Quant;
         public Double Quantity() throws ParseException {
             NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
             Number number = format.parse(this.Quant);

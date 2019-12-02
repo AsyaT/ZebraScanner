@@ -48,7 +48,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         else if(data.Error == false)
         {
             for (OperationTypesAndAccountingAreasModel.OperationTypeModel operationType : data.AccountingAreasAndTypes) {
-                listItem.add(operationType.OperationType);
+                listItem.add(operationType.getName());
             }
 
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
@@ -69,7 +69,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                         }
                         else
                         {
-                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum().getActivityClass());
+                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(SelectedType).getActivityClass());
                             goToMainActivityIntent.putExtra("operation_name", SelectedType);
                             startActivity(goToMainActivityIntent);
                         }
@@ -77,7 +77,13 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                 }
             });
 
-            cancelButton.setOnClickListener(clickListener);
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent preSettings = new Intent(getBaseContext(),PreSettingsActivity.class);
+                    startActivity(preSettings);
+                }
+            });
 
         }
 

@@ -24,6 +24,7 @@ public class CustomListAdapter extends ArrayAdapter {
     }
 
     static class ViewHolder {
+        protected TextView textStringNumber;
         protected TextView textNomenclature;
         protected TextView textWeight;
         protected TextView textCoefficient;
@@ -35,8 +36,12 @@ public class CustomListAdapter extends ArrayAdapter {
         View view = inflator.inflate(R.layout.list_view_row, null);
 
         ViewHolder holder = new ViewHolder();
+
+        holder.textStringNumber  = (TextView) view.findViewById(R.id.textViewStringNumber);
+        holder.textStringNumber.setText(this.ListOrderModel.get(position).getStringNumber());
+
         holder.textNomenclature = (TextView) view.findViewById(R.id.textViewNomenclature);
-        holder.textNomenclature.setText(this.ListOrderModel.get(position).getNomenclature());
+        holder.textNomenclature.setText(this.ListOrderModel.get(position).getNomenclature()+"\n"+this.ListOrderModel.get(position).getCharacteristic());
 
         holder.textWeight = (TextView) view.findViewById(R.id.textViewWeight);
         holder.textWeight.setText(this.ListOrderModel.get(position).getWeight());

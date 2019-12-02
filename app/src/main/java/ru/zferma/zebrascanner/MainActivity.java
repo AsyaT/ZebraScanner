@@ -3,6 +3,7 @@ package ru.zferma.zebrascanner;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -11,7 +12,9 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -84,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataControl() );
         listView = (ListView) findViewById(R.id.listView);
+
+        LayoutInflater inflater = getLayoutInflater();
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_view_header,listView,false);
+        listView.addHeaderView(header);
+
         listView.setAdapter(customListAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,6 +136,21 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 catch (Exception ex){
 
                 }
+            }
+        });
+
+        Button btnBackToOperationsList = findViewById(R.id.btnBack);
+        btnBackToOperationsList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (emdkManager != null) {
+
+                    emdkManager.release();
+                    emdkManager = null;
+                }
+
+                Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
+                startActivity(operationSelectionIntent);
             }
         });
     }
@@ -195,6 +218,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
+    @Override
+    protected void onPause() {
+
+        if (emdkManager != null) {
+
+            emdkManager.release();
+            emdkManager = null;
+        }
+
+        super.onPause();
+    }
 
 
     @Override
@@ -205,8 +239,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             this.emdkManager.release();
             this.emdkManager = null;
-
-
         }
     }
 
@@ -364,6 +396,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         String UniqueCode ="";
         Double Weight;
         String Nomenclature;
+        String Characteristic;
+        String ProductGuid;
 
         @Override
         protected Void doInBackground(Object... params) {
@@ -377,6 +411,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             this.UniqueCode = ((ListViewPresentationModel) params[0]).UniqueCode;
             this.Weight = ((ListViewPresentationModel) params[0]).Weight;
             this.Nomenclature = ((ListViewPresentationModel) params[0]).Nomenclature;
+            this.Characteristic = ((ListViewPresentationModel) params[0]).Characteristic;
+            this.ProductGuid = ((ListViewPresentationModel) params[0]).ProductGuid;
 
             return null;
         }
@@ -386,11 +422,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            ProductListViewModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode);
+            ProductListViewModel existingTableModel =  dataTableControl.GetExistingModel(UniqueCode, ProductGuid);
 
             if(existingTableModel == null)
             {
-                CreateNewLineInListView(Nomenclature, UniqueCode, "1", Weight.toString());
+                Integer newStringNumber = dataTableControl.GetSizeOfList()+1;
+                CreateNewLineInListView(ProductGuid,newStringNumber.toString(),Characteristic, Nomenclature, UniqueCode, "1", Weight.toString());
             }
             else
             {
@@ -400,13 +437,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
                 Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + Weight;
 
-                CreateNewLineInListView(Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
+                CreateNewLineInListView(ProductGuid, existingTableModel.getStringNumber(),Characteristic, Nomenclature, UniqueCode, newCoefficient.toString(), newWeight.toString() );
             }
         }
 
-        void CreateNewLineInListView(String nomenclature, String barcode, String coefficient, String weight)
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        void CreateNewLineInListView(String productGuid, String stringNumber, String characteristic, String nomenclature, String barcode, String coefficient, String weight)
         {
-            ProductListViewModel tableModel = new ProductListViewModel(nomenclature, barcode, coefficient, weight );
+            ProductListViewModel tableModel = new ProductListViewModel(productGuid, stringNumber, characteristic, nomenclature, barcode, coefficient, weight);
             dataTableControl.AddOne(tableModel);
             customListAdapter.notifyDataSetChanged();
         }

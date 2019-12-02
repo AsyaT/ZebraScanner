@@ -9,7 +9,7 @@ public class BarcodeExecutor {
     public void Execute(ScannerState state, ScanDataCollection.ScanData data, Activity activity, Scanner scanner) throws InstantiationException, IllegalAccessException {
         Class classCommand = state.GetClass();
         Command command = (Command) classCommand.newInstance();
-        command.Action(activity);
+        command.Action(activity, scanner);
         command.ParseData(data);
         command.PostAction(scanner);
 

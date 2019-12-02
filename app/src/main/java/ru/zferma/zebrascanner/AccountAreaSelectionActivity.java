@@ -11,22 +11,22 @@ import android.widget.TextView;
 
 public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
-
+    String OperationName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        String operationName = getIntent().getStringExtra("operation_name");
+        OperationName = getIntent().getStringExtra("operation_name");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
-        operationTypeTextView.setText(operationName);
+        operationTypeTextView.setText(OperationName);
 
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
         OperationTypes AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass());
-        listItem = AccountingAreaIncomeData.GetAccountingAreas(operationName);
+        listItem = AccountingAreaIncomeData.GetAccountingAreas(OperationName);
 
         if(listItem == null)
         {
@@ -48,14 +48,20 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
             public void onClick(View view) {
                 if(SelectedType.isEmpty() == false)
                 {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum().getActivityClass());
+                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(OperationName).getActivityClass());
                     goToMainActivityIntent.putExtra("accounting_area_name", SelectedType);
                     startActivity(goToMainActivityIntent);
                 }
             }
         });
 
-        cancelButton.setOnClickListener(clickListener);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent operationSelection = new Intent(getBaseContext(), OperationSelectionActivity.class);
+                startActivity(operationSelection);
+            }
+        });
 
 
     }

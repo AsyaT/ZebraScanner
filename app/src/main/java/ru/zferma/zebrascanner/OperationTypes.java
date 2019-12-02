@@ -39,7 +39,7 @@ public class OperationTypes {
     {
         for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes)
         {
-            if (otModel.OperationType == operationTypeName && otModel.AccountingAreas.size()>1)
+            if (otModel.getName() == operationTypeName && otModel.AccountingAreas.size()>1)
             {
                 return true;
             }
@@ -57,7 +57,7 @@ public class OperationTypes {
         ArrayList<String> result = new ArrayList<>();
         for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes)
         {
-            if(((String)otModel.OperationType).equalsIgnoreCase((String)operationTypeName))
+            if(((String)otModel.getName()).equalsIgnoreCase((String)operationTypeName))
             {
                 for(OperationTypesAndAccountingAreasModel.AccountingAreaModel accountingAreaModel: otModel.AccountingAreas)
                 {

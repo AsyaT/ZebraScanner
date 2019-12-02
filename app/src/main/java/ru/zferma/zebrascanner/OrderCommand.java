@@ -8,7 +8,7 @@ import com.symbol.emdk.barcode.Scanner;
 
 public class OrderCommand implements Command {
     @Override
-    public void Action(Activity activity) {
+    public void Action(Activity activity, Scanner scanner) {
         ScanOrderFragment orderInfoFragment = (ScanOrderFragment) ((AppCompatActivity)activity).getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
         FragmentHelper fragmentHelper = new FragmentHelper(activity);
         fragmentHelper.closeFragment(orderInfoFragment);
