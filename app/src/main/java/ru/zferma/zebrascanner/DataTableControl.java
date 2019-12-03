@@ -75,7 +75,7 @@ public class DataTableControl {
         }
         else
         {
-            this.RemoveOne(existingTableModel);
+            DataTable.remove(existingTableModel);
 
             Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
             Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + model.Weight;

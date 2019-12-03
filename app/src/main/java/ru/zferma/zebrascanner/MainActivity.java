@@ -409,12 +409,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             } catch (ScannerException e) {
                 e.printStackTrace();
             }
-
-            dataTableControl.AddOne(Model);
-            customListAdapter.notifyDataSetChanged();
-
             return null;
         }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            dataTableControl.AddOne(Model);
+            customListAdapter.notifyDataSetChanged();
+        }
+
 
     }
 
