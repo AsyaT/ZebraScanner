@@ -176,7 +176,7 @@ public class ProductCommand implements Command   {
         {
             if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 ) {
 
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel);
+                ((MainActivity)this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
             }
 
             else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
@@ -193,7 +193,7 @@ public class ProductCommand implements Command   {
                         barCode.getInternalEquipment() );
 
  */
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate().execute(viewUpdateModel);
+                ((MainActivity)this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
             }
         }
         else if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)

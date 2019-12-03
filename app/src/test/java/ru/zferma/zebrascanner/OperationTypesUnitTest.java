@@ -7,7 +7,7 @@ public class OperationTypesUnitTest {
     @Test
     public void GetDataTest()
     {
-        OperationTypes op = new OperationTypes();
+        OperationTypes op = new OperationTypes("http://10.74.255.29/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetList?UserName=tsd_ish2","tsd_ish2:123");
         OperationTypesAndAccountingAreasModel data = op.GetData();
 
         assertEquals(false, data.Error);

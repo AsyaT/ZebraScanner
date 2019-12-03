@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/txtview_lv_header_stringnumber"
-        android:layout_width="30dp"
+        android:layout_width="27dp"
         android:layout_height="wrap_content"
         android:background="#EDF7C9"
         android:padding="5dp"
@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/txtview_lv_header_nomenclature"
-        android:layout_width="176dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:background="#EDF7C9"
         android:padding="5dp"
@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/txtview_lv_header_weight"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:background="#EDF7C9"
         android:padding="5dp"
@@ -31,9 +31,9 @@
 
     <TextView
         android:id="@+id/txtview_lv_header_quantity"
-        android:layout_width="48dp"
+        android:layout_width="34dp"
         android:layout_height="wrap_content"
         android:background="#EDF7C9"
         android:padding="5dp"
-        android:text="Кол." />
+        android:text="К." />
 </LinearLayout>

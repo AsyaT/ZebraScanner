@@ -51,13 +51,47 @@ public class DataTableControl {
 
     public void RemoveOne(ProductListViewModel model)
     {
+
         DataTable.remove(model);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void AddOne(ProductListViewModel model)
+    public void AddOne(ListViewPresentationModel model)
     {
-        DataTable.add(model);
+        ProductListViewModel result = null;
+
+        ProductListViewModel existingTableModel =  this.GetExistingModel(model.UniqueCode, model.ProductGuid);
+        if(existingTableModel == null)
+        {
+            Integer newStringNumber = this.GetSizeOfList()+1;
+            result = new ProductListViewModel(
+                    model.ProductGuid,
+                    newStringNumber.toString(),
+                    model.Characteristic,
+                    model.Nomenclature,
+                    model.UniqueCode,
+                    "1",
+                    model.Weight.toString());
+        }
+        else
+        {
+            DataTable.remove(existingTableModel);
+
+            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
+            Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + model.Weight;
+
+            result = new ProductListViewModel(
+                    model.ProductGuid,
+                    existingTableModel.getStringNumber(),
+                    model.Characteristic,
+                    model.Nomenclature,
+                    model.UniqueCode,
+                    newCoefficient.toString(),
+                    newWeight.toString()
+            );
+        }
+
+        DataTable.add(result);
         DataTable.sort(new Comparator<ProductListViewModel>() {
             @Override
             public int compare(ProductListViewModel product1, ProductListViewModel product2) {
