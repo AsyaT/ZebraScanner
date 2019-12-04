@@ -23,7 +23,7 @@ public class ServerConnection {
 
     }
 
-    public String GetUserPass()
+    public String GetUsernameAndPassword()
     {
         return this.Username + ":" + this.Password;
     }

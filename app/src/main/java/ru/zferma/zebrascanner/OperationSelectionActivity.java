@@ -35,7 +35,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
         AccountingAreaIncomeData = new OperationTypesHelper(
                 appState.serverConnection.GetOperationTypesURL(),
-                appState.serverConnection.GetUserPass());
+                appState.serverConnection.GetUsernameAndPassword());
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
         if(data == null )

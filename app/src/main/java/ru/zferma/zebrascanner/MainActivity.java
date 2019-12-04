@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
 
         try {
-            productHelper = new ProductHelper(appState.serverConnection.GetProductURL(),appState.serverConnection.GetUserPass());
+            productHelper = new ProductHelper(appState.serverConnection.GetProductURL(),appState.serverConnection.GetUsernameAndPassword());
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

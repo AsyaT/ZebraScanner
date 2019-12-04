@@ -39,7 +39,7 @@ public class PreSettingsActivity extends AppCompatActivity {
         {
             return false;
         }
-        if(appState.serverConnection.GetUserPass().isEmpty())
+        if(appState.serverConnection.GetPassword().isEmpty())
         {
             return false;
         }
