@@ -27,7 +27,11 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        OperationTypesHelper AccountingAreaIncomeData = new OperationTypesHelper(GetConnectionUrl(), GetUserPass());
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
+        OperationTypesHelper AccountingAreaIncomeData = new OperationTypesHelper(
+                appState.serverConnection.GetOperationTypesURL(),
+                appState.serverConnection.GetUserPass());
         listItem = AccountingAreaIncomeData.GetAccountingAreas(OperationName);
 
         if(listItem == null)

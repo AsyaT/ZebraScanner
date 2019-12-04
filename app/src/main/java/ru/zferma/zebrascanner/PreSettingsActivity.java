@@ -3,20 +3,13 @@ package ru.zferma.zebrascanner;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
 
 public class PreSettingsActivity extends AppCompatActivity {
 
@@ -31,16 +24,22 @@ public class PreSettingsActivity extends AppCompatActivity {
 
     private Boolean AreSettingsFill()
     {
-        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        if(spSettings.getString(APP_1C_USERNAME,"").isEmpty())
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
+        if(appState.serverConnection == null)
         {
             return false;
         }
-        if(spSettings.getString(APP_1C_PASSWORD,"").isEmpty())
+
+        if(appState.serverConnection.GetServerIP().isEmpty())
         {
             return false;
         }
-        if(spSettings.getString(APP_1C_SERVER,"").isEmpty())
+        if(appState.serverConnection.GetUsername().isEmpty())
+        {
+            return false;
+        }
+        if(appState.serverConnection.GetUserPass().isEmpty())
         {
             return false;
         }

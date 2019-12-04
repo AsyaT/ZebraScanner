@@ -1,10 +1,8 @@
 package ru.zferma.zebrascanner;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -41,11 +39,6 @@ import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductHelper;
 import businesslogic.ScannerState;
 import businesslogic.ScannerStateHelper;
-
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -85,11 +78,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
 
-        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String userpass =  spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
-        String url= "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/Products/v1/GetList";
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
         try {
-            productHelper = new ProductHelper(url,userpass);
+            productHelper = new ProductHelper(appState.serverConnection.GetProductURL(),appState.serverConnection.GetUserPass());
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

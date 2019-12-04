@@ -9,7 +9,7 @@ public class ProductHelper {
 
     public ProductHelper(String url, String userpass) throws ExecutionException, InterruptedException
     {
-        List<ProductModel.ProductListModel> result = (new WebServiceProductRead()).execute(url,userpass).get();
+        List<ProductModel.ProductListModel> result = (new WebServiceProductRead()).execute().get();
 
         this.Model = new ProductModel();
         this.Model.BarCodeList = result;

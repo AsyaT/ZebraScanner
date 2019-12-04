@@ -1,7 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -15,11 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
 
 public class BaseSelectionActivity extends AppCompatActivity {
 
@@ -70,18 +63,6 @@ public class BaseSelectionActivity extends AppCompatActivity {
             FragmentWithText barcodeInfoFragment = (FragmentWithText) getSupportFragmentManager().findFragmentById(R.id.frConnectionInfo);
             barcodeInfoFragment.UpdateText(result);
         }
-    }
-
-    protected String GetConnectionUrl()
-    {
-        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        return "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetList?UserName="+ spSettings.getString(APP_1C_USERNAME,"");
-    }
-
-    protected String GetUserPass()
-    {
-        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        return spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
     }
 
     AdapterView.OnItemClickListener ClickAction = new AdapterView.OnItemClickListener() {

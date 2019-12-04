@@ -31,7 +31,11 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
         listItem = new ArrayList<>();
 
-        AccountingAreaIncomeData = new OperationTypesHelper(GetConnectionUrl(), GetUserPass() );
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
+        AccountingAreaIncomeData = new OperationTypesHelper(
+                appState.serverConnection.GetOperationTypesURL(),
+                appState.serverConnection.GetUserPass());
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
         if(data == null )
