@@ -58,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     // Declare a variable to hold scanner device to scan
     private Scanner scanner = null;
 
+    public Scanner getScanner()
+    {
+        return scanner;
+    }
+
     public ProductHelper productHelper = null;
 
     DataTableControl dataTableControl;
@@ -264,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     {
 
                         BarcodeExecutor executor = new BarcodeExecutor();
-                        executor.Execute(scannerState.GetCurrent(), data,this, scanner);
+                        executor.Execute(scannerState.GetCurrent(), data,this);
                         scannerState.Set(ScannerState.PRODUCT);
                     }
                 }

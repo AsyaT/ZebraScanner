@@ -27,9 +27,9 @@ public class ProductCommand implements Command {
     Scanner CurrentScanner;
 
     @Override
-    public void Action(Activity activity, Scanner scanner) {
+    public void Action(Activity activity) {
         this.Activity = activity;
-        this.CurrentScanner = scanner;
+        this.CurrentScanner = ((MainActivity)activity).getScanner();
         productHelper = ((MainActivity)activity).productHelper;
 
         mediaPlayer = MediaPlayer.create(activity, R.raw.beep01);
@@ -72,7 +72,7 @@ public class ProductCommand implements Command {
 
                                         viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), result[0].ProductName,result[0].ProductCharactName, weight, result[0].ProductGUID);
 
-                                        PostAction(CurrentScanner);
+                                        PostAction();
 
                                         try {
                                             CurrentScanner.enable();
@@ -149,7 +149,7 @@ public class ProductCommand implements Command {
     }
 
     @Override
-    public void PostAction(Scanner scanner) {
+    public void PostAction() {
 
         if(viewUpdateModel == null && productListModel!=null)
         {
@@ -159,7 +159,7 @@ public class ProductCommand implements Command {
         if (productListModel == null)
         {
             try {
-                scanner.disable();
+                CurrentScanner.disable();
             } catch (ScannerException e) {
                 e.printStackTrace();
             }
