@@ -7,6 +7,9 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import com.symbol.emdk.barcode.Scanner;
 
 public class OrderCommand implements Command {
+
+    String OrderGuid;
+
     @Override
     public void Action(Activity activity, Scanner scanner) {
         ScanOrderFragment orderInfoFragment = (ScanOrderFragment) ((AppCompatActivity)activity).getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
@@ -16,11 +19,13 @@ public class OrderCommand implements Command {
 
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
-        //TODO : parse data and save
+        OrderGuid = data.getData();
     }
 
     @Override
     public void PostAction( Scanner scanner) {
+        OrderViewStructure orderViewStructure = new OrderViewStructure(OrderGuid);
 
+        //Show fragment with Order Name and products list
     }
 }
