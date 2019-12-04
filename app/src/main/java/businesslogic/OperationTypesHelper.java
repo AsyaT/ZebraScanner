@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class OperationTypes {
+public class OperationTypesHelper {
 
     private OperationTypesAndAccountingAreasModel InputModel;
 
 
-    public OperationTypes(String url, String userpass)
+    public OperationTypesHelper(String url, String userpass)
     {
         String jsonString = "";
 

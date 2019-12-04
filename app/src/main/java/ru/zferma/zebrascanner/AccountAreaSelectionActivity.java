@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import businesslogic.OperationTypes;
+import businesslogic.OperationTypesHelper;
 
 public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
@@ -27,7 +27,7 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        OperationTypes AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass());
+        OperationTypesHelper AccountingAreaIncomeData = new OperationTypesHelper(GetConnectionUrl(), GetUserPass());
         listItem = AccountingAreaIncomeData.GetAccountingAreas(OperationName);
 
         if(listItem == null)

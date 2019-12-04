@@ -12,12 +12,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import businesslogic.OperationTypes;
+import businesslogic.OperationTypesHelper;
 import businesslogic.OperationTypesAndAccountingAreasModel;
 
 public class OperationSelectionActivity extends BaseSelectionActivity{
 
-    OperationTypes AccountingAreaIncomeData;
+    OperationTypesHelper AccountingAreaIncomeData;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -31,7 +31,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
         listItem = new ArrayList<>();
 
-        AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass() );
+        AccountingAreaIncomeData = new OperationTypesHelper(GetConnectionUrl(), GetUserPass() );
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
         if(data == null )
