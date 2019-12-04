@@ -9,6 +9,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import com.symbol.emdk.barcode.Scanner;
 import com.symbol.emdk.barcode.ScannerException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,15 +63,13 @@ public class ProductCommand implements Command {
                                 result[0] = listNomenclature.get(i);
                                 try {
                                     if (productListModel != null) {
-                                        double weight;
-                                        if (barCode.getWeight() == null) {
-                                            weight = result[0].Quantity();
 
-                                        } else {
-                                            weight = barCode.getWeight();
-                                        }
-
-                                        viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), result[0].ProductName,result[0].ProductCharactName, weight, result[0].ProductGUID);
+                                        viewUpdateModel = new ListViewPresentationModel(
+                                                barCode.getUniqueIdentifier(),
+                                                result[0].ProductName,
+                                                result[0].ProductCharactName,
+                                                WeightCalculation(result[0]),
+                                                result[0].ProductGUID);
 
                                         PostAction();
 
@@ -129,22 +128,29 @@ public class ProductCommand implements Command {
             {
                 propertiesListModel = productListModel.PropertiesList.get(0);
 
-                double weight;
-                if(barCode.getWeight() == null)
-                {
-                    weight = propertiesListModel.Quantity();
-                }
-                else {
-                    weight = barCode.getWeight();
-                }
-
-                viewUpdateModel = new ListViewPresentationModel(barCode.getUniqueIdentifier(), propertiesListModel.ProductName, propertiesListModel.ProductCharactName, weight, propertiesListModel.ProductGUID);
+                viewUpdateModel = new ListViewPresentationModel(
+                        barCode.getUniqueIdentifier(),
+                        propertiesListModel.ProductName,
+                        propertiesListModel.ProductCharactName,
+                        WeightCalculation(propertiesListModel),
+                        propertiesListModel.ProductGUID);
 
             }
         }
         catch (Exception ex)
         {
             ex.getMessage();
+        }
+    }
+
+    private Double WeightCalculation(ProductModel.PropertiesListModel propertiesListModel ) throws ParseException {
+
+        if(barCode.getWeight() == null)
+        {
+            return propertiesListModel.Quantity();
+        }
+        else {
+            return barCode.getWeight();
         }
     }
 
