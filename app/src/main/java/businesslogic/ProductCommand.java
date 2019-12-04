@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,7 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductCommand implements Command   {
+import ru.zferma.zebrascanner.MainActivity;
+import ru.zferma.zebrascanner.R;
+
+public class ProductCommand implements Command {
 
     ListViewPresentationModel viewUpdateModel = null;
     ProductHelper productHelper;

@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

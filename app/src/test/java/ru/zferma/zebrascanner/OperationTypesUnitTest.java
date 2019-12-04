@@ -1,6 +1,10 @@
 package ru.zferma.zebrascanner;
 
 import org.junit.Test;
+
+import businesslogic.OperationTypes;
+import businesslogic.OperationTypesAndAccountingAreasModel;
+
 import static org.junit.Assert.assertEquals;
 
 public class OperationTypesUnitTest {

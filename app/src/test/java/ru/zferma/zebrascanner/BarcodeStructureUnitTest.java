@@ -6,6 +6,9 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import businesslogic.BarcodeStructure;
+import businesslogic.BarcodeTypes;
+
 import static org.junit.Assert.assertEquals;
 
 public class BarcodeStructureUnitTest {

@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 import android.graphics.Color;
 import android.os.Build;

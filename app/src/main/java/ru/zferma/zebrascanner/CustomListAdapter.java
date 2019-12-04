@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import businesslogic.ProductListViewModel;
+
 public class CustomListAdapter extends ArrayAdapter {
 
     //to reference the Activity

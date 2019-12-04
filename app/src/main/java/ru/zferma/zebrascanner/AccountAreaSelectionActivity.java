@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import businesslogic.OperationTypes;
+
 public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
     String OperationName = "";

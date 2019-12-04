@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 public class ProductListViewModel {
     private String ProductGuid;

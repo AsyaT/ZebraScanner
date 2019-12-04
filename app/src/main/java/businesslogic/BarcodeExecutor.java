@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 import android.app.Activity;
 

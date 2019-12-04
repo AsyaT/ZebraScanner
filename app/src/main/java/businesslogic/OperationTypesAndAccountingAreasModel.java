@@ -1,11 +1,11 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 
 import java.util.List;
 
 public class OperationTypesAndAccountingAreasModel {
-    Boolean Error;
-    List<OperationTypeModel> AccountingAreasAndTypes;
+    public Boolean Error;
+    public List<OperationTypeModel> AccountingAreasAndTypes;
 
     public class  OperationTypeModel
     {

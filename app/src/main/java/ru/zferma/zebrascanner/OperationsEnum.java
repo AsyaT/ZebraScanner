@@ -2,7 +2,7 @@ package ru.zferma.zebrascanner;
 
 public enum OperationsEnum {
     Rotation("Ротация", StubActionActivity.class),
-    PackageList("Упаковочный лист",PackageListActivity.class),
+    PackageList("Упаковочный лист", PackageListActivity.class),
     Realization("Реализация", RealizationActivity.class),
     Acceptance("Приемка", AcceptanceActivity.class),
     Inventory("Инвентаризация", InventoryActivity.class),

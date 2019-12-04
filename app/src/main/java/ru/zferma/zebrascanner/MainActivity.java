@@ -35,6 +35,13 @@ import com.symbol.emdk.barcode.StatusData;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import businesslogic.BarcodeExecutor;
+import businesslogic.DataTableControl;
+import businesslogic.ListViewPresentationModel;
+import businesslogic.ProductHelper;
+import businesslogic.ScannerState;
+import businesslogic.ScannerStateHelper;
+
 import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
 import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
 import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
@@ -317,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    class AsyncBarcodeInfoUpdate extends AsyncTask<String,Void,String> {
+    public class AsyncBarcodeInfoUpdate extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {

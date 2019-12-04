@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 import java.text.NumberFormat;
 import java.text.ParseException;

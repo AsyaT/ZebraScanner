@@ -1,10 +1,10 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 public class ScannerStateHelper {
 
-    private  ScannerState CurrentState ;
+    private ScannerState CurrentState ;
 
-    ScannerStateHelper()
+    public ScannerStateHelper()
     {
         CurrentState = ScannerState.PRODUCT;
     }
