@@ -40,15 +40,13 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
         if(data == null )
         {
-            Fragment noConnectionFragment = new NoConnectionFragment();
-            replaceFragment(noConnectionFragment);
+            ShowFragmentNoConnection();
 
             new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствует.\n Обратитесь к Системному администратору");
         }
         else if(data.Error == true)
         {
-            Fragment noConnectionFragment = new NoConnectionFragment();
-            replaceFragment(noConnectionFragment);
+            ShowFragmentNoConnection();
 
             new AsyncFragmentInfoUpdate().execute("Сервер ответил с ошибкой.\n Обратитесь к Системному администратору");
         }
@@ -100,5 +98,12 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
     {
         startActivity(new Intent(OperationSelectionActivity.this,OperationSelectionActivity.class)) ;
         finish();
+    }
+
+    private void ShowFragmentNoConnection()
+    {
+        Fragment noConnectionFragment = new NoConnectionFragment();
+        FragmentHelper fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.replaceFragment(noConnectionFragment,R.id.frConnectionInfo);
     }
 }

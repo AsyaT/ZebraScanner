@@ -2,9 +2,6 @@ package ru.zferma.zebrascanner;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,14 +36,6 @@ public class BaseSelectionActivity extends AppCompatActivity {
         else {
             return null;
         }
-    }
-
-    public void replaceFragment(Fragment destFragment)
-    {
-        FragmentManager fragmentManager = this.getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frConnectionInfo, destFragment);
-        fragmentTransaction.commit();
     }
 
     class AsyncFragmentInfoUpdate extends AsyncTask<String,Void,String> {

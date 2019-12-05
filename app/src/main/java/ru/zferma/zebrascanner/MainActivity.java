@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 try{
                     Fragment barcodeInfoFragment = new BarcodeInfoFragment();
                     FragmentHelper fragmentHelper = new FragmentHelper(MainActivity.this);
-                    fragmentHelper.replaceFragment(barcodeInfoFragment);
+                    fragmentHelper.replaceFragment(barcodeInfoFragment, R.id.frBarcodeInfo);
                     IsBarcodeInfoFragmentShowed = true;
                 }
                 catch (Exception ex){
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     {
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.replaceFragment(scanOrderFragment);
+        fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo);
         scannerState.Set(ScannerState.ORDER);
     }
 

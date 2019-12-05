@@ -37,7 +37,8 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         if(listItem == null)
         {
             Fragment noConnectionFragment = new NoConnectionFragment();
-            replaceFragment(noConnectionFragment);
+            FragmentHelper fragmentHelper = new FragmentHelper(this);
+            fragmentHelper.replaceFragment(noConnectionFragment, R.id.frConnectionInfo);
 
             new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствуем.\n Обратитесь к Системному администратору");
         }

@@ -15,11 +15,11 @@ public class FragmentHelper {
         ActivityInUse = activity;
     }
 
-    public void replaceFragment(Fragment destFragment)
+    public void replaceFragment(Fragment destFragment, int var1)
     {
         FragmentManager fragmentManager = ((AppCompatActivity)ActivityInUse).getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frBarcodeInfo, destFragment);
+        fragmentTransaction.replace(var1, destFragment);
         fragmentTransaction.commit();
     }
 
