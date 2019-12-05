@@ -49,21 +49,72 @@ public class BarcodeStructure {
 
     public Short getInternalEquipment() {return this.InternalEquipment;}
 
+    private void Cycle(String fullBarcode) throws ParseException {
+        String gtin = "01";
+        String newWeight = "3103";
+        String lotNumber="10";
+        String productionDate = "11";
+        String expirationDate = "17";
+        String serialNumber = "21";
+        String internalCompanyCodes = "92";
+
+        while (fullBarcode.length()>0)
+        {
+            if(fullBarcode.startsWith(gtin))
+            {
+                UniqueIdentifier = fullBarcode.substring(gtin.length(), gtin.length()+14);
+                fullBarcode = fullBarcode.substring(gtin.length()+14);
+            }
+
+            if(fullBarcode.startsWith(newWeight))
+            {
+                String stringWeight = fullBarcode.substring(newWeight.length(), newWeight.length() + 6);
+                Weight = Double.parseDouble(stringWeight.substring(0,3) + "." + stringWeight.substring(3)) ;
+                fullBarcode = fullBarcode.substring(newWeight.length()+6);
+            }
+
+            if(fullBarcode.startsWith(lotNumber))
+            {
+                LotNumber = fullBarcode.substring(lotNumber.length(), lotNumber.length() + 4);
+                fullBarcode = fullBarcode.substring(lotNumber.length() + 4);
+            }
+
+            if(fullBarcode.startsWith(productionDate))
+            {
+                String productionDateString = fullBarcode.substring(productionDate.length(), productionDate.length() + 6);
+                ProductionDate = (new SimpleDateFormat("yyMMdd")).parse(productionDateString);
+                fullBarcode = fullBarcode.substring(productionDate.length()+6);
+            }
+
+            if(fullBarcode.startsWith(expirationDate))
+            {
+                String expirationDateString = fullBarcode.substring(expirationDate.length(), expirationDate.length() + 6);
+                ExpirationDate = (new SimpleDateFormat("yyMMdd")).parse(expirationDateString);
+                fullBarcode = fullBarcode.substring(expirationDate.length()+6);
+            }
+
+            if(fullBarcode.startsWith(serialNumber))
+            {
+                SerialNumber = fullBarcode.substring(serialNumber.length(), serialNumber.length() + 5);
+                fullBarcode = fullBarcode.substring(serialNumber.length() + 5);
+            }
+
+            if(fullBarcode.startsWith(internalCompanyCodes))
+            {
+                InternalProducer =  Byte.parseByte(fullBarcode.substring(internalCompanyCodes.length(),internalCompanyCodes.length()+1 ));
+                InternalEquipment= Short.parseShort(fullBarcode.substring(internalCompanyCodes.length()+1, internalCompanyCodes.length()+ 1 + 3));
+                fullBarcode = fullBarcode.substring(internalCompanyCodes.length() + 4);
+            }
+        }
+    }
+
     public BarcodeStructure( String fullBarcode, BarcodeTypes labelType) throws ParseException {
         FullBarcode = fullBarcode;
         LabelType = labelType;
 
         if(LabelType == BarcodeTypes.LocalGS1_EXP)
         {
-            String stringWeight = fullBarcode.substring(20,26);
-            Weight = Double.parseDouble(stringWeight.substring(0,3) + "." + stringWeight.substring(3)) ;
-            UniqueIdentifier = fullBarcode.substring(2,16);
-            LotNumber = fullBarcode.substring(28, 32);
-            ExpirationDate = (new SimpleDateFormat("yyMMdd")).parse( fullBarcode.substring(42, 48) );
-            ProductionDate = (new SimpleDateFormat("yyMMdd")).parse(fullBarcode.substring(34,40));
-            SerialNumber = fullBarcode.substring(50,55);
-            InternalProducer = Byte.parseByte(fullBarcode.substring(57,58));
-            InternalEquipment = Short.parseShort(fullBarcode.substring(58,61));
+            Cycle(fullBarcode);
         }
         else if( LabelType == BarcodeTypes.LocalEAN13)
         {

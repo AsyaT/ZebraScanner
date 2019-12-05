@@ -16,7 +16,7 @@ public class BarcodeStructureUnitTest {
     private final String EAN13_BARCODE="4603502137574";
     private final String WEIGHT_EAN13_BARCODE ="2209983009489";
     private final String GS1_EXP_BARCODE="0104630037036817310302530010082011190820171908252100001923000";
-    private final String GS1_EXP_EGG_BARCODE="01046300492946701119082017190909100820210001926000";
+    private final String GS1_EXP_EGG_BARCODE="010463004929467011190820171909091008202100001926000";
 
     private BarcodeStructure UnderTest_EAN13_BarcodeStructure;
     private BarcodeStructure UnderTest_WEIGHTEAN13_BarcodeStructure;
