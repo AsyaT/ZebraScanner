@@ -1,6 +1,6 @@
 package businesslogic;
 
-public class ProductListViewModel {
+public class ProductListViewModel extends Object {
     private String ProductGuid;
     private String StringNumber;
     private String Nomenclature;
@@ -36,4 +36,5 @@ public class ProductListViewModel {
         this.Coefficient = coefficient;
         this.Weight = weight;
     }
+
 }

@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
 
         dataTableControl = new DataTableControl();
-        customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataControl() );
+        customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
         listView = (ListView) findViewById(R.id.listView);
 
         LayoutInflater inflater = getLayoutInflater();
