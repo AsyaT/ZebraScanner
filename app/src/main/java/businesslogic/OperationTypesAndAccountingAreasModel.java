@@ -7,11 +7,11 @@ public class OperationTypesAndAccountingAreasModel {
     public Boolean Error;
     public List<OperationTypeModel> AccountingAreasAndTypes;
 
-    public class  OperationTypeModel
+    public static class  OperationTypeModel
     {
-        private String OperationTypeName;
-        private String OperationTypeID;
-        List<AccountingAreaModel> AccountingAreas;
+        public String OperationTypeName;
+        public String OperationTypeID;
+        public List<AccountingAreaModel> AccountingAreas;
 
         public String getName()
         {
@@ -23,8 +23,8 @@ public class OperationTypesAndAccountingAreasModel {
         }
     }
 
-    public class AccountingAreaModel{
-        String Name;
-        String GUID;
+    public static class AccountingAreaModel{
+        public String Name;
+        public String GUID;
     }
 }
