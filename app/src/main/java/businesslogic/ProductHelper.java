@@ -1,18 +1,28 @@
 package businesslogic;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class ProductHelper {
 
     private ProductModel Model;
 
-    public ProductHelper(String url, String userpass) throws ExecutionException, InterruptedException
-    {
-        List<ProductModel.ProductListModel> result = (new WebServiceProductRead()).execute().get();
+    public ProductHelper(String url, String userpass)  {
+        List<ProductModel.ProductListModel> result = PullResult(url,userpass);
 
         this.Model = new ProductModel();
         this.Model.BarCodeList = result;
+    }
+
+    private List<ProductModel.ProductListModel> PullResult(String url, String userpass)  {
+        try {
+          // return (new WebServiceProductRead()).execute(url, userpass).get();
+            return null; // TODO: return
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public ProductModel.ProductListModel FindProductByBarcode(String barcodeUniqueIdentifier)

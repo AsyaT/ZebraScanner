@@ -31,7 +31,6 @@ import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import businesslogic.BarcodeExecutor;
 import businesslogic.DataTableControl;
@@ -80,13 +79,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
 
-        try {
-            productHelper = new ProductHelper(appState.serverConnection.GetProductURL(),appState.serverConnection.GetUsernameAndPassword());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        productHelper = new ProductHelper(appState.serverConnection.GetProductURL(),appState.serverConnection.GetUsernameAndPassword());
+
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
