@@ -15,8 +15,14 @@ public class ProductHelper {
 
     private List<ProductModel.ProductListModel> PullResult(String url, String userpass)  {
         try {
-          // return (new WebServiceProductRead()).execute(url, userpass).get();
-            return null; // TODO: return
+            if(url.isEmpty())
+            {
+                 return null;
+            }
+            else {
+                return (new WebServiceProductRead()).execute(url, userpass).get();
+            }
+
         }
         catch (Exception e)
         {

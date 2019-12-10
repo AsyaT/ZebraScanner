@@ -37,7 +37,7 @@ public class ProductHelperTest {
 
         productListModel.PropertiesList.add(propertiesListModel);
         model.BarCodeList.add(productListModel);
-        
+
         productHelper = new ProductHelper("","");
 
         Whitebox.setInternalState(productHelper,"Model",model);
