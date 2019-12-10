@@ -1,11 +1,8 @@
 package ru.zferma.zebrascanner;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -19,24 +16,12 @@ import businesslogic.OperationTypesHelper;
 @PrepareForTest({ OperationTypesHelper.class })
 class OperationTypesHelperTest {
 
-    @Mock
     OperationTypesHelper helper;
 
-    @Mock
     OperationTypesAndAccountingAreasModel model;
 
     public OperationTypesHelperTest()
     {
-
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void DoTest() throws Exception {
 
         model = new OperationTypesAndAccountingAreasModel();
         model.Error = false;
@@ -71,19 +56,25 @@ class OperationTypesHelperTest {
 
         model.AccountingAreasAndTypes.add(opType_2);
 
+
         helper = new OperationTypesHelper("","");
         Whitebox.setInternalState(helper,"InputModel",model);
+    }
 
+    @Test
+    public void Test_HasSeveralAccountingAreas()
+    {
         Assert.assertFalse(helper.HasSeveralAccountingAreas("Ротация"));
+        
+        Assert.assertTrue(helper.HasSeveralAccountingAreas("Приемка"));
+    }
 
-        Boolean result = helper.HasSeveralAccountingAreas("Приемка");
-        Assert.assertTrue(result);
-
-
+    @Test
+    public void Test_GetAccountingAreas()
+    {
         ArrayList<String> accountingAreas = new ArrayList<String>();
         accountingAreas.add("Приемка на 6-4-1");
         accountingAreas.add("Приемка на 6-4-2");
         Assert.assertEquals(accountingAreas,helper.GetAccountingAreas("Приемка"));
-
     }
 }
