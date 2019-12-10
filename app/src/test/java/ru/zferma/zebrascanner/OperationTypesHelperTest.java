@@ -1,10 +1,11 @@
 package ru.zferma.zebrascanner;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
+import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -27,6 +28,11 @@ class OperationTypesHelperTest {
     public OperationTypesHelperTest()
     {
 
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -65,14 +71,12 @@ class OperationTypesHelperTest {
 
         model.AccountingAreasAndTypes.add(opType_2);
 
-        PowerMockito.whenNew(OperationTypesHelper.class).withAnyArguments().thenReturn(helper);
+        helper = new OperationTypesHelper("","");
         Whitebox.setInternalState(helper,"InputModel",model);
 
-        PowerMockito.when(helper.HasSeveralAccountingAreas("Ротация")).thenReturn(Boolean.FALSE);
         Assert.assertFalse(helper.HasSeveralAccountingAreas("Ротация"));
 
         Boolean result = helper.HasSeveralAccountingAreas("Приемка");
-        PowerMockito.when(helper.HasSeveralAccountingAreas("Приемка")).thenReturn(Boolean.TRUE);
         Assert.assertTrue(result);
 
 
