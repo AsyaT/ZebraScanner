@@ -10,8 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import businesslogic.LocationContext;
 import businesslogic.OperationTypesHelper;
 import businesslogic.OperationTypesAndAccountingAreasModel;
 
@@ -36,6 +38,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         AccountingAreaIncomeData = new OperationTypesHelper(
                 appState.serverConnection.GetOperationTypesURL(),
                 appState.serverConnection.GetUsernameAndPassword());
+
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
         if(data == null )
@@ -65,19 +68,35 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (SelectedType.isEmpty() == false) {
-
-                        if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType)) {
-                            Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
-                            goToAreaSelectionIntent.putExtra("operation_name", SelectedType);
-                            startActivity(goToAreaSelectionIntent);
+                    if (SelectedType.isEmpty() == false)
+                    {
+                        Class NextActivityClass ;
+                        LocationContext locationContext;
+                        if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType))
+                        {
+                            NextActivityClass =  AccountAreaSelectionActivity.class;
+                            locationContext= new LocationContext(
+                                    SelectedType,
+                                    null,
+                                    null,
+                                    null);
                         }
                         else
                         {
-                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(SelectedType).getActivityClass());
-                            goToMainActivityIntent.putExtra("operation_name", SelectedType);
-                            startActivity(goToMainActivityIntent);
+                            NextActivityClass =  getOperationsEnum(SelectedType).getActivityClass();
+                            locationContext= new LocationContext(
+                                    SelectedType,
+                                    AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).Name,
+                                    AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
+                                    AccountingAreaIncomeData.GetPackageListPermissions(SelectedType));
                         }
+
+                        Intent goToMainActivityIntent = new Intent(getBaseContext(), NextActivityClass);
+
+                        goToMainActivityIntent.putExtra("location_context", (Serializable) locationContext);
+
+                        startActivity(goToMainActivityIntent);
+
                     }
                 }
             });

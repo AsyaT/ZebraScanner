@@ -33,6 +33,7 @@ import com.symbol.emdk.barcode.StatusData;
 import java.util.ArrayList;
 
 import businesslogic.BarcodeExecutor;
+import businesslogic.LocationContext;
 import businesslogic.DataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductHelper;
@@ -64,6 +65,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     ScannerStateHelper scannerState = new ScannerStateHelper();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
+
+    LocationContext ScanningPermissions;
+
+    public Boolean isAllowedToScan(ScanDataCollection.LabelType labelType)
+    {
+        return ScanningPermissions.isAllowed(labelType);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 dataTableControl.ItemClicked(view,position);
             }
         });
+
+        ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
 
         Button btnDel = (Button) findViewById(R.id.btnRemoveOne);
         btnDel.setOnClickListener(new View.OnClickListener() {
