@@ -42,4 +42,5 @@ dependencies {
     testImplementation 'org.powermock:powermock-module-junit4-rule-agent:1.6.6'
     testImplementation 'org.powermock:powermock-module-junit4-rule:1.6.6'
     testImplementation 'org.powermock:powermock-module-junit4:1.6.6'
+    testImplementation fileTree(include: ['com.symbol.emdk.jar'], dir: 'libs')
 }

@@ -88,7 +88,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                                     SelectedType,
                                     AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).Name,
                                     AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
-                                    AccountingAreaIncomeData.GetPackageListPermissions(SelectedType));
+                                    AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
                         }
 
                         Intent goToMainActivityIntent = new Intent(getBaseContext(), NextActivityClass);

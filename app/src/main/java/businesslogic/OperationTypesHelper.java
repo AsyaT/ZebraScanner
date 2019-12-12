@@ -117,7 +117,7 @@ public class OperationTypesHelper {
         return permissions;
     }
 
-    public Boolean GetPackageListPermissions(String accountingArea)
+    public Boolean IsPackageListScanningAllowed(String accountingArea)
     {
         for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes) {
             for (OperationTypesAndAccountingAreasModel.AccountingAreaModel accountingAreasModel : otModel.AccountingAreas)

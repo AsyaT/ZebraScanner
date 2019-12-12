@@ -64,7 +64,7 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
                             LocationContext.GetOperationName(),
                             SelectedType,
                             AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
-                            AccountingAreaIncomeData.GetPackageListPermissions(SelectedType));
+                            AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
 
                     goToMainActivityIntent.putExtra("location_context", (Serializable) locationContext);
 
