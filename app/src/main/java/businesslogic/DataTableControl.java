@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -24,13 +24,13 @@ public class DataTableControl {
         ItemsToDelete = new ArrayList<Integer>();
     }
 
-    public ArrayList<ProductListViewModel> GetDataControl()
+    public ArrayList<ProductListViewModel> GetDataTable()
     {
         return DataTable;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public ProductListViewModel GetExistingModel(String uniqueBarcode, String productGuid )
+    public ProductListViewModel GetExitingProduct(String uniqueBarcode, String productGuid )
     {
         return DataTable.stream().filter(x-> uniqueBarcode.equalsIgnoreCase(x.getBarCode()) && productGuid.equalsIgnoreCase(x.getProductGuid())).findAny().orElse(null);
     }
@@ -49,18 +49,12 @@ public class DataTableControl {
         }
     }
 
-    public void RemoveOne(ProductListViewModel model)
-    {
-
-        DataTable.remove(model);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void AddOne(ListViewPresentationModel model)
     {
         ProductListViewModel result = null;
 
-        ProductListViewModel existingTableModel =  this.GetExistingModel(model.UniqueCode, model.ProductGuid);
+        ProductListViewModel existingTableModel =  this.GetExitingProduct(model.UniqueCode, model.ProductGuid);
         if(existingTableModel == null)
         {
             Integer newStringNumber = this.GetSizeOfList()+1;

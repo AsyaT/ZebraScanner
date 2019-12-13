@@ -9,29 +9,39 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
+import businesslogic.LocationContext;
+import businesslogic.OperationTypesHelper;
+
 public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
-    String OperationName = "";
+    LocationContext LocationContext ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        OperationName = getIntent().getStringExtra("operation_name");
+        LocationContext = (LocationContext) getIntent().getSerializableExtra("location_context");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
-        operationTypeTextView.setText(OperationName);
+        operationTypeTextView.setText(LocationContext.GetOperationName());
 
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        OperationTypes AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass());
-        listItem = AccountingAreaIncomeData.GetAccountingAreas(OperationName);
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
+        OperationTypesHelper AccountingAreaIncomeData = new OperationTypesHelper(
+                appState.serverConnection.GetOperationTypesURL(),
+                appState.serverConnection.GetUsernameAndPassword());
+        listItem = AccountingAreaIncomeData.GetAccountingAreas(LocationContext.GetOperationName());
 
         if(listItem == null)
         {
             Fragment noConnectionFragment = new NoConnectionFragment();
-            replaceFragment(noConnectionFragment);
+            FragmentHelper fragmentHelper = new FragmentHelper(this);
+            fragmentHelper.replaceFragment(noConnectionFragment, R.id.frConnectionInfo);
 
             new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствуем.\n Обратитесь к Системному администратору");
         }
@@ -48,8 +58,17 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
             public void onClick(View view) {
                 if(SelectedType.isEmpty() == false)
                 {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(OperationName).getActivityClass());
-                    goToMainActivityIntent.putExtra("accounting_area_name", SelectedType);
+                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(LocationContext.GetOperationName()).getActivityClass());
+
+                    LocationContext locationContext = new LocationContext(
+                            LocationContext.GetOperationName(),
+                            SelectedType,
+                            AccountingAreaIncomeData.GetAccountingAreaGUID(SelectedType),
+                            AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
+                            AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
+
+                    goToMainActivityIntent.putExtra("location_context", (Serializable) locationContext);
+
                     startActivity(goToMainActivityIntent);
                 }
             }

@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package businesslogic;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -10,12 +10,12 @@ public class ProductModel {
 
 
 
-    public class ProductListModel {
+    public static class ProductListModel {
         public String Barcode;
         public List<PropertiesListModel> PropertiesList;
     }
 
-    public class PropertiesListModel{
+    public static class PropertiesListModel{
         public String ProductName;
         public String ProductGUID;
         public String ProductCharactName;
