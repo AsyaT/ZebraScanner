@@ -85,11 +85,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
+        ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
 
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
 
-        productHelper = new ProductHelper(appState.serverConnection.GetProductURL(),appState.serverConnection.GetUsernameAndPassword());
-
+        productHelper = new ProductHelper(
+                appState.serverConnection.GetProductURL( ScanningPermissions.GetAccountingAreaGUID()),
+                appState.serverConnection.GetUsernameAndPassword());
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -108,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 dataTableControl.ItemClicked(view,position);
             }
         });
-
-        ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
 
         Button btnDel = (Button) findViewById(R.id.btnRemoveOne);
         btnDel.setOnClickListener(new View.OnClickListener() {

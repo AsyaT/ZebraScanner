@@ -117,6 +117,21 @@ public class OperationTypesHelper {
         return permissions;
     }
 
+    public String GetAccountingAreaGUID(String accountingArea)
+    {
+        for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes) {
+            for (OperationTypesAndAccountingAreasModel.AccountingAreaModel accountingAreasModel : otModel.AccountingAreas)
+            {
+                if(accountingAreasModel.Name.equals(accountingArea))
+                {
+                    return accountingAreasModel.GUID;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public Boolean IsPackageListScanningAllowed(String accountingArea)
     {
         for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes) {

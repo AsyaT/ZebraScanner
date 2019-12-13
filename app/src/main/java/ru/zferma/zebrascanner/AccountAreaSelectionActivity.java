@@ -63,6 +63,7 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
                     LocationContext locationContext = new LocationContext(
                             LocationContext.GetOperationName(),
                             SelectedType,
+                            AccountingAreaIncomeData.GetAccountingAreaGUID(SelectedType),
                             AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
                             AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
 

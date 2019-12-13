@@ -79,6 +79,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                                     SelectedType,
                                     null,
                                     null,
+                                    null,
                                     null);
                         }
                         else
@@ -87,6 +88,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                             locationContext= new LocationContext(
                                     SelectedType,
                                     AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).Name,
+                                    AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).GUID,
                                     AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
                                     AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
                         }
