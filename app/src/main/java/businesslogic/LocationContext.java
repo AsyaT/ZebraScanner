@@ -1,10 +1,14 @@
 package businesslogic;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.symbol.emdk.barcode.ScanDataCollection;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class LocationContext {
+public class LocationContext implements Serializable {
 
     HashMap<ScanDataCollection.LabelType, Boolean> Rules = new HashMap<>();
 
@@ -30,4 +34,5 @@ public class LocationContext {
     {
         return this.Operation;
     }
+
 }
