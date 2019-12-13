@@ -109,4 +109,10 @@ class OperationTypesHelperTest {
 
         Assert.assertEquals(Boolean.FALSE, helper.IsPackageListScanningAllowed("Ротация"));
     }
+
+    @Test
+    public void Test_AccountingAreaGuid()
+    {
+        Assert.assertEquals("97e2d02c-ad73-11e7-80c4-a4bf011ce3c3", helper.GetAccountingAreaGUID("Ротация"));
+    }
 }
