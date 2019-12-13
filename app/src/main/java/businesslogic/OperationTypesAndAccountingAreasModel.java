@@ -26,5 +26,8 @@ public class OperationTypesAndAccountingAreasModel {
     public static class AccountingAreaModel{
         public String Name;
         public String GUID;
+        public Boolean EAN13_Denied;
+        public Boolean DataBar_Denied;
+        public Boolean PackageList_Denied;
     }
 }

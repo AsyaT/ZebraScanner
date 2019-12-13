@@ -1,8 +1,10 @@
 package businesslogic;
 
 import com.google.gson.Gson;
+import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class OperationTypesHelper {
 
@@ -70,4 +72,78 @@ public class OperationTypesHelper {
         return result;
     }
 
+    public OperationTypesAndAccountingAreasModel.AccountingAreaModel GetSingleAccountingArea(String operationTypeName)
+    {
+        if(InputModel == null)
+        {
+            return null;
+        }
+        if(GetAccountingAreas(operationTypeName).size() > 1)
+        {
+            return null;
+        }
+        else
+        {
+            for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes)
+            {
+                if(((String)otModel.getName()).equalsIgnoreCase((String)operationTypeName))
+                {
+                    for(OperationTypesAndAccountingAreasModel.AccountingAreaModel accountingAreaModel: otModel.AccountingAreas)
+                    {
+                        return  accountingAreaModel;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public HashMap<ScanDataCollection.LabelType, Boolean> GetScanningPermissions(String accountingArea)
+    {
+        HashMap<ScanDataCollection.LabelType, Boolean> permissions = new HashMap<>();
+
+        for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes) {
+            for (OperationTypesAndAccountingAreasModel.AccountingAreaModel accountingAreasModel : otModel.AccountingAreas)
+            {
+                if(accountingAreasModel.Name.equals(accountingArea))
+                {
+                    permissions.put(ScanDataCollection.LabelType.GS1_DATABAR_EXP, accountingAreasModel.DataBar_Denied);
+                    permissions.put(ScanDataCollection.LabelType.EAN13, accountingAreasModel.EAN13_Denied);
+                }
+            }
+        }
+
+        return permissions;
+    }
+
+    public String GetAccountingAreaGUID(String accountingArea)
+    {
+        for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes) {
+            for (OperationTypesAndAccountingAreasModel.AccountingAreaModel accountingAreasModel : otModel.AccountingAreas)
+            {
+                if(accountingAreasModel.Name.equals(accountingArea))
+                {
+                    return accountingAreasModel.GUID;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Boolean IsPackageListScanningAllowed(String accountingArea)
+    {
+        for(OperationTypesAndAccountingAreasModel.OperationTypeModel otModel: InputModel.AccountingAreasAndTypes) {
+            for (OperationTypesAndAccountingAreasModel.AccountingAreaModel accountingAreasModel : otModel.AccountingAreas)
+            {
+                if(accountingAreasModel.Name.equalsIgnoreCase(accountingArea))
+                {
+                    return accountingAreasModel.PackageList_Denied;
+                }
+            }
+        }
+
+        return null;
+    }
 }

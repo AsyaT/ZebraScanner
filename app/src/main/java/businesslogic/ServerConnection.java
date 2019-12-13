@@ -12,9 +12,9 @@ public class ServerConnection {
         this.Password = password;
     }
 
-    public String GetProductURL()
+    public String GetProductURL(String accountingAreaGuid)
     {
-        return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Products/v1/GetList";
+        return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Products/v1/GetList?AccountingAreaGUID="+accountingAreaGuid;
     }
 
     public String GetOperationTypesURL()
