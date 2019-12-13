@@ -1,10 +1,8 @@
 package ru.zferma.zebrascanner;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -33,12 +31,14 @@ import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_PASSWORD;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_SERVER;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_1C_USERNAME;
-import static ru.zferma.zebrascanner.SettingsActivity.APP_PREFERENCES;
+import businesslogic.BarcodeExecutor;
+import businesslogic.LocationContext;
+import businesslogic.DataTableControl;
+import businesslogic.ListViewPresentationModel;
+import businesslogic.ProductHelper;
+import businesslogic.ScannerState;
+import businesslogic.ScannerStateHelper;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     // Declare a variable to hold scanner device to scan
     private Scanner scanner = null;
 
+    public Scanner getScanner()
+    {
+        return scanner;
+    }
+
     public ProductHelper productHelper = null;
 
     DataTableControl dataTableControl;
@@ -60,6 +65,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     ScannerStateHelper scannerState = new ScannerStateHelper();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
+
+    LocationContext ScanningPermissions;
+
+    public Boolean isAllowedToScan(ScanDataCollection.LabelType labelType)
+    {
+        return ScanningPermissions.isAllowed(labelType);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,20 +85,16 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
+        ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
 
-        SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String userpass =  spSettings.getString(APP_1C_USERNAME,"") + ":" + spSettings.getString(APP_1C_PASSWORD,"");
-        String url= "http://"+ spSettings.getString(APP_1C_SERVER,"")+"/erp_troyan/hs/TSD_Feed/Products/v1/GetList";
-        try {
-            productHelper = new ProductHelper(url,userpass);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
+        productHelper = new ProductHelper(
+                appState.serverConnection.GetProductURL( ScanningPermissions.GetAccountingAreaGUID()),
+                appState.serverConnection.GetUsernameAndPassword());
 
         dataTableControl = new DataTableControl();
-        customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataControl() );
+        customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
         listView = (ListView) findViewById(R.id.listView);
 
         LayoutInflater inflater = getLayoutInflater();
@@ -130,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 try{
                     Fragment barcodeInfoFragment = new BarcodeInfoFragment();
                     FragmentHelper fragmentHelper = new FragmentHelper(MainActivity.this);
-                    fragmentHelper.replaceFragment(barcodeInfoFragment);
+                    fragmentHelper.replaceFragment(barcodeInfoFragment, R.id.frBarcodeInfo);
                     IsBarcodeInfoFragmentShowed = true;
                 }
                 catch (Exception ex){
@@ -159,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     {
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.replaceFragment(scanOrderFragment);
+        fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo);
         scannerState.Set(ScannerState.ORDER);
     }
 
@@ -257,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     {
 
                         BarcodeExecutor executor = new BarcodeExecutor();
-                        executor.Execute(scannerState.GetCurrent(), data,this, scanner);
+                        executor.Execute(scannerState.GetCurrent(), data,this);
                         scannerState.Set(ScannerState.PRODUCT);
                     }
                 }
@@ -317,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    class AsyncBarcodeInfoUpdate extends AsyncTask<String,Void,String> {
+    public class AsyncBarcodeInfoUpdate extends AsyncTask<String,Void,String> {
 
         @Override
         protected String doInBackground(String... params) {

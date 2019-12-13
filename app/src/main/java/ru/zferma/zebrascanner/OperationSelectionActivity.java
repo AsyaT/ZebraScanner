@@ -10,11 +10,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+
+import businesslogic.LocationContext;
+import businesslogic.OperationTypesHelper;
+import businesslogic.OperationTypesAndAccountingAreasModel;
 
 public class OperationSelectionActivity extends BaseSelectionActivity{
 
-    OperationTypes AccountingAreaIncomeData;
+    OperationTypesHelper AccountingAreaIncomeData;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -28,20 +33,23 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
         listItem = new ArrayList<>();
 
-        AccountingAreaIncomeData = new OperationTypes(GetConnectionUrl(), GetUserPass() );
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
+        AccountingAreaIncomeData = new OperationTypesHelper(
+                appState.serverConnection.GetOperationTypesURL(),
+                appState.serverConnection.GetUsernameAndPassword());
+
         OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
 
         if(data == null )
         {
-            Fragment noConnectionFragment = new NoConnectionFragment();
-            replaceFragment(noConnectionFragment);
+            ShowFragmentNoConnection();
 
             new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствует.\n Обратитесь к Системному администратору");
         }
         else if(data.Error == true)
         {
-            Fragment noConnectionFragment = new NoConnectionFragment();
-            replaceFragment(noConnectionFragment);
+            ShowFragmentNoConnection();
 
             new AsyncFragmentInfoUpdate().execute("Сервер ответил с ошибкой.\n Обратитесь к Системному администратору");
         }
@@ -60,19 +68,37 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (SelectedType.isEmpty() == false) {
-
-                        if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType)) {
-                            Intent goToAreaSelectionIntent = new Intent(getBaseContext(), AccountAreaSelectionActivity.class);
-                            goToAreaSelectionIntent.putExtra("operation_name", SelectedType);
-                            startActivity(goToAreaSelectionIntent);
+                    if (SelectedType.isEmpty() == false)
+                    {
+                        Class NextActivityClass ;
+                        LocationContext locationContext;
+                        if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType))
+                        {
+                            NextActivityClass =  AccountAreaSelectionActivity.class;
+                            locationContext= new LocationContext(
+                                    SelectedType,
+                                    null,
+                                    null,
+                                    null,
+                                    null);
                         }
                         else
                         {
-                             Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(SelectedType).getActivityClass());
-                            goToMainActivityIntent.putExtra("operation_name", SelectedType);
-                            startActivity(goToMainActivityIntent);
+                            NextActivityClass =  getOperationsEnum(SelectedType).getActivityClass();
+                            locationContext= new LocationContext(
+                                    SelectedType,
+                                    AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).Name,
+                                    AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).GUID,
+                                    AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
+                                    AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
                         }
+
+                        Intent goToMainActivityIntent = new Intent(getBaseContext(), NextActivityClass);
+
+                        goToMainActivityIntent.putExtra("location_context", (Serializable) locationContext);
+
+                        startActivity(goToMainActivityIntent);
+
                     }
                 }
             });
@@ -93,5 +119,12 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
     {
         startActivity(new Intent(OperationSelectionActivity.this,OperationSelectionActivity.class)) ;
         finish();
+    }
+
+    private void ShowFragmentNoConnection()
+    {
+        Fragment noConnectionFragment = new NoConnectionFragment();
+        FragmentHelper fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.replaceFragment(noConnectionFragment,R.id.frConnectionInfo);
     }
 }
