@@ -23,6 +23,11 @@ public class ServerConnection {
 
     }
 
+    public String GetOrderProductURL(String orderGUID)
+    {
+        return "http://"+this.ServerIP+"/erp_troyan/hs/TSD_Feed/ClientOrders/v1/GetByGUID?GUID="+orderGUID;
+    }
+
     public String GetUsernameAndPassword()
     {
         return this.Username + ":" + this.Password;
