@@ -1,8 +1,9 @@
 package businesslogic;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OrderModel {
+public class OrderModel implements Serializable {
     public Boolean Error;
     public String OrderName;
     public List<ProductListModel> ProductList;

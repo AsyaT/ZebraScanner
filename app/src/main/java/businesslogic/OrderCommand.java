@@ -1,11 +1,14 @@
 package businesslogic;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
 import ru.zferma.zebrascanner.FragmentHelper;
+import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
@@ -39,6 +42,13 @@ public class OrderCommand implements Command {
 
         OrderHelper orderHelper = new OrderHelper(url, userpass);
 
-        //Show small row fragment with Order Name and products list
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("order", orderHelper.GetData());
+
+        Fragment orderInfoFragment = new OrderInfoFragment();
+        orderInfoFragment.setArguments(bundle);
+        FragmentHelper fragmentHelper = new FragmentHelper(this.Activity);
+        fragmentHelper.replaceFragment(orderInfoFragment, R.id.frOrderInfo);
+
     }
 }

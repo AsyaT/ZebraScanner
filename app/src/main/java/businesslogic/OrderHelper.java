@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 
 public class OrderHelper {
 
-    public OrderModel Model;
+    private OrderModel Model;
 
     public OrderHelper(String url, String userpass)
     {
@@ -20,8 +20,10 @@ public class OrderHelper {
 
         Gson g = new Gson();
         Model = g.fromJson(jsonString, OrderModel.class);
+    }
 
-
-        // Find all products and keep them in table
+    public OrderModel GetData()
+    {
+        return this.Model;
     }
 }
