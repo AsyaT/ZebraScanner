@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        tools:context=".ProgressOrderFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/txtProgressOrderName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hello_blank_fragment" />
+
+            <TableLayout
+                android:id="@+id/tblProgrssOrder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txtTableProductName"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="Продукт" />
+
+                    <TextView
+                        android:id="@+id/txtTableOrded"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Заказано" />
+
+                    <TextView
+                        android:id="@+id/txtTableExecuted"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Выполнено" />
+
+                    <TextView
+                        android:id="@+id/txtLeft"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="Осталось" />
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
