@@ -87,12 +87,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // View accordingly
         ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
 
-        ScannerApplication appState = ((ScannerApplication)this.getApplication());
-
-        productHelper = new ProductHelper(
-                appState.serverConnection.GetProductURL( ScanningPermissions.GetAccountingAreaGUID()),
-                appState.serverConnection.GetUsernameAndPassword());
-
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
         listView = (ListView) findViewById(R.id.listView);
