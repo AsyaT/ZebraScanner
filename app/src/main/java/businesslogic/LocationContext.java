@@ -24,7 +24,7 @@ public class LocationContext implements Serializable {
         this.PackedListScanning = packageListRule;
     }
 
-    public Boolean isAllowed(ScanDataCollection.LabelType labelType)
+    public Boolean IsDenied(ScanDataCollection.LabelType labelType)
     {
         return Rules.get(labelType);
     }

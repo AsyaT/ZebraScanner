@@ -33,9 +33,9 @@ import com.symbol.emdk.barcode.StatusData;
 import java.util.ArrayList;
 
 import businesslogic.BarcodeExecutor;
-import businesslogic.LocationContext;
 import businesslogic.DataTableControl;
 import businesslogic.ListViewPresentationModel;
+import businesslogic.LocationContext;
 import businesslogic.ProductHelper;
 import businesslogic.ScannerState;
 import businesslogic.ScannerStateHelper;
@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         return scanner;
     }
 
-    public ProductHelper productHelper = null;
-
     DataTableControl dataTableControl;
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
@@ -68,9 +66,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     LocationContext ScanningPermissions;
 
-    public Boolean isAllowedToScan(ScanDataCollection.LabelType labelType)
+    public Boolean IsDeniedToScan(ScanDataCollection.LabelType labelType)
     {
-        return ScanningPermissions.isAllowed(labelType);
+        return ScanningPermissions.IsDenied(labelType);
     }
 
 
@@ -86,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
         ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
+
+        new AsyncGetProducts().execute(ScanningPermissions.GetAccountingAreaGUID());
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -465,6 +465,22 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             alertDialog.show();
             super.onPostExecute(message);
         }
+    }
+
+    public class AsyncGetProducts extends AsyncTask<String, Void,Void>
+    {
+
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            ScannerApplication appState = ((ScannerApplication) getApplication());
+            appState.productHelper = new ProductHelper(
+                    appState.serverConnection.GetProductURL( params[0]),
+                    appState.serverConnection.GetUsernameAndPassword());
+
+            return null;
+        }
+
     }
 /*
     private class DataBaseCaller extends AsyncTask<Void, Void, Void>

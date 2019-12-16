@@ -1,7 +1,6 @@
 package ru.zferma.zebrascanner;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import businesslogic.LocationContext;
 import businesslogic.OperationTypesAndAccountingAreasModel;
 import businesslogic.OperationTypesHelper;
-import businesslogic.ProductHelper;
 
 public class OperationSelectionActivity extends BaseSelectionActivity{
 
@@ -88,20 +86,6 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                         {
                             String accountingAreaGuid = AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).GUID;
 
-                            ScannerApplication appState = ((ScannerApplication) getApplication());
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    appState.productHelper = new ProductHelper(
-                                            appState.serverConnection.GetProductURL( accountingAreaGuid),
-                                            appState.serverConnection.GetUsernameAndPassword());
-
-                                }
-                            };
-
-                            AsyncTask.execute(runnable);
-
                             NextActivityClass =  getOperationsEnum(SelectedType).getActivityClass();
                             locationContext= new LocationContext(
                                     SelectedType,
@@ -145,4 +129,6 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         FragmentHelper fragmentHelper = new FragmentHelper(this);
         fragmentHelper.replaceFragment(noConnectionFragment,R.id.frConnectionInfo);
     }
+
+
 }
