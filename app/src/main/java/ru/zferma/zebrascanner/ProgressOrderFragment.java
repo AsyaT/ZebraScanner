@@ -32,22 +32,27 @@ public class ProgressOrderFragment extends Fragment {
         for(OrderModel.ProductListModel product : Order.ProductList) {
 
             TextView txtView = new TextView(getActivity());
-            txtView.setLayoutParams(new TableRow.LayoutParams(120,TableRow.LayoutParams.WRAP_CONTENT));
+            txtView.setLayoutParams(new TableRow.LayoutParams(120,TableRow.LayoutParams.MATCH_PARENT));
             txtView.setText(product.Product + "\n" + product.Charact);
+            txtView.setBackgroundResource(R.drawable.textviewborder);
 
             TextView txtOrderd = new TextView(getActivity());
-            txtOrderd.setLayoutParams(new TableRow.LayoutParams(60,TableRow.LayoutParams.WRAP_CONTENT));
+            txtOrderd.setLayoutParams(new TableRow.LayoutParams(70,TableRow.LayoutParams.MATCH_PARENT));
             txtOrderd.setText(product.Ordered+ " | "+product.PiecesOrdered);
+            txtOrderd.setBackgroundResource(R.drawable.textviewborder);
 
             TextView txtExecuted = new TextView(getActivity());
-            txtExecuted.setLayoutParams(new TableRow.LayoutParams(60,TableRow.LayoutParams.WRAP_CONTENT));
+            txtExecuted.setLayoutParams(new TableRow.LayoutParams(70,TableRow.LayoutParams.MATCH_PARENT));
             txtExecuted.setText(product.Done+ " | "+product.PiecesDone);
+            txtExecuted.setBackgroundResource(R.drawable.textviewborder);
 
             TextView txtLeft = new TextView(getActivity());
-            txtLeft.setLayoutParams(new TableRow.LayoutParams(60,TableRow.LayoutParams.WRAP_CONTENT));
+            txtLeft.setLayoutParams(new TableRow.LayoutParams(70,TableRow.LayoutParams.MATCH_PARENT));
             txtLeft.setText(product.Left+ " | "+product.PiecesLeft);
+            txtLeft.setBackgroundResource(R.drawable.textviewborder);
 
             TableRow tr = new TableRow(getActivity());
+            tr.setBackgroundResource(R.drawable.textviewborder);
             tr.addView(txtView);
             tr.addView(txtOrderd);
             tr.addView(txtExecuted);

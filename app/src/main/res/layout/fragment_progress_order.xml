@@ -15,7 +15,8 @@
                 android:id="@+id/txtProgressOrderName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hello_blank_fragment" />
+                android:text="@string/hello_blank_fragment"
+                android:background="@drawable/textviewborder"/>
 
             <TableLayout
                 android:id="@+id/tblProgrssOrder"
@@ -30,25 +31,29 @@
                         android:id="@+id/txtTableProductName"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:text="Продукт" />
+                        android:text="Продукт"
+                        android:background="@drawable/textviewborder"/>
 
                     <TextView
                         android:id="@+id/txtTableOrded"
-                        android:layout_width="60dp"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:text="Заказано" />
+                        android:text="Заказано"
+                        android:background="@drawable/textviewborder"/>
 
                     <TextView
                         android:id="@+id/txtTableExecuted"
-                        android:layout_width="60dp"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:text="Выполнено" />
+                        android:text="Выполнено"
+                        android:background="@drawable/textviewborder"/>
 
                     <TextView
                         android:id="@+id/txtLeft"
-                        android:layout_width="60dp"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:text="Осталось" />
+                        android:text="Осталось"
+                        android:background="@drawable/textviewborder"/>
                 </TableRow>
 
             </TableLayout>

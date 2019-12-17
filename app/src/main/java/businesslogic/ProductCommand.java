@@ -128,57 +128,56 @@ public class ProductCommand implements Command {
                             }
                         }
                     });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.setCancelable(false);
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+
+                    try {
+                        CurrentScanner.disable();
+                    } catch (ScannerException e) {
+                        e.printStackTrace();
+                    }
+
+                    mediaPlayer.start();
                 }
             });
-
-            AlertDialog alertDialog = builder.create();
-            alertDialog.setCancelable(false);
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
+        }
+        else{
 
             try {
-                CurrentScanner.disable();
-            } catch (ScannerException e) {
-                e.printStackTrace();
+                barCode = new BarcodeStructure(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+
+                productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
+
+                if(productListModel == null)
+                {
+                    return;
+                }
+
+                ProductModel.PropertiesListModel propertiesListModel = null;
+
+                if(productListModel.PropertiesList.size()>1)
+                {
+                    SelectionDialog((List<ProductModel.PropertiesListModel>)productListModel.PropertiesList);
+                }
+                else
+                {
+                    propertiesListModel = productListModel.PropertiesList.get(0);
+
+                    viewUpdateModel = new ListViewPresentationModel(
+                            barCode.getUniqueIdentifier(),
+                            propertiesListModel.ProductName,
+                            propertiesListModel.ProductCharactName,
+                            WeightCalculation(propertiesListModel),
+                            propertiesListModel.ProductGUID);
+
+                }
             }
-
-            mediaPlayer.start();
-            return;
-        }
-
-
-        try {
-            barCode = new BarcodeStructure(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
-
-            productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
-
-            if(productListModel == null)
+            catch (Exception ex)
             {
-                return;
+                ex.getMessage();
             }
-
-            ProductModel.PropertiesListModel propertiesListModel = null;
-
-            if(productListModel.PropertiesList.size()>1)
-            {
-                SelectionDialog((List<ProductModel.PropertiesListModel>)productListModel.PropertiesList);
-            }
-            else
-            {
-                propertiesListModel = productListModel.PropertiesList.get(0);
-
-                viewUpdateModel = new ListViewPresentationModel(
-                        barCode.getUniqueIdentifier(),
-                        propertiesListModel.ProductName,
-                        propertiesListModel.ProductCharactName,
-                        WeightCalculation(propertiesListModel),
-                        propertiesListModel.ProductGUID);
-
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.getMessage();
         }
     }
 
