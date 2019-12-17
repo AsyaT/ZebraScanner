@@ -16,6 +16,7 @@ import java.util.List;
 
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
+import ru.zferma.zebrascanner.ScannerApplication;
 
 public class ProductCommand implements Command {
 
@@ -31,7 +32,9 @@ public class ProductCommand implements Command {
     public void Action(Activity activity) {
         this.Activity = activity;
         this.CurrentScanner = ((MainActivity)activity).getScanner();
-        productHelper = ((MainActivity)activity).productHelper;
+
+        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
+        productHelper = appState.productHelper;
 
         mediaPlayer = MediaPlayer.create(activity, R.raw.beep01);
 
@@ -109,7 +112,7 @@ public class ProductCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
 
-        if(((MainActivity)this.Activity).isAllowedToScan(data.getLabelType()) == false)
+        if(((MainActivity)this.Activity).IsDeniedToScan(data.getLabelType()) == true)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.Activity);
 

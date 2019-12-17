@@ -14,8 +14,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import businesslogic.LocationContext;
-import businesslogic.OperationTypesHelper;
 import businesslogic.OperationTypesAndAccountingAreasModel;
+import businesslogic.OperationTypesHelper;
 
 public class OperationSelectionActivity extends BaseSelectionActivity{
 
@@ -84,20 +84,22 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                         }
                         else
                         {
+                            String accountingAreaGuid = AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).GUID;
+
                             NextActivityClass =  getOperationsEnum(SelectedType).getActivityClass();
                             locationContext= new LocationContext(
                                     SelectedType,
                                     AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).Name,
-                                    AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).GUID,
+                                    accountingAreaGuid,
                                     AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
                                     AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
                         }
 
-                        Intent goToMainActivityIntent = new Intent(getBaseContext(), NextActivityClass);
+                        Intent nextActivityIntent = new Intent(getBaseContext(), NextActivityClass);
 
-                        goToMainActivityIntent.putExtra("location_context", (Serializable) locationContext);
+                        nextActivityIntent.putExtra("location_context", (Serializable) locationContext);
 
-                        startActivity(goToMainActivityIntent);
+                        startActivity(nextActivityIntent);
 
                     }
                 }
@@ -127,4 +129,6 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         FragmentHelper fragmentHelper = new FragmentHelper(this);
         fragmentHelper.replaceFragment(noConnectionFragment,R.id.frConnectionInfo);
     }
+
+
 }
