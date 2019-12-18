@@ -33,10 +33,10 @@ import com.symbol.emdk.barcode.StatusData;
 import java.util.ArrayList;
 
 import businesslogic.BarcodeExecutor;
+import businesslogic.BarcodeHelper;
 import businesslogic.DataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.LocationContext;
-import businesslogic.ProductHelper;
 import businesslogic.ScannerState;
 import businesslogic.ScannerStateHelper;
 
@@ -474,7 +474,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         protected Void doInBackground(String... params)
         {
             ScannerApplication appState = ((ScannerApplication) getApplication());
-            appState.productHelper = new ProductHelper(
+            appState.barcodeHelper = new BarcodeHelper(
                     appState.serverConnection.GetProductURL( params[0]),
                     appState.serverConnection.GetUsernameAndPassword());
 

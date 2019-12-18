@@ -21,7 +21,7 @@ import ru.zferma.zebrascanner.ScannerApplication;
 public class ProductCommand implements Command {
 
     ListViewPresentationModel viewUpdateModel = null;
-    ProductHelper productHelper;
+    BarcodeHelper barcodeHelper;
     MediaPlayer mediaPlayer;
     BarcodeStructure barCode;
     ProductModel.ProductListModel productListModel;
@@ -34,7 +34,7 @@ public class ProductCommand implements Command {
         this.CurrentScanner = ((MainActivity)activity).getScanner();
 
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-        productHelper = appState.productHelper;
+        barcodeHelper = appState.barcodeHelper;
 
         mediaPlayer = MediaPlayer.create(activity, R.raw.beep01);
 
@@ -151,7 +151,7 @@ public class ProductCommand implements Command {
             try {
                 barCode = new BarcodeStructure(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-                productListModel =  productHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
+                productListModel =  barcodeHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
 
                 if(productListModel == null)
                 {

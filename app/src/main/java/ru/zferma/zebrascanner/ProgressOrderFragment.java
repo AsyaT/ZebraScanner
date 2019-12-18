@@ -36,7 +36,7 @@ public class ProgressOrderFragment extends Fragment {
 
             TextView txtView = new TextView(getActivity());
             txtView.setLayoutParams(new TableRow.LayoutParams(120,TableRow.LayoutParams.WRAP_CONTENT));
-            //txtView.setText(appState.productHelper.FindProductByGuid(product.Product).ProductName + "\n" + appState.productHelper.FindCharacteristicByGuid(product.Charact).ProductCharactName );
+            //txtView.setText(appState.barcodeHelper.FindProductByGuid(product.Product).ProductName + "\n" + appState.barcodeHelper.FindCharacteristicByGuid(product.Charact).ProductCharactName );
             txtView.setText(product.Product + "\n" + product.Charact );
             txtView.setBackgroundResource(R.drawable.textviewborder);
 

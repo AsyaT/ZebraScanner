@@ -9,18 +9,18 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 
-import businesslogic.ProductHelper;
+import businesslogic.BarcodeHelper;
 import businesslogic.ProductModel;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ProductHelper.class })
-public class ProductHelperTest {
+@PrepareForTest({ BarcodeHelper.class })
+public class BarcodeHelperTest {
 
-    ProductHelper productHelper;
+    BarcodeHelper barcodeHelper;
     ProductModel model;
 
 
-    public  ProductHelperTest() {
+    public BarcodeHelperTest() {
         model = new ProductModel();
         model.BarCodeList = new ArrayList<ProductModel.ProductListModel>();
 
@@ -38,15 +38,15 @@ public class ProductHelperTest {
         productListModel.PropertiesList.add(propertiesListModel);
         model.BarCodeList.add(productListModel);
 
-        productHelper = new ProductHelper("","");
+        barcodeHelper = new BarcodeHelper("","");
 
-        Whitebox.setInternalState(productHelper,"Model",model);
+        Whitebox.setInternalState(barcodeHelper,"Model",model);
     }
 
     @Test
     public void Test_FindProductByBarcode()
     {
-        ProductModel.ProductListModel result = productHelper.FindProductByBarcode("2407394");
+        ProductModel.ProductListModel result = barcodeHelper.FindProductByBarcode("2407394");
 
         Assert.assertEquals(model.BarCodeList.get(0),result);
     }

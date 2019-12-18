@@ -3,11 +3,11 @@ package businesslogic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductHelper {
+public class BarcodeHelper {
 
     private ProductModel Model;
 
-    public ProductHelper(String url, String userpass)  {
+    public BarcodeHelper(String url, String userpass)  {
         //List<ProductModel.ProductListModel> result = PullResult(url,userpass);
 
         this.Model = new ProductModel();
