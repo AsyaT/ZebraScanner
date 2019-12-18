@@ -26,7 +26,6 @@ public class ProductHelper {
         plm.PropertiesList.add(productModel);
         this.Model.BarCodeList.add(plm);
 
-
          //
 
         //this.Model.BarCodeList = result;
@@ -57,6 +56,36 @@ public class ProductHelper {
             if(productPosition.Barcode.equalsIgnoreCase(barcodeUniqueIdentifier))
             {
                 return productPosition;
+            }
+        }
+        return null;
+    }
+
+    public ProductModel.PropertiesListModel FindProductByGuid(String productGuid)
+    {
+        for(ProductModel.ProductListModel productPosition : Model.BarCodeList)
+        {
+            for(ProductModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
+            {
+                if(propertiesListModel.ProductGUID.equalsIgnoreCase(productGuid))
+                {
+                    return propertiesListModel;
+                }
+            }
+        }
+        return null;
+    }
+
+    public ProductModel.PropertiesListModel FindCharacteristicByGuid(String characteristicGuid)
+    {
+        for(ProductModel.ProductListModel productPosition : Model.BarCodeList)
+        {
+            for(ProductModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
+            {
+                if(propertiesListModel.ProductCharactGUID.equalsIgnoreCase(characteristicGuid))
+                {
+                    return propertiesListModel;
+                }
             }
         }
         return null;
