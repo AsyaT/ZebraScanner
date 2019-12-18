@@ -37,6 +37,7 @@ import businesslogic.BarcodeHelper;
 import businesslogic.DataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.LocationContext;
+import businesslogic.ProductHelper;
 import businesslogic.ScannerState;
 import businesslogic.ScannerStateHelper;
 
@@ -478,6 +479,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     appState.serverConnection.GetProductURL( params[0]),
                     appState.serverConnection.GetUsernameAndPassword());
 
+            appState.productHelper = new ProductHelper(
+                    appState.serverConnection.GetProductURL( params[0]),
+                    appState.serverConnection.GetUsernameAndPassword());
             return null;
         }
 

@@ -30,14 +30,13 @@ public class ProgressOrderFragment extends Fragment {
 
         TableLayout tblLayout = view.findViewById(R.id.tblProgrssOrder);
 
-       // ScannerApplication appState = ((ScannerApplication) getActivity().getApplication());
+        ScannerApplication appState = ((ScannerApplication) getActivity().getApplication());
 
         for(OrderModel.ProductListModel product : Order.ProductList) {
 
             TextView txtView = new TextView(getActivity());
             txtView.setLayoutParams(new TableRow.LayoutParams(120,TableRow.LayoutParams.WRAP_CONTENT));
-            //txtView.setText(appState.barcodeHelper.FindProductByGuid(product.Product).ProductName + "\n" + appState.barcodeHelper.FindCharacteristicByGuid(product.Charact).ProductCharactName );
-            txtView.setText(product.Product + "\n" + product.Charact );
+            txtView.setText(appState.productHelper.FindProductByGuid(product.Product) + "\n" + appState.productHelper.FindCharacteristicByGuid(product.Charact) );
             txtView.setBackgroundResource(R.drawable.textviewborder);
 
             LinearLayout linearLayoutKilos = new LinearLayout(getActivity());

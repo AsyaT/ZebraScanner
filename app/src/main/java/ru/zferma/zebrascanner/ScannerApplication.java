@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import businesslogic.BarcodeHelper;
+import businesslogic.ProductHelper;
 import businesslogic.ServerConnection;
 
 public class ScannerApplication extends Application {
@@ -19,6 +20,7 @@ public class ScannerApplication extends Application {
     public ServerConnection serverConnection = null;
 
     public BarcodeHelper barcodeHelper = null;
+    public ProductHelper productHelper = null;
 
     public void onCreate() {
         super.onCreate();
