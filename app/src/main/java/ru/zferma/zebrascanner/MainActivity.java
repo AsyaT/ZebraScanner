@@ -476,11 +476,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         {
             ScannerApplication appState = ((ScannerApplication) getApplication());
             appState.barcodeHelper = new BarcodeHelper(
-                    appState.serverConnection.GetProductURL( params[0]),
+                    appState.serverConnection.GetBarcodeListURL( params[0]),
                     appState.serverConnection.GetUsernameAndPassword());
 
             appState.productHelper = new ProductHelper(
-                    appState.serverConnection.GetProductURL( params[0]),
+                    appState.serverConnection.GetProductURL(),
                     appState.serverConnection.GetUsernameAndPassword());
             return null;
         }
