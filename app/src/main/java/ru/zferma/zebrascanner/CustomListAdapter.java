@@ -47,7 +47,7 @@ public class CustomListAdapter extends ArrayAdapter {
         //holder.textNomenclature.setText(this.ListOrderModel.get(position).getNomenclature());
 
         holder.textWeight = (TextView) view.findViewById(R.id.textViewWeight);
-        holder.textWeight.setText(this.ListOrderModel.get(position).getWeight());
+        holder.textWeight.setText(this.ListOrderModel.get(position).getWeight().toString());
 
         holder.textCoefficient = (TextView) view.findViewById(R.id.textViewCoefficient);
         holder.textCoefficient.setText(this.ListOrderModel.get(position).getCoefficient());

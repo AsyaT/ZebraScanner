@@ -6,8 +6,8 @@ public class ProductListViewModel extends Object {
     private String Nomenclature;
     private String Characteristic;
     private String BarCode;
-    private String Weight;
-    private String Coefficient;
+    private Double Weight;
+    private Integer Coefficient;
 
     public String getProductGuid() { return ProductGuid;}
     public String getNomenclature() {
@@ -22,12 +22,12 @@ public class ProductListViewModel extends Object {
     public String getBarCode(){
         return BarCode;
     }
-    public String getWeight () {return Weight;}
-    public String getCoefficient(){
+    public Double getWeight () {return Weight;}
+    public Integer getCoefficient(){
         return Coefficient;
     }
 
-    public ProductListViewModel(String productGuid, String stringNumber, String characteristic, String nomenclature, String barCode, String coefficient, String weight){
+    public ProductListViewModel(String productGuid, String stringNumber, String characteristic, String nomenclature, String barCode, Integer coefficient, Double weight){
         this.ProductGuid = productGuid;
         this.StringNumber = stringNumber;
         this.Characteristic = characteristic;

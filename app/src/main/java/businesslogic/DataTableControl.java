@@ -35,6 +35,19 @@ public class DataTableControl {
         return DataTable.stream().filter(x-> uniqueBarcode.equalsIgnoreCase(x.getBarCode()) && productGuid.equalsIgnoreCase(x.getProductGuid())).findAny().orElse(null);
     }
 
+    public ProductListViewModel GetExitingProduct(String productGuid )
+    {
+        for(ProductListViewModel product : DataTable)
+        {
+            if(product.getProductGuid().equalsIgnoreCase(productGuid))
+            {
+                return product;
+            }
+        }
+
+        return null;
+    }
+
     public void ItemClicked(View view, int position)
     {
         if(ItemsToDelete.contains(position))
@@ -64,15 +77,15 @@ public class DataTableControl {
                     model.Characteristic,
                     model.Nomenclature,
                     model.UniqueCode,
-                    "1",
-                    model.Weight.toString());
+                    1,
+                    model.Weight);
         }
         else
         {
             DataTable.remove(existingTableModel);
 
-            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
-            Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + model.Weight;
+            Integer newCoefficient = existingTableModel.getCoefficient() + 1;
+            Double newWeight = existingTableModel.getWeight() + model.Weight;
 
             result = new ProductListViewModel(
                     model.ProductGuid,
@@ -80,8 +93,8 @@ public class DataTableControl {
                     model.Characteristic,
                     model.Nomenclature,
                     model.UniqueCode,
-                    newCoefficient.toString(),
-                    newWeight.toString()
+                    newCoefficient,
+                    newWeight
             );
         }
 
