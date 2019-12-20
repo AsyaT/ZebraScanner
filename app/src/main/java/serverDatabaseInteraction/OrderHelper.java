@@ -2,9 +2,12 @@ package serverDatabaseInteraction;
 
 import com.google.gson.Gson;
 
+import businesslogic.OrderStructureModel;
+
 public class OrderHelper {
 
     private OrderModel Model;
+    private OrderStructureModel ReturnModel;
 
     public OrderHelper(String url, String userpass)
     {
@@ -22,8 +25,9 @@ public class OrderHelper {
         Model = g.fromJson(jsonString, OrderModel.class);
     }
 
-    public OrderModel GetData()
+    public OrderStructureModel GetModel()
     {
-        return this.Model;
+        return ReturnModel;
     }
+
 }

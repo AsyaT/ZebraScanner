@@ -16,10 +16,5 @@ public class BarcodeModel {
         public String ProductCharactName;
         public String ProductCharactGUID;
         public String Quant;
-      /*  public Double Quantity() throws ParseException {
-            NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
-            Number number = format.parse(this.Quant);
-            return number.doubleValue();
-        }*/
     }
 }

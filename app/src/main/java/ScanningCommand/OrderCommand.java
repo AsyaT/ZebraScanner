@@ -44,7 +44,7 @@ public class OrderCommand implements Command {
         OrderHelper orderHelper = new OrderHelper(url, userpass);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("order", orderHelper.GetData());
+        bundle.putSerializable("order", orderHelper.GetModel());
 
         Fragment orderInfoFragment = new OrderInfoFragment();
         orderInfoFragment.setArguments(bundle);

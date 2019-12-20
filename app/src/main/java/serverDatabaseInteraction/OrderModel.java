@@ -3,7 +3,7 @@ package serverDatabaseInteraction;
 import java.io.Serializable;
 import java.util.List;
 
-public class OrderModel implements Serializable {
+public class OrderModel  {
     public Boolean Error;
     public String OrderName;
     public List<ProductListModel> ProductList;

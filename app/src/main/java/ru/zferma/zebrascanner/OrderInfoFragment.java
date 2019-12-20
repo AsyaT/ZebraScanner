@@ -8,24 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import businesslogic.OrderStructureModel;
 import presentation.FragmentHelper;
-import serverDatabaseInteraction.OrderModel;
 
 
 public class OrderInfoFragment extends Fragment {
 
-    private OrderModel Order;
+    private OrderStructureModel Order;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Order = (OrderModel) getArguments().getSerializable("order");
+        Order = (OrderStructureModel) getArguments().getSerializable("order");
 
         View view = inflater.inflate(R.layout.fragment_order_info, container, false);
 
         TextView txtOrderName = (TextView)  view.findViewById(R.id.txtOrderName);
-        txtOrderName.setText(Order.OrderName);
+        txtOrderName.setText(Order.GetOrderName());
 
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override

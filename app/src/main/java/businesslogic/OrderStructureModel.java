@@ -1,9 +1,10 @@
 package businesslogic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderStructureModel {
+public class OrderStructureModel implements Serializable {
 
     private String Name;
     private List<ProductOrderStructureModel> ProductList;
