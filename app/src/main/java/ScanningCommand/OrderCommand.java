@@ -1,4 +1,4 @@
-package businesslogic;
+package ScanningCommand;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,11 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
-import ru.zferma.zebrascanner.FragmentHelper;
+import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
+import serverDatabaseInteraction.OrderHelper;
 
 public class OrderCommand implements Command {
 

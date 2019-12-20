@@ -11,48 +11,43 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import businesslogic.OrderModel;
-import businesslogic.ProductListViewModel;
+import businesslogic.OrderStructureModel;
 
 public class ProgressOrderFragment extends Fragment {
 
-   OrderModel Order;
+   OrderStructureModel Order;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
         View view = inflater.inflate(R.layout.fragment_progress_order, container, false);
 
-        Order = (OrderModel) getArguments().getSerializable("order");
+        Order = (OrderStructureModel) getArguments().getSerializable("order");
 
         MainActivity activity = (MainActivity) getActivity();
 
         TextView txtOrderName = view.findViewById(R.id.txtProgressOrderName);
-        txtOrderName.setText(Order.OrderName);
+        txtOrderName.setText(Order.GetOrderName());
 
         TableLayout tblLayout = view.findViewById(R.id.tblProgrssOrder);
 
         ScannerApplication appState = ((ScannerApplication) getActivity().getApplication());
 
-        for(OrderModel.ProductListModel product : Order.ProductList)
+        for(OrderStructureModel.ProductOrderStructureModel product : Order.ProductList())
         {
             try {
                 Double doneKilos = 0.0;
                 Integer doneItems = 0;
 
-                ProductListViewModel alreadyScanned = activity.dataTableControl.GetExitingProduct(product.Product);
-
-                if(activity.dataTableControl.GetSizeOfList() > 0 && alreadyScanned!=null )
-                {
-                    doneKilos = activity.dataTableControl.GetExitingProduct(product.Product).getWeight();
-                    doneItems =  activity.dataTableControl.GetExitingProduct(product.Product).getCoefficient();
-                }
+                //TODO : set how many scanned to doneKilos and doneItems . Use FullDataTableControl to keep all scnned
 
                 TextView txtView = new TextView(getActivity());
                 txtView.setLayoutParams(new TableRow.LayoutParams(120, TableRow.LayoutParams.WRAP_CONTENT));
-                txtView.setText(appState.productHelper.FindProductByGuid(product.Product) + "\n" + appState.productHelper.FindCharacteristicByGuid(product.Charact));
+                txtView.setText(
+                        appState.productStructureModel.FindProductByGuid(product.GetProductGuid()) +
+                                "\n" +
+                                appState.productStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGuid()));
                 txtView.setBackgroundResource(R.drawable.textviewborder);
 
                 LinearLayout linearLayoutKilos = new LinearLayout(getActivity());
@@ -60,18 +55,18 @@ public class ProgressOrderFragment extends Fragment {
 
                 TextView txtOrderd = new TextView(getActivity());
                 txtOrderd.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
-                txtOrderd.setText(product.KilosOrdered().toString());
+                txtOrderd.setText(product.OrderedInKilos().toString());
                 txtOrderd.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtExecuted = new TextView(getActivity());
                 txtExecuted.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
-                Double finalSum = product.KilosDone() + doneKilos;
+                Double finalSum = product.DoneInKilos() + doneKilos;
                 txtExecuted.setText(finalSum.toString());
                 txtExecuted.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtLeft = new TextView(getActivity());
                 txtLeft.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
-                Double finalDiff = product.KilosLeft() - doneKilos;
+                Double finalDiff = product.LeftInKilos() - doneKilos;
                 txtLeft.setText(finalDiff.toString());
                 txtLeft.setBackgroundResource(R.drawable.textviewborder);
 
@@ -84,18 +79,18 @@ public class ProgressOrderFragment extends Fragment {
 
                 TextView txtOrderedPieces = new TextView(getActivity());
                 txtOrderedPieces.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
-                txtOrderedPieces.setText(product.PiecesOrdered.toString());
+                txtOrderedPieces.setText(product.OrderedInItems().toString());
                 txtOrderedPieces.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtExecutedPieces = new TextView(getActivity());
                 txtExecutedPieces.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
-                Integer finalSumItems = product.PiecesDone + doneItems;
+                Integer finalSumItems = product.DoneInItems() + doneItems;
                 txtExecutedPieces.setText(finalSumItems.toString());
                 txtExecutedPieces.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtLeftPieces = new TextView(getActivity());
                 txtLeftPieces.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
-                Integer finalDiffItems = product.PiecesLeft - doneItems;
+                Integer finalDiffItems = product.LeftInItems() - doneItems;
                 txtLeftPieces.setText(finalDiffItems.toString());
                 txtLeftPieces.setBackgroundResource(R.drawable.textviewborder);
 

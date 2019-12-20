@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package presentation;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package businesslogic;
+package serverDatabaseInteraction;
 
 public class ProductCharacteristicModel {
     String ProductGuid;

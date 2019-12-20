@@ -1,4 +1,4 @@
-package businesslogic;
+package ScanningCommand;
 
 import android.app.Activity;
 

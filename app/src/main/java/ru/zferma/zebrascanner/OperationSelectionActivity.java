@@ -13,9 +13,10 @@ import android.widget.ListView;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import businesslogic.LocationContext;
-import businesslogic.OperationTypesAndAccountingAreasModel;
-import businesslogic.OperationTypesHelper;
+import businesslogic.OperationTypesStructureModel;
+import presentation.FragmentHelper;
+import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
+import serverDatabaseInteraction.OperationTypesHelper;
 
 public class OperationSelectionActivity extends BaseSelectionActivity{
 
@@ -71,11 +72,11 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                     if (SelectedType.isEmpty() == false)
                     {
                         Class NextActivityClass ;
-                        LocationContext locationContext;
+                        OperationTypesStructureModel operationTypesStructureModel;
                         if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType))
                         {
                             NextActivityClass =  AccountAreaSelectionActivity.class;
-                            locationContext= new LocationContext(
+                            operationTypesStructureModel = new OperationTypesStructureModel(
                                     SelectedType,
                                     null,
                                     null,
@@ -87,7 +88,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                             String accountingAreaGuid = AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).GUID;
 
                             NextActivityClass =  getOperationsEnum(SelectedType).getActivityClass();
-                            locationContext= new LocationContext(
+                            operationTypesStructureModel = new OperationTypesStructureModel(
                                     SelectedType,
                                     AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).Name,
                                     accountingAreaGuid,
@@ -97,7 +98,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
                         Intent nextActivityIntent = new Intent(getBaseContext(), NextActivityClass);
 
-                        nextActivityIntent.putExtra("location_context", (Serializable) locationContext);
+                        nextActivityIntent.putExtra("location_context", (Serializable) operationTypesStructureModel);
 
                         startActivity(nextActivityIntent);
 

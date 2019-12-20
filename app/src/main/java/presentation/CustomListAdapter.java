@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package presentation;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import businesslogic.ProductListViewModel;
+import ru.zferma.zebrascanner.R;
 
 public class CustomListAdapter extends ArrayAdapter {
 

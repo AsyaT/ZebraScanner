@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import businesslogic.OrderModel;
+import presentation.FragmentHelper;
+import serverDatabaseInteraction.OrderModel;
 
 
 public class OrderInfoFragment extends Fragment {

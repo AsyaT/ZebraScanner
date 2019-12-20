@@ -5,7 +5,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class LocationContext implements Serializable {
+public class OperationTypesStructureModel implements Serializable {
 
     HashMap<ScanDataCollection.LabelType, Boolean> Rules = new HashMap<>();
 
@@ -15,7 +15,7 @@ public class LocationContext implements Serializable {
     String AccountingArea;
     String AccountingAreaGUID;
 
-    public LocationContext(String operationName, String accountingAreaName, String accountingAreaGuid, HashMap<ScanDataCollection.LabelType, Boolean> scanningRules, Boolean packageListRule )
+    public OperationTypesStructureModel(String operationName, String accountingAreaName, String accountingAreaGuid, HashMap<ScanDataCollection.LabelType, Boolean> scanningRules, Boolean packageListRule )
     {
         this.Operation = operationName;
         this.AccountingArea = accountingAreaName;

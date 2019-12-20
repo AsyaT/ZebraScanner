@@ -1,4 +1,4 @@
-package businesslogic;
+package presentation;
 
 public class ProductListViewModel extends Object {
     private String ProductGuid;
@@ -6,8 +6,8 @@ public class ProductListViewModel extends Object {
     private String Nomenclature;
     private String Characteristic;
     private String BarCode;
-    private Double Weight;
-    private Integer Coefficient;
+    private String Weight;
+    private String Coefficient;
 
     public String getProductGuid() { return ProductGuid;}
     public String getNomenclature() {
@@ -22,12 +22,12 @@ public class ProductListViewModel extends Object {
     public String getBarCode(){
         return BarCode;
     }
-    public Double getWeight () {return Weight;}
-    public Integer getCoefficient(){
+    public String getWeight () {return Weight;}
+    public String getCoefficient(){
         return Coefficient;
     }
 
-    public ProductListViewModel(String productGuid, String stringNumber, String characteristic, String nomenclature, String barCode, Integer coefficient, Double weight){
+    public ProductListViewModel(String productGuid, String stringNumber, String characteristic, String nomenclature, String barCode, String coefficient, String weight){
         this.ProductGuid = productGuid;
         this.StringNumber = stringNumber;
         this.Characteristic = characteristic;

@@ -11,21 +11,22 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 
-import businesslogic.LocationContext;
-import businesslogic.OperationTypesHelper;
+import businesslogic.OperationTypesStructureModel;
+import presentation.FragmentHelper;
+import serverDatabaseInteraction.OperationTypesHelper;
 
 public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
-    LocationContext LocationContext ;
+    OperationTypesStructureModel OperationTypesStructureModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        LocationContext = (LocationContext) getIntent().getSerializableExtra("location_context");
+        OperationTypesStructureModel = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
-        operationTypeTextView.setText(LocationContext.GetOperationName());
+        operationTypeTextView.setText(OperationTypesStructureModel.GetOperationName());
 
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
@@ -35,7 +36,7 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         OperationTypesHelper AccountingAreaIncomeData = new OperationTypesHelper(
                 appState.serverConnection.GetOperationTypesURL(),
                 appState.serverConnection.GetUsernameAndPassword());
-        listItem = AccountingAreaIncomeData.GetAccountingAreas(LocationContext.GetOperationName());
+        listItem = AccountingAreaIncomeData.GetAccountingAreas(OperationTypesStructureModel.GetOperationName());
 
         if(listItem == null)
         {
@@ -58,16 +59,16 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
             public void onClick(View view) {
                 if(SelectedType.isEmpty() == false)
                 {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(LocationContext.GetOperationName()).getActivityClass());
+                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(OperationTypesStructureModel.GetOperationName()).getActivityClass());
 
-                    LocationContext locationContext = new LocationContext(
-                            LocationContext.GetOperationName(),
+                    OperationTypesStructureModel operationTypesStructureModel = new OperationTypesStructureModel(
+                            OperationTypesStructureModel.GetOperationName(),
                             SelectedType,
                             AccountingAreaIncomeData.GetAccountingAreaGUID(SelectedType),
                             AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
                             AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
 
-                    goToMainActivityIntent.putExtra("location_context", (Serializable) locationContext);
+                    goToMainActivityIntent.putExtra("location_context", (Serializable) operationTypesStructureModel);
 
                     startActivity(goToMainActivityIntent);
                 }

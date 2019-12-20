@@ -1,23 +1,25 @@
-package businesslogic;
+package serverDatabaseInteraction;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import businesslogic.BarcodeStructureModel;
+
 public class BarcodeHelper {
 
-    private ProductModel Model;
+    private BarcodeModel Model;
 
     public BarcodeHelper(String url, String userpass)  {
-        //List<ProductModel.ProductListModel> result = PullResult(url,userpass);
+        //List<BarcodeModel.ProductListModel> result = PullResult(url,userpass);
 
-        this.Model = new ProductModel();
+        this.Model = new BarcodeModel();
         //
 
-        this.Model.BarCodeList = new ArrayList<ProductModel.ProductListModel>();
-        ProductModel.ProductListModel plm = new ProductModel.ProductListModel();
+        this.Model.BarCodeList = new ArrayList<BarcodeModel.ProductListModel>();
+        BarcodeModel.ProductListModel plm = new BarcodeModel.ProductListModel();
         plm.Barcode = "4660017708243";
-        plm.PropertiesList = new ArrayList<ProductModel.PropertiesListModel>();
-        ProductModel.PropertiesListModel productModel = new ProductModel.PropertiesListModel();
+        plm.PropertiesList = new ArrayList<BarcodeModel.PropertiesListModel>();
+        BarcodeModel.PropertiesListModel productModel = new BarcodeModel.PropertiesListModel();
         productModel.ProductName = "Бедрышко куриное \\\"Здоровая Ферма\\\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)";
         productModel.ProductGUID = "f50d315d-7ca8-11e6-80d7-e4115bea65d2";
         productModel.ProductCharactName = "Метро";
@@ -29,9 +31,16 @@ public class BarcodeHelper {
          //
 
         //this.Model.BarCodeList = result;
+
+        BarcodeStructureModel barcodeStructureModel = new BarcodeStructureModel();
+
+        for(BarcodeModel.ProductListModel productListModel : Model.BarCodeList)
+        {
+
+        }
     }
 
-    private List<ProductModel.ProductListModel> PullResult(String url, String userpass)  {
+    private List<BarcodeModel.ProductListModel> PullResult(String url, String userpass)  {
         try {
             if(url.isEmpty())
             {
@@ -49,9 +58,9 @@ public class BarcodeHelper {
         return null;
     }
 
-    public ProductModel.ProductListModel FindProductByBarcode(String barcodeUniqueIdentifier)
+    public BarcodeModel.ProductListModel FindProductByBarcode(String barcodeUniqueIdentifier)
     {
-        for(ProductModel.ProductListModel productPosition : Model.BarCodeList)
+        for(BarcodeModel.ProductListModel productPosition : Model.BarCodeList)
         {
             if(productPosition.Barcode.equalsIgnoreCase(barcodeUniqueIdentifier))
             {
@@ -61,11 +70,11 @@ public class BarcodeHelper {
         return null;
     }
 
-    public ProductModel.PropertiesListModel FindProductByGuid(String productGuid)
+    public BarcodeModel.PropertiesListModel FindProductByGuid(String productGuid)
     {
-        for(ProductModel.ProductListModel productPosition : Model.BarCodeList)
+        for(BarcodeModel.ProductListModel productPosition : Model.BarCodeList)
         {
-            for(ProductModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
+            for(BarcodeModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
             {
                 if(propertiesListModel.ProductGUID.equalsIgnoreCase(productGuid))
                 {
@@ -76,11 +85,11 @@ public class BarcodeHelper {
         return null;
     }
 
-    public ProductModel.PropertiesListModel FindCharacteristicByGuid(String characteristicGuid)
+    public BarcodeModel.PropertiesListModel FindCharacteristicByGuid(String characteristicGuid)
     {
-        for(ProductModel.ProductListModel productPosition : Model.BarCodeList)
+        for(BarcodeModel.ProductListModel productPosition : Model.BarCodeList)
         {
-            for(ProductModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
+            for(BarcodeModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
             {
                 if(propertiesListModel.ProductCharactGUID.equalsIgnoreCase(characteristicGuid))
                 {

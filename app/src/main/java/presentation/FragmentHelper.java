@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package presentation;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;

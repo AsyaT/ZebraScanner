@@ -1,4 +1,4 @@
-package businesslogic;
+package ScanningCommand;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,17 +14,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import businesslogic.ScanningBarcodeStructureModel;
+import businesslogic.BarcodeTypes;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
+import businesslogic.BarcodeStructureModel;
 
 public class ProductCommand implements Command {
 
     ListViewPresentationModel viewUpdateModel = null;
-    BarcodeHelper barcodeHelper;
+    BarcodeStructureModel BarcodeStructureModel;
     MediaPlayer mediaPlayer;
-    BarcodeStructure barCode;
-    ProductModel.ProductListModel productListModel;
+    ScanningBarcodeStructureModel barCode;
+    List<businesslogic.BarcodeStructureModel.ProductStructureModel> ProductModel;
     Activity Activity;
     Scanner CurrentScanner;
 
@@ -34,21 +37,21 @@ public class ProductCommand implements Command {
         this.CurrentScanner = ((MainActivity)activity).getScanner();
 
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-        barcodeHelper = appState.barcodeHelper;
+        BarcodeStructureModel = appState.barcodeStructureModel;
 
         mediaPlayer = MediaPlayer.create(activity, R.raw.beep01);
 
     }
 
-    protected void SelectionDialog(List<ProductModel.PropertiesListModel> listNomenclature) {
+    protected void SelectionDialog(List<BarcodeStructureModel.ProductStructureModel> listNomenclature) {
 
 
         List<CharSequence> nomenclatures = new ArrayList<CharSequence>();
-        final ProductModel.PropertiesListModel[] result = {null};
+        final BarcodeStructureModel.ProductStructureModel[] result = {null};
 
-        for(ProductModel.PropertiesListModel nomenclature : listNomenclature)
+        for(BarcodeStructureModel.ProductStructureModel nomenclature : listNomenclature)
         {
-            nomenclatures.add(nomenclature.ProductName+"\n Характеристика: "+nomenclature.ProductCharactName+"\n Вес: "+nomenclature.Quant+"\n\n");
+            nomenclatures.add(nomenclature.GetNomenclature()+"\n Характеристика: "+nomenclature.GetCharacteristicName()+"\n Вес: "+nomenclature.GetQuantity().toString()+"\n\n");
         }
 
         CharSequence[] showedNomenclatures = nomenclatures.toArray(new CharSequence[nomenclatures.size()]);
@@ -65,14 +68,14 @@ public class ProductCommand implements Command {
 
                                 result[0] = listNomenclature.get(i);
                                 try {
-                                    if (productListModel != null) {
+                                    if (ProductModel != null) {
 
                                         viewUpdateModel = new ListViewPresentationModel(
                                                 barCode.getUniqueIdentifier(),
-                                                result[0].ProductName,
-                                                result[0].ProductCharactName,
-                                                WeightCalculation(result[0]),
-                                                result[0].ProductGUID);
+                                                result[0].GetNomenclature(),
+                                                result[0].GetCharacteristicName(),
+                                                WeightCalculation(result[0].GetQuantity()),
+                                                result[0].GetProductGuid());
 
                                         PostAction();
 
@@ -149,31 +152,30 @@ public class ProductCommand implements Command {
         else{
 
             try {
-                barCode = new BarcodeStructure(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+                barCode = new ScanningBarcodeStructureModel(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+                ProductModel = BarcodeStructureModel.FindProductByBarcode(barCode.getUniqueIdentifier());
 
-                productListModel =  barcodeHelper.FindProductByBarcode(barCode.getUniqueIdentifier());
-
-                if(productListModel == null)
+                if(ProductModel == null)
                 {
                     return;
                 }
 
-                ProductModel.PropertiesListModel propertiesListModel = null;
+                BarcodeStructureModel.ProductStructureModel propertyModel = null;
 
-                if(productListModel.PropertiesList.size()>1)
+                if(ProductModel.size()>1)
                 {
-                    SelectionDialog((List<ProductModel.PropertiesListModel>)productListModel.PropertiesList);
+                    SelectionDialog(ProductModel);
                 }
                 else
                 {
-                    propertiesListModel = productListModel.PropertiesList.get(0);
+                    propertyModel = ProductModel.get(0);
 
                     viewUpdateModel = new ListViewPresentationModel(
                             barCode.getUniqueIdentifier(),
-                            propertiesListModel.ProductName,
-                            propertiesListModel.ProductCharactName,
-                            WeightCalculation(propertiesListModel),
-                            propertiesListModel.ProductGUID);
+                            propertyModel.GetNomenclature(),
+                            propertyModel.GetCharacteristicName(),
+                            WeightCalculation(propertyModel.GetQuantity()),
+                            propertyModel.GetProductGuid());
 
                 }
             }
@@ -184,11 +186,11 @@ public class ProductCommand implements Command {
         }
     }
 
-    private Double WeightCalculation(ProductModel.PropertiesListModel propertiesListModel ) throws ParseException {
+    private Double WeightCalculation(Double modelQuantity ) throws ParseException {
 
         if(barCode.getWeight() == null)
         {
-            return propertiesListModel.Quantity();
+            return modelQuantity;
         }
         else {
             return barCode.getWeight();
@@ -198,12 +200,12 @@ public class ProductCommand implements Command {
     @Override
     public void PostAction() {
 
-        if(viewUpdateModel == null && productListModel!=null)
+        if(viewUpdateModel == null && ProductModel!=null)
         {
             return;
         }
 
-        if (productListModel == null)
+        if (ProductModel == null)
         {
             try {
                 CurrentScanner.disable();

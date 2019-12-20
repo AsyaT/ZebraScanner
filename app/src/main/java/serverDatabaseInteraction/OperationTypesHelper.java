@@ -1,4 +1,4 @@
-package businesslogic;
+package serverDatabaseInteraction;
 
 import com.google.gson.Gson;
 import com.symbol.emdk.barcode.ScanDataCollection;

@@ -32,14 +32,16 @@ import com.symbol.emdk.barcode.StatusData;
 
 import java.util.ArrayList;
 
-import businesslogic.BarcodeExecutor;
-import businesslogic.BarcodeHelper;
-import businesslogic.DataTableControl;
-import businesslogic.ListViewPresentationModel;
-import businesslogic.LocationContext;
-import businesslogic.ProductHelper;
+import ScanningCommand.BarcodeExecutor;
+import ScanningCommand.ListViewPresentationModel;
 import businesslogic.ScannerState;
 import businesslogic.ScannerStateHelper;
+import presentation.CustomListAdapter;
+import presentation.DataTableControl;
+import presentation.FragmentHelper;
+import businesslogic.BarcodeStructureModel;
+import businesslogic.OperationTypesStructureModel;
+import businesslogic.ProductStructureModel;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
 
-    LocationContext ScanningPermissions;
+    OperationTypesStructureModel ScanningPermissions;
 
     public Boolean IsDeniedToScan(ScanDataCollection.LabelType labelType)
     {
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
-        ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
+        ScanningPermissions = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
 
         new AsyncGetProducts().execute(ScanningPermissions.GetAccountingAreaGUID());
 
@@ -475,13 +477,21 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         protected Void doInBackground(String... params)
         {
             ScannerApplication appState = ((ScannerApplication) getApplication());
-            appState.barcodeHelper = new BarcodeHelper(
+            appState.barcodeStructureModel = new BarcodeStructureModel();
+
+                    /*
+                    new BarcodeHelper(
                     appState.serverConnection.GetBarcodeListURL( params[0]),
                     appState.serverConnection.GetUsernameAndPassword());
+*/
 
-            appState.productHelper = new ProductHelper(
+            appState.productStructureModel = new ProductStructureModel();
+                    /*
+                    new ProductHelper(
                     appState.serverConnection.GetProductURL(),
                     appState.serverConnection.GetUsernameAndPassword());
+
+                    */
             return null;
         }
 

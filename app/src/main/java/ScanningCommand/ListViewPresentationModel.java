@@ -1,4 +1,4 @@
-package businesslogic;
+package ScanningCommand;
 
 public class ListViewPresentationModel {
 

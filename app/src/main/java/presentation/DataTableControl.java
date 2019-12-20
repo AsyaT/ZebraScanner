@@ -1,4 +1,4 @@
-package businesslogic;
+package presentation;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -7,6 +7,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import ScanningCommand.ListViewPresentationModel;
 
 public class DataTableControl {
 
@@ -77,15 +79,15 @@ public class DataTableControl {
                     model.Characteristic,
                     model.Nomenclature,
                     model.UniqueCode,
-                    1,
-                    model.Weight);
+                    "1",
+                    model.Weight.toString());
         }
         else
         {
             DataTable.remove(existingTableModel);
 
-            Integer newCoefficient = existingTableModel.getCoefficient() + 1;
-            Double newWeight = existingTableModel.getWeight() + model.Weight;
+            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
+            Double newWeight = Double.parseDouble( existingTableModel.getWeight()) + model.Weight;
 
             result = new ProductListViewModel(
                     model.ProductGuid,
@@ -93,8 +95,8 @@ public class DataTableControl {
                     model.Characteristic,
                     model.Nomenclature,
                     model.UniqueCode,
-                    newCoefficient,
-                    newWeight
+                    newCoefficient.toString(),
+                    newWeight.toString()
             );
         }
 

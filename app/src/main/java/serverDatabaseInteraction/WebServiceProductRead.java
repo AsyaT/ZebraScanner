@@ -1,4 +1,4 @@
-package businesslogic;
+package serverDatabaseInteraction;
 
 import android.os.AsyncTask;
 
@@ -15,12 +15,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebServiceProductRead extends AsyncTask<String, Void, List<ProductModel.ProductListModel>> {
+public class WebServiceProductRead extends AsyncTask<String, Void, List<BarcodeModel.ProductListModel>> {
 
     @Override
-    protected List<ProductModel.ProductListModel> doInBackground(String... urlString) {
+    protected List<BarcodeModel.ProductListModel> doInBackground(String... urlString) {
 
-        List<ProductModel.ProductListModel> productListModel = new ArrayList<ProductModel.ProductListModel>();
+        List<BarcodeModel.ProductListModel> productListModel = new ArrayList<BarcodeModel.ProductListModel>();
 
         try {
 
@@ -45,7 +45,7 @@ public class WebServiceProductRead extends AsyncTask<String, Void, List<ProductM
 
                     while (reader.hasNext()) {
 
-                        ProductModel.ProductListModel product = gson.fromJson(reader, ProductModel.ProductListModel.class);
+                        BarcodeModel.ProductListModel product = gson.fromJson(reader, BarcodeModel.ProductListModel.class);
                         productListModel.add(product);
                     }
 
