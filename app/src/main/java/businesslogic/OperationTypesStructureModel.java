@@ -12,12 +12,20 @@ public class OperationTypesStructureModel implements Serializable {
     Boolean PackedListScanning;
 
     String Operation;
+    String OperationGUID;
     String AccountingArea;
     String AccountingAreaGUID;
 
-    public OperationTypesStructureModel(String operationName, String accountingAreaName, String accountingAreaGuid, HashMap<ScanDataCollection.LabelType, Boolean> scanningRules, Boolean packageListRule )
+    public OperationTypesStructureModel(
+            String operationName,
+            String operationGuid,
+            String accountingAreaName,
+            String accountingAreaGuid,
+            HashMap<ScanDataCollection.LabelType, Boolean> scanningRules,
+            Boolean packageListRule )
     {
         this.Operation = operationName;
+        this.OperationGUID = operationGuid;
         this.AccountingArea = accountingAreaName;
         this.AccountingAreaGUID = accountingAreaGuid;
         this.Rules = scanningRules;
@@ -33,6 +41,8 @@ public class OperationTypesStructureModel implements Serializable {
     {
         return this.Operation;
     }
+
+    public String GetOperationGuid() { return this.OperationGUID; }
 
     public String GetAccountingAreaGUID()
     {

@@ -8,13 +8,13 @@ import businesslogic.BarcodeStructureModel;
 public class BarcodeHelper {
 
     private BarcodeModel Model;
+    private BarcodeStructureModel ReturnModel;
 
     public BarcodeHelper(String url, String userpass)  {
         //List<BarcodeModel.ProductListModel> result = PullResult(url,userpass);
-
         this.Model = new BarcodeModel();
+        //this.Model.BarCodeList = result;
         //
-
         this.Model.BarCodeList = new ArrayList<BarcodeModel.ProductListModel>();
         BarcodeModel.ProductListModel plm = new BarcodeModel.ProductListModel();
         plm.Barcode = "4660017708243";
@@ -29,15 +29,6 @@ public class BarcodeHelper {
         this.Model.BarCodeList.add(plm);
 
          //
-
-        //this.Model.BarCodeList = result;
-
-        BarcodeStructureModel barcodeStructureModel = new BarcodeStructureModel();
-
-        for(BarcodeModel.ProductListModel productListModel : Model.BarCodeList)
-        {
-
-        }
     }
 
     private List<BarcodeModel.ProductListModel> PullResult(String url, String userpass)  {
@@ -54,48 +45,6 @@ public class BarcodeHelper {
         catch (Exception e)
         {
             e.printStackTrace();
-        }
-        return null;
-    }
-
-    public BarcodeModel.ProductListModel FindProductByBarcode(String barcodeUniqueIdentifier)
-    {
-        for(BarcodeModel.ProductListModel productPosition : Model.BarCodeList)
-        {
-            if(productPosition.Barcode.equalsIgnoreCase(barcodeUniqueIdentifier))
-            {
-                return productPosition;
-            }
-        }
-        return null;
-    }
-
-    public BarcodeModel.PropertiesListModel FindProductByGuid(String productGuid)
-    {
-        for(BarcodeModel.ProductListModel productPosition : Model.BarCodeList)
-        {
-            for(BarcodeModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
-            {
-                if(propertiesListModel.ProductGUID.equalsIgnoreCase(productGuid))
-                {
-                    return propertiesListModel;
-                }
-            }
-        }
-        return null;
-    }
-
-    public BarcodeModel.PropertiesListModel FindCharacteristicByGuid(String characteristicGuid)
-    {
-        for(BarcodeModel.ProductListModel productPosition : Model.BarCodeList)
-        {
-            for(BarcodeModel.PropertiesListModel propertiesListModel : productPosition.PropertiesList)
-            {
-                if(propertiesListModel.ProductCharactGUID.equalsIgnoreCase(characteristicGuid))
-                {
-                    return propertiesListModel;
-                }
-            }
         }
         return null;
     }

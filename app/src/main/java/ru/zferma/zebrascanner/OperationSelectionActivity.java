@@ -1,26 +1,30 @@
 package ru.zferma.zebrascanner;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import businesslogic.OperationTypesStructureModel;
+import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import presentation.FragmentHelper;
-import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
+import presentation.OperationTypesListViewModel;
+import presentation.OperationsListAdapter;
 import serverDatabaseInteraction.OperationTypesHelper;
 
 public class OperationSelectionActivity extends BaseSelectionActivity{
 
-    OperationTypesHelper AccountingAreaIncomeData;
+    OperationTypesListViewModel SelectedOperation;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -32,15 +36,15 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         okButton = (Button) findViewById(R.id.OKButton);
         cancelButton = (Button) findViewById(R.id.CancelButton);
 
-        listItem = new ArrayList<>();
+
 
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
 
-        AccountingAreaIncomeData = new OperationTypesHelper(
+        OperationTypesHelper operationTypesHelper = new OperationTypesHelper(
                 appState.serverConnection.GetOperationTypesURL(),
                 appState.serverConnection.GetUsernameAndPassword());
 
-        OperationTypesAndAccountingAreasModel data= AccountingAreaIncomeData.GetData();
+        OperationsTypesAccountingAreaStructureModel data = operationTypesHelper.GetData();
 
         if(data == null )
         {
@@ -48,36 +52,57 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
             new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствует.\n Обратитесь к Системному администратору");
         }
-        else if(data.Error == true)
+        else
         {
-            ShowFragmentNoConnection();
+            List<OperationTypesListViewModel> listItem = new ArrayList<>();
 
-            new AsyncFragmentInfoUpdate().execute("Сервер ответил с ошибкой.\n Обратитесь к Системному администратору");
-        }
-        else if(data.Error == false)
-        {
-            for (OperationTypesAndAccountingAreasModel.OperationTypeModel operationType : data.AccountingAreasAndTypes) {
-                listItem.add(operationType.getName());
+            for (String operationTypeId : data.GetOperationKeys()) {
+                OperationTypesListViewModel model = new OperationTypesListViewModel();
+                model.OperationGuid = operationTypeId;
+                model.OperationName = data.GetOperationName(operationTypeId);
+                listItem.add(model);
             }
 
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
+            final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem); // WHAT Is IT "simple_list_item_1" ???
 
             listView.setAdapter(adapter);
 
-            listView.setOnItemClickListener(ClickAction);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                    OperationTypesListViewModel tap = (OperationTypesListViewModel) adapter.getItem(position);
+
+                    if(SelectedOperation == null || SelectedOperation != tap)
+                    {
+                        for (int i = 0; i < listView.getChildCount(); i++) {
+                            View listItem = listView.getChildAt(i);
+                            listItem.setBackgroundColor(Color.WHITE);
+                        }
+
+                        view.setBackgroundColor(Color.YELLOW);
+                        SelectedOperation = tap;
+                    }
+                    else{
+                        view.setBackgroundColor(Color.WHITE);
+                        SelectedOperation = null;
+                    }
+                }
+            });
 
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (SelectedType.isEmpty() == false)
+                    if (SelectedOperation != null)
                     {
                         Class NextActivityClass ;
                         OperationTypesStructureModel operationTypesStructureModel;
-                        if (AccountingAreaIncomeData.HasSeveralAccountingAreas(SelectedType))
+                        if (data.HasSeveralAccountingAreas(SelectedOperation.OperationGuid))
                         {
                             NextActivityClass =  AccountAreaSelectionActivity.class;
                             operationTypesStructureModel = new OperationTypesStructureModel(
-                                    SelectedType,
+                                    SelectedOperation.OperationName,
+                                    SelectedOperation.OperationGuid,
                                     null,
                                     null,
                                     null,
@@ -85,15 +110,17 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                         }
                         else
                         {
-                            String accountingAreaGuid = AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).GUID;
+                            OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea = data.GetAccountingAreas(SelectedOperation.OperationGuid).get(0);
+                            String accountingAreaGuid = (String) data.GetAccountingAreas(SelectedOperation.OperationGuid).keySet().toArray()[0];
 
-                            NextActivityClass =  getOperationsEnum(SelectedType).getActivityClass();
+                            NextActivityClass =  getOperationsEnum(SelectedOperation.OperationName).getActivityClass();
                             operationTypesStructureModel = new OperationTypesStructureModel(
-                                    SelectedType,
-                                    AccountingAreaIncomeData.GetSingleAccountingArea(SelectedType).Name,
+                                    SelectedOperation.OperationName,
+                                    SelectedOperation.OperationGuid,
+                                    accountingArea.GetName(),
                                     accountingAreaGuid,
-                                    AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
-                                    AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
+                                    accountingArea.GetScanningPermissions(),
+                                    accountingArea.IsPackageListAllowed());
                         }
 
                         Intent nextActivityIntent = new Intent(getBaseContext(), NextActivityClass);

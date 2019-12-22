@@ -18,28 +18,4 @@ public class ProductHelper {
 
         Model.add(product1);
     }
-
-    public String FindProductByGuid(String productGuid) {
-
-        for(ProductCharacteristicModel item : Model)
-        {
-            if(item.ProductGuid.equalsIgnoreCase(productGuid))
-            {
-                return item.Nomenclature;
-            }
-        }
-        return "";
-    }
-
-    public String FindCharacteristicByGuid(String charactGuid) {
-        for(ProductCharacteristicModel item : Model)
-        {
-            if(item.CharacteristicGuid.equalsIgnoreCase( charactGuid ))
-            {
-                return item.Characteristic;
-            }
-        }
-
-        return "";
-    }
 }
