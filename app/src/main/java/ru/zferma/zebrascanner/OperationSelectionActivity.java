@@ -36,8 +36,6 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         okButton = (Button) findViewById(R.id.OKButton);
         cancelButton = (Button) findViewById(R.id.CancelButton);
 
-
-
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
 
         OperationTypesHelper operationTypesHelper = new OperationTypesHelper(
@@ -63,7 +61,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                 listItem.add(model);
             }
 
-            final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem); // WHAT Is IT "simple_list_item_1" ???
+            final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem);
 
             listView.setAdapter(adapter);
 
