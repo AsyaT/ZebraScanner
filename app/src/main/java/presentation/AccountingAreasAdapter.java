@@ -18,7 +18,7 @@ public class AccountingAreasAdapter extends ArrayAdapter {
     private final List<AccountingAreasListViewModel> AccountingAreasListModel;
 
     public AccountingAreasAdapter(Activity context, List<AccountingAreasListViewModel> list) {
-        super(context, R.layout.list_view_row, list);
+        super(context, R.layout.accounting_area_row, list);
         this.context = context;
         this.AccountingAreasListModel = list;
     }
@@ -30,7 +30,7 @@ public class AccountingAreasAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflator = context.getLayoutInflater();
-        View view = inflator.inflate(R.layout.list_view_row, null);
+        View view = inflator.inflate(R.layout.accounting_area_row, null);
 
         AccountingAreasAdapter.ViewHolder holder = new AccountingAreasAdapter.ViewHolder();
 

@@ -62,7 +62,6 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             }
 
             final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem);
-
             listView.setAdapter(adapter);
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
