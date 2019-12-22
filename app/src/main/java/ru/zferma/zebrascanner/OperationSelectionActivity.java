@@ -107,9 +107,10 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                         }
                         else
                         {
-                            OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea = data.GetAccountingAreas(SelectedOperation.OperationGuid).get(0);
                             String accountingAreaGuid = (String) data.GetAccountingAreas(SelectedOperation.OperationGuid).keySet().toArray()[0];
-
+                            OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea =
+                                    data.GetAccountingAreas(SelectedOperation.OperationGuid).get(accountingAreaGuid);
+                            
                             NextActivityClass =  getOperationsEnum(SelectedOperation.OperationName).getActivityClass();
                             operationTypesStructureModel = new OperationTypesStructureModel(
                                     SelectedOperation.OperationName,
