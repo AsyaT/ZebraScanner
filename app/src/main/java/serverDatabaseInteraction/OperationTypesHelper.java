@@ -15,13 +15,7 @@ public class OperationTypesHelper {
 
     public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
 
-        String jsonString ="";
-        jsonString= PullJsonData(url,userpass);
-
-        if(jsonString == null || jsonString.isEmpty())
-        {
-            throw new ApplicationException("Сервер не отвечает.");
-        }
+        String jsonString = PullJsonData(url,userpass);
 
         this.InputModel = ParseJson(jsonString);
 
@@ -54,8 +48,16 @@ public class OperationTypesHelper {
         }
     }
 
-    protected String PullJsonData(String url, String userpass) throws ExecutionException, InterruptedException {
-            return (new WebService()).execute(url,userpass).get();
+    protected String PullJsonData(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
+        String result = null;
+        result =  (new WebService()).execute(url,userpass).get();
+        if(result == null || result.isEmpty())
+        {
+            throw new ApplicationException("Сервер не отвечает.");
+        }
+        else {
+            return result;
+        }
     }
 
     private OperationTypesAndAccountingAreasModel ParseJson(String jsonString)
