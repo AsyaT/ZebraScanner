@@ -1,9 +1,12 @@
 package ru.zferma.zebrascanner;
 
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ListView;
+
+import presentation.FragmentHelper;
 
 public class BaseSelectionActivity extends AppCompatActivity {
 
@@ -28,6 +31,13 @@ public class BaseSelectionActivity extends AppCompatActivity {
         else {
             return null;
         }
+    }
+
+    protected void ShowFragmentNoConnection()
+    {
+        Fragment noConnectionFragment = new NoConnectionFragment();
+        FragmentHelper fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.replaceFragment(noConnectionFragment,R.id.frConnectionInfo);
     }
 
     class AsyncFragmentInfoUpdate extends AsyncTask<String,Void,String> {

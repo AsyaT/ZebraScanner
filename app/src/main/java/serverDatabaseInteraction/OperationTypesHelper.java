@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 
@@ -12,9 +13,16 @@ public class OperationTypesHelper {
     private OperationTypesAndAccountingAreasModel InputModel;
     private OperationsTypesAccountingAreaStructureModel ResultModel;
 
-    public OperationTypesHelper(String url, String userpass)
-    {
-        String jsonString = PullJsonData(url,userpass);
+    public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
+
+        String jsonString ="";
+        jsonString= PullJsonData(url,userpass);
+
+        if(jsonString == null || jsonString.isEmpty())
+        {
+            throw new ApplicationException("Сервер не отвечает.");
+        }
+
         this.InputModel = ParseJson(jsonString);
 
         if(InputModel.Error == false)
@@ -42,20 +50,12 @@ public class OperationTypesHelper {
             }
         }
         else{
-            // TODO
+            throw new ApplicationException("Сервер ответил с ошибкой.");
         }
     }
 
-    protected String PullJsonData(String url, String userpass)
-    {
-        try {
+    protected String PullJsonData(String url, String userpass) throws ExecutionException, InterruptedException {
             return (new WebService()).execute(url,userpass).get();
-        }
-        catch (Exception ex)
-        {
-            ex.getMessage();
-        }
-        return null;
     }
 
     private OperationTypesAndAccountingAreasModel ParseJson(String jsonString)
