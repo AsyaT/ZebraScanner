@@ -13,15 +13,12 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import presentation.AccountingAreasAdapter;
 import presentation.AccountingAreasListViewModel;
 import presentation.FragmentHelper;
-import serverDatabaseInteraction.ApplicationException;
-import serverDatabaseInteraction.OperationTypesHelper;
 
 public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
@@ -41,29 +38,7 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
-
-        OperationTypesHelper operationTypesHelper = null;
-        try {
-            operationTypesHelper = new OperationTypesHelper(
-                    appState.serverConnection.GetOperationTypesURL(),
-                    appState.serverConnection.GetUsernameAndPassword());
-        }
-        catch (ApplicationException applicationException)
-        {
-            ShowFragmentNoConnection();
-            new AsyncFragmentInfoUpdate().execute(applicationException.getMessage());
-        } catch (ExecutionException e)
-        {
-            ShowFragmentNoConnection();
-            new AsyncFragmentInfoUpdate().execute(e.getMessage());
-        }
-        catch (InterruptedException e)
-        {
-            ShowFragmentNoConnection();
-            new AsyncFragmentInfoUpdate().execute(e.getMessage());
-        }
-
-        OperationsTypesAccountingAreaStructureModel data = operationTypesHelper.GetData();
+        OperationsTypesAccountingAreaStructureModel data = appState.operationsTypesAccountingAreaStructureModel;
 
         ArrayList<AccountingAreasListViewModel> listItem = new ArrayList<>();
 
