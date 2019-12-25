@@ -32,7 +32,7 @@ public class OperationTypesStructureModel implements Serializable {
         this.PackedListScanning = packageListRule;
     }
 
-    public Boolean IsDenied(ScanDataCollection.LabelType labelType)
+    public Boolean IsAllowed(ScanDataCollection.LabelType labelType)
     {
         return Rules.get(labelType);
     }

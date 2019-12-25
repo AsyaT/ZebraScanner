@@ -1,34 +1,71 @@
 package serverDatabaseInteraction;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
+import com.google.gson.Gson;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import businesslogic.BarcodeStructureModel;
+import businesslogic.CharacterisiticStructureModel;
+import businesslogic.ProductStructureModel;
 
 public class BarcodeHelper {
 
     private BarcodeModel Model;
-    private BarcodeStructureModel ReturnModel;
+    public BarcodeStructureModel BarcodeModel;
+    public ProductStructureModel ProductModel;
+    public CharacterisiticStructureModel CharacteristicModel;
 
-    public BarcodeHelper(String url, String userpass)  {
-        //List<BarcodeModel.ProductListModel> result = PullResult(url,userpass);
+
+    public BarcodeHelper(String result) throws ParseException {
+
+        Gson g = new Gson();
+        this.Model = g.fromJson(result, BarcodeModel.class);
+        this.BarcodeModel = new BarcodeStructureModel();
+        this.ProductModel = new ProductStructureModel();
+        this.CharacteristicModel = new CharacterisiticStructureModel();
+
+        for(serverDatabaseInteraction.BarcodeModel.ProductListModel barcode : Model.BarCodeList)
+        {
+            ArrayList<BarcodeStructureModel.ProductStructureModel> listModel = new ArrayList<>();
+
+            for(serverDatabaseInteraction.BarcodeModel.PropertiesListModel plm : barcode.PropertiesList)
+            {
+                NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
+                Number number = format.parse(plm.Quant);
+
+                BarcodeStructureModel.ProductStructureModel productModel =
+                        new BarcodeStructureModel.ProductStructureModel(plm.ProductGUID, plm.ProductCharactGUID, number.doubleValue());
+                listModel.add(productModel);
+
+                this.ProductModel.Add(plm.ProductGUID, plm.ProductName);
+                this.CharacteristicModel.Add(plm.ProductCharactGUID, plm.ProductCharactName);
+            }
+
+            this.BarcodeModel.Add(barcode.Barcode, listModel);
+        }
+    }
+
+    public BarcodeHelper(String url, String userpass) {
+        List<BarcodeModel.ProductListModel> result = PullResult(url,userpass);
         this.Model = new BarcodeModel();
-        //this.Model.BarCodeList = result;
-        //
-        this.Model.BarCodeList = new ArrayList<BarcodeModel.ProductListModel>();
-        BarcodeModel.ProductListModel plm = new BarcodeModel.ProductListModel();
-        plm.Barcode = "4660017708243";
-        plm.PropertiesList = new ArrayList<BarcodeModel.PropertiesListModel>();
-        BarcodeModel.PropertiesListModel productModel = new BarcodeModel.PropertiesListModel();
-        productModel.ProductName = "Бедрышко куриное \\\"Здоровая Ферма\\\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)";
-        productModel.ProductGUID = "f50d315d-7ca8-11e6-80d7-e4115bea65d2";
-        productModel.ProductCharactName = "Метро";
-        productModel.ProductCharactGUID = "41dbf472-19d8-11e7-80cb-001e67e5da8c";
-        productModel.Quant = "8";
-        plm.PropertiesList.add(productModel);
-        this.Model.BarCodeList.add(plm);
+        this.Model.BarCodeList = result;
+    }
 
-         //
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String readFileAsString(String fileName)throws Exception
+    {
+        String data = "";
+        data = new String(Files.readAllBytes(Paths.get(fileName)));
+        return data;
     }
 
     private List<BarcodeModel.ProductListModel> PullResult(String url, String userpass)  {

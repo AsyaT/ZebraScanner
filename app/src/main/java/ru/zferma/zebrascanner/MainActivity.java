@@ -1,5 +1,6 @@
 package ru.zferma.zebrascanner;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -30,18 +32,24 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import ScanningCommand.BarcodeExecutor;
 import ScanningCommand.ListViewPresentationModel;
+import businesslogic.OperationTypesStructureModel;
 import businesslogic.ScannerState;
 import businesslogic.ScannerStateHelper;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
-import businesslogic.BarcodeStructureModel;
-import businesslogic.OperationTypesStructureModel;
-import businesslogic.ProductStructureModel;
+import serverDatabaseInteraction.BarcodeHelper;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -69,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     OperationTypesStructureModel ScanningPermissions;
 
-    public Boolean IsDeniedToScan(ScanDataCollection.LabelType labelType)
+    public Boolean IsAllowedToScan(ScanDataCollection.LabelType labelType)
     {
-        return ScanningPermissions.IsDenied(labelType);
+        return ScanningPermissions.IsAllowed(labelType);
     }
 
 
@@ -476,22 +484,42 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected Void doInBackground(String... params)
         {
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    permissions,
+                    1);
+
+            String result = "";
+            try {
+                File file = new File("/storage/emulated/0/Download/barcodes.txt");
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+
+                String st;
+                while ((st = br.readLine()) != null)
+                    result+=st;
+
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
             ScannerApplication appState = ((ScannerApplication) getApplication());
-            appState.barcodeStructureModel = new BarcodeStructureModel();
 
-                    /*
-                    new BarcodeHelper(
-                    appState.serverConnection.GetBarcodeListURL( params[0]),
-                    appState.serverConnection.GetUsernameAndPassword());
-*/
+            BarcodeHelper bh = null;
+            try {
+                bh = new BarcodeHelper(result);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-            appState.productStructureModel = new ProductStructureModel();
-                    /*
-                    new ProductHelper(
-                    appState.serverConnection.GetProductURL(),
-                    appState.serverConnection.GetUsernameAndPassword());
-
-                    */
+            appState.barcodeStructureModel = bh.BarcodeModel;
+            appState.productStructureModel =bh.ProductModel;
+            appState.characterisiticStructureModel = bh.CharacteristicModel;
             return null;
         }
 

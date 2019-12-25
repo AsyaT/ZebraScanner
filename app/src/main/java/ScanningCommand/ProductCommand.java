@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import businesslogic.CharacterisiticStructureModel;
+import businesslogic.ProductStructureModel;
 import businesslogic.ScanningBarcodeStructureModel;
 import businesslogic.BarcodeTypes;
 import ru.zferma.zebrascanner.MainActivity;
@@ -25,6 +27,9 @@ public class ProductCommand implements Command {
 
     ListViewPresentationModel viewUpdateModel = null;
     BarcodeStructureModel BarcodeStructureModel;
+    ProductStructureModel ProductStructureModel;
+    CharacterisiticStructureModel CharacterisiticStructureModel;
+
     MediaPlayer mediaPlayer;
     ScanningBarcodeStructureModel barCode;
     List<businesslogic.BarcodeStructureModel.ProductStructureModel> ProductModel;
@@ -38,6 +43,8 @@ public class ProductCommand implements Command {
 
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
         BarcodeStructureModel = appState.barcodeStructureModel;
+        ProductStructureModel = appState.productStructureModel;
+        CharacterisiticStructureModel = appState.characterisiticStructureModel;
 
         mediaPlayer = MediaPlayer.create(activity, R.raw.beep01);
 
@@ -51,7 +58,10 @@ public class ProductCommand implements Command {
 
         for(BarcodeStructureModel.ProductStructureModel nomenclature : listNomenclature)
         {
-            nomenclatures.add(nomenclature.GetNomenclature()+"\n Характеристика: "+nomenclature.GetCharacteristicName()+"\n Вес: "+nomenclature.GetQuantity().toString()+"\n\n");
+            nomenclatures.add(
+                    this.ProductStructureModel.FindProductByGuid( nomenclature.GetProductGuid())+
+                            "\n Характеристика: "+this.CharacterisiticStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID())+
+                            "\n Вес: "+nomenclature.GetQuantity().toString()+"\n\n");
         }
 
         CharSequence[] showedNomenclatures = nomenclatures.toArray(new CharSequence[nomenclatures.size()]);
@@ -72,8 +82,8 @@ public class ProductCommand implements Command {
 
                                         viewUpdateModel = new ListViewPresentationModel(
                                                 barCode.getUniqueIdentifier(),
-                                                result[0].GetNomenclature(),
-                                                result[0].GetCharacteristicName(),
+                                                ProductStructureModel.FindProductByGuid( result[0].GetProductGuid()),
+                                                CharacterisiticStructureModel.FindCharacteristicByGuid(result[0].GetCharacteristicGUID()),
                                                 WeightCalculation(result[0].GetQuantity()),
                                                 result[0].GetProductGuid());
 
@@ -115,7 +125,7 @@ public class ProductCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
 
-        if(((MainActivity)this.Activity).IsDeniedToScan(data.getLabelType()) == true)
+        if(((MainActivity)this.Activity).IsAllowedToScan(data.getLabelType()) == false)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.Activity);
 
@@ -172,8 +182,8 @@ public class ProductCommand implements Command {
 
                     viewUpdateModel = new ListViewPresentationModel(
                             barCode.getUniqueIdentifier(),
-                            propertyModel.GetNomenclature(),
-                            propertyModel.GetCharacteristicName(),
+                            this.ProductStructureModel.FindProductByGuid(propertyModel.GetProductGuid()),
+                            this.CharacterisiticStructureModel.FindCharacteristicByGuid(propertyModel.GetCharacteristicGUID()),
                             WeightCalculation(propertyModel.GetQuantity()),
                             propertyModel.GetProductGuid());
 
