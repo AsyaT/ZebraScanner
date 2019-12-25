@@ -23,15 +23,30 @@ public class OrderCommand implements Command {
     public void Action(Activity activity) {
         this.Activity = activity;
 
-        ScanOrderFragment orderInfoFragment = (ScanOrderFragment) ((AppCompatActivity)activity).getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
-        FragmentHelper fragmentHelper = new FragmentHelper(activity);
-        fragmentHelper.closeFragment(orderInfoFragment);
+
     }
 
     @Override
-    public void ParseData(ScanDataCollection.ScanData data) {
+    public void ParseData(ScanDataCollection.ScanData data)
+    {
 
-        OrderGuid = data.getData();
+        ScanOrderFragment orderInfoFragment = (ScanOrderFragment) ((AppCompatActivity)Activity).getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+
+        if(data.getData().length() != 39)
+        {
+            this.Activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    orderInfoFragment.UpdateText("Это не штрих-код заказа! Сканируйте другой штрих-код.");
+                }
+            });
+        }
+        else
+            {
+                OrderGuid = data.getData();
+
+                FragmentHelper fragmentHelper = new FragmentHelper(Activity);
+                fragmentHelper.closeFragment(orderInfoFragment);
+        }
     }
 
     @Override
