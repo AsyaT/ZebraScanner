@@ -1,6 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -482,12 +480,20 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     {
 
         @Override
-        protected Void doInBackground(String... params)
-        {
-            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    permissions,
-                    1);
+        protected Void doInBackground(String... voids) {
+          /*  try {
+                scanner.read();
+            } catch (ScannerException e) {
+                e.printStackTrace();
+            }
+
+           */
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
 
             String result = "";
             try {
@@ -520,7 +526,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             appState.barcodeStructureModel = bh.BarcodeModel;
             appState.productStructureModel =bh.ProductModel;
             appState.characterisiticStructureModel = bh.CharacteristicModel;
-            return null;
+
+ 
         }
 
     }
