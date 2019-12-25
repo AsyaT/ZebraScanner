@@ -9,7 +9,18 @@ public class OrderStructureModel implements Serializable {
     private String Name;
     private List<ProductOrderStructureModel> ProductList;
 
-    public class ProductOrderStructureModel
+    public OrderStructureModel(String name)
+    {
+        this.Name = name;
+        this.ProductList = new ArrayList<>();
+    }
+
+    public void Add(ProductOrderStructureModel product)
+    {
+        this.ProductList.add(product);
+    }
+
+    public static class ProductOrderStructureModel
     {
         private String ProductGuid;
         private String CharacteristicGuid;
@@ -19,6 +30,18 @@ public class OrderStructureModel implements Serializable {
         private Integer OrderedItems;
         private Integer DoneItems;
         private Integer LeftItems;
+
+        public  ProductOrderStructureModel(String productGuid, String characteristicGuid, Double orderedKilos, Double doneKilos, Double leftKilos, Integer orderedItems, Integer doneItems, Integer leftItems)
+        {
+            this.ProductGuid = productGuid;
+            this.CharacteristicGuid = characteristicGuid;
+            this.OrderedKilos = orderedKilos;
+            this.DoneKilos = doneKilos;
+            this.LeftKilos = leftKilos;
+            this.OrderedItems = orderedItems;
+            this.DoneItems = doneItems;
+            this.LeftItems = leftItems;
+        }
 
         public String GetProductGuid()
         {

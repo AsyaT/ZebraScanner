@@ -1,6 +1,5 @@
 package serverDatabaseInteraction;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class OrderModel  {
@@ -12,9 +11,9 @@ public class OrderModel  {
     {
         public String Product;
         public String Charact;
-        private String Ordered;
-        private String Done;
-        private String Left;
+        public String Ordered;
+        public String Done;
+        public String Left;
         public Integer PiecesOrdered;
         public Integer PiecesDone;
         public Integer PiecesLeft;
