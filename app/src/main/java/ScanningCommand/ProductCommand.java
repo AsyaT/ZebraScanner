@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.OrderStructureModel;
 import businesslogic.ProductStructureModel;
 import businesslogic.ScanningBarcodeStructureModel;
 import businesslogic.BarcodeTypes;
@@ -26,9 +27,10 @@ import businesslogic.BarcodeStructureModel;
 public class ProductCommand implements Command {
 
     ListViewPresentationModel viewUpdateModel = null;
-    BarcodeStructureModel BarcodeStructureModel;
-    ProductStructureModel ProductStructureModel;
-    CharacterisiticStructureModel CharacterisiticStructureModel;
+    BarcodeStructureModel BarcodeStructureModel = null;
+    ProductStructureModel ProductStructureModel = null;
+    CharacterisiticStructureModel CharacterisiticStructureModel = null;
+    OrderStructureModel OrderStructureModel = null;
 
     MediaPlayer mediaPlayer;
     ScanningBarcodeStructureModel barCode;
@@ -45,6 +47,7 @@ public class ProductCommand implements Command {
         BarcodeStructureModel = appState.barcodeStructureModel;
         ProductStructureModel = appState.productStructureModel;
         CharacterisiticStructureModel = appState.characterisiticStructureModel;
+        OrderStructureModel = appState.orderStructureModel;
 
         mediaPlayer = MediaPlayer.create(activity, R.raw.beep01);
 
@@ -80,20 +83,40 @@ public class ProductCommand implements Command {
                                 try {
                                     if (ProductModel != null) {
 
-                                        viewUpdateModel = new ListViewPresentationModel(
-                                                barCode.getUniqueIdentifier(),
-                                                ProductStructureModel.FindProductByGuid( result[0].GetProductGuid()),
-                                                CharacterisiticStructureModel.FindCharacteristicByGuid(result[0].GetCharacteristicGUID()),
-                                                WeightCalculation(result[0].GetQuantity()),
-                                                result[0].GetProductGuid());
+                                        if(OrderStructureModel.IfProductExists(result[0].GetProductGuid())==false)
+                                        {
+                                            try {
+                                                CurrentScanner.disable();
+                                            } catch (ScannerException e) {
+                                                e.printStackTrace();
+                                            }
 
-                                        PostAction();
+                                            mediaPlayer.start();
 
-                                        try {
-                                            CurrentScanner.enable();
-                                            CurrentScanner.read();
-                                        } catch (ScannerException e) {
-                                            e.printStackTrace();
+                                            if (((MainActivity)Activity).IsBarcodeInfoFragmentShowed)
+                                            {
+                                                ((MainActivity)Activity).new AsyncBarcodeInfoUpdate().execute("Такой продукт не найден в заказе");
+                                            }
+                                            else {
+                                                ((MainActivity)Activity).new MessageDialog().execute("Заказ не содержит такого продукта!");
+                                            }
+                                        }
+                                        else{
+                                            viewUpdateModel = new ListViewPresentationModel(
+                                                    barCode.getUniqueIdentifier(),
+                                                    ProductStructureModel.FindProductByGuid( result[0].GetProductGuid()),
+                                                    CharacterisiticStructureModel.FindCharacteristicByGuid(result[0].GetCharacteristicGUID()),
+                                                    WeightCalculation(result[0].GetQuantity()),
+                                                    result[0].GetProductGuid());
+
+                                            PostAction();
+
+                                            try {
+                                                CurrentScanner.enable();
+                                                CurrentScanner.read();
+                                            } catch (ScannerException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
                                     }
                                 } catch (Exception ex)
@@ -180,12 +203,33 @@ public class ProductCommand implements Command {
                 {
                     propertyModel = ProductModel.get(0);
 
-                    viewUpdateModel = new ListViewPresentationModel(
-                            barCode.getUniqueIdentifier(),
-                            this.ProductStructureModel.FindProductByGuid(propertyModel.GetProductGuid()),
-                            this.CharacterisiticStructureModel.FindCharacteristicByGuid(propertyModel.GetCharacteristicGUID()),
-                            WeightCalculation(propertyModel.GetQuantity()),
-                            propertyModel.GetProductGuid());
+                    if(this.OrderStructureModel.IfProductExists(propertyModel.GetProductGuid())==false)
+                    {
+                        try {
+                            CurrentScanner.disable();
+                        } catch (ScannerException e) {
+                            e.printStackTrace();
+                        }
+
+                        mediaPlayer.start();
+
+                        if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed)
+                        {
+                            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute("Такой продукт не найден в заказе");
+                        }
+                        else {
+                            ((MainActivity)this.Activity).new MessageDialog().execute("Заказ не содержит такого продукта!");
+                        }
+                        return;
+                    }
+                    else {
+                        viewUpdateModel = new ListViewPresentationModel(
+                                barCode.getUniqueIdentifier(),
+                                this.ProductStructureModel.FindProductByGuid(propertyModel.GetProductGuid()),
+                                this.CharacterisiticStructureModel.FindCharacteristicByGuid(propertyModel.GetCharacteristicGUID()),
+                                WeightCalculation(propertyModel.GetQuantity()),
+                                propertyModel.GetProductGuid());
+                    }
 
                 }
             }

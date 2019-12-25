@@ -20,6 +20,18 @@ public class OrderStructureModel implements Serializable {
         this.ProductList.add(product);
     }
 
+    public Boolean IfProductExists(String productGuid)
+    {
+        for(ProductOrderStructureModel structure : this.ProductList)
+        {
+            if(structure.ProductGuid.equalsIgnoreCase(productGuid))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class ProductOrderStructureModel
     {
         private String ProductGuid;

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import businesslogic.OrderStructureModel;
 import businesslogic.ServerConnection;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.ProductStructureModel;
@@ -25,6 +26,7 @@ public class ScannerApplication extends Application {
     public ProductStructureModel productStructureModel = null;
     public CharacterisiticStructureModel characterisiticStructureModel = null;
     public OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel = null;
+    public OrderStructureModel orderStructureModel = null;
 
     public void onCreate() {
         super.onCreate();

@@ -58,6 +58,8 @@ public class OrderCommand implements Command {
 
         OrderHelper orderHelper = new OrderHelper(url, userpass);
 
+        appState.orderStructureModel = orderHelper.GetModel();
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("order", orderHelper.GetModel());
 
