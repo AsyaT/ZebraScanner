@@ -32,7 +32,7 @@ public class OrderStructureModel implements Serializable {
         return false;
     }
 
-    public static class ProductOrderStructureModel
+    public static class ProductOrderStructureModel implements Serializable
     {
         private String ProductGuid;
         private String CharacteristicGuid;
