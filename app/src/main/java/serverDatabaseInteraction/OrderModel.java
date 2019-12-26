@@ -4,6 +4,7 @@ import java.util.List;
 
 public class OrderModel  {
     public Boolean Error;
+    public String ErrorMessage;
     public String OrderName;
     public List<ProductListModel> ProductList;
 

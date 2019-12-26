@@ -8,11 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import com.symbol.emdk.barcode.ScanDataCollection;
 
 import businesslogic.OrderStructureModel;
+import businesslogic.ScannerState;
 import presentation.FragmentHelper;
+import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
+import serverDatabaseInteraction.ApplicationException;
 import serverDatabaseInteraction.OrderHelper;
 
 public class OrderCommand implements Command {
@@ -39,32 +42,35 @@ public class OrderCommand implements Command {
         String userpass =  appState.serverConnection.GetUsernameAndPassword();
         String url= appState.serverConnection.GetOrderProductURL(OrderGuid);
 
-        OrderHelper orderHelper = new OrderHelper(url, userpass);
+        OrderHelper orderHelper = null;
+        try {
+            orderHelper = new OrderHelper(url, userpass);
 
-        OrderStructureModel serverResult = orderHelper.GetModel();
+            OrderStructureModel serverResult = orderHelper.GetModel();
 
-        if(serverResult ==null)
+            appState.orderStructureModel = serverResult;
+
+            FragmentHelper fragmentHelper = new FragmentHelper(Activity);
+            fragmentHelper.closeFragment(orderInfoFragment);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("order", appState.orderStructureModel);
+
+            Fragment orderNameInfoFragment = new OrderInfoFragment();
+            orderNameInfoFragment.setArguments(bundle);
+           // FragmentHelper fragmentHelper = new FragmentHelper(this.Activity);
+            fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
+
+            ((MainActivity)Activity).scannerState.Set(ScannerState.PRODUCT);
+        }
+        catch (ApplicationException e)
         {
             this.Activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    orderInfoFragment.UpdateText("Это не штрих-код заказа! Сканируйте другой штрих-код.");
+                    orderInfoFragment.UpdateText(e.getMessage());
+                    return;
                 }
             });
-        }
-        else
-            {
-                appState.orderStructureModel = serverResult;
-
-                FragmentHelper fragmentHelper = new FragmentHelper(Activity);
-                fragmentHelper.closeFragment(orderInfoFragment);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("order", appState.orderStructureModel);
-
-                Fragment orderNameInfoFragment = new OrderInfoFragment();
-                orderNameInfoFragment.setArguments(bundle);
-               // FragmentHelper fragmentHelper = new FragmentHelper(this.Activity);
-                fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
         }
     }
 

@@ -13,8 +13,7 @@ public class OrderHelper {
     private OrderModel Model;
     private OrderStructureModel ReturnModel;
 
-    public OrderHelper(String url, String userpass)
-    {
+    public OrderHelper(String url, String userpass) throws ApplicationException {
         String jsonString = "";
 
         try {
@@ -27,6 +26,11 @@ public class OrderHelper {
 
         Gson g = new Gson();
         Model = g.fromJson(jsonString, OrderModel.class);
+
+        if(Model.Error == true)
+        {
+            throw new ApplicationException(Model.ErrorMessage);
+        }
 
         this.ReturnModel = new OrderStructureModel(Model.OrderName);
 

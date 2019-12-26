@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
 
-    ScannerStateHelper scannerState = new ScannerStateHelper();
+    public ScannerStateHelper scannerState = new ScannerStateHelper();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
 
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                         BarcodeExecutor executor = new BarcodeExecutor();
                         executor.Execute(scannerState.GetCurrent(), data,this);
-                        scannerState.Set(ScannerState.PRODUCT);
+
                     }
                 }
         }
