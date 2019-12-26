@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
+import businesslogic.OrderStructureModel;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
@@ -32,7 +33,17 @@ public class OrderCommand implements Command {
 
         ScanOrderFragment orderInfoFragment = (ScanOrderFragment) ((AppCompatActivity)Activity).getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
 
-        if(data.getData().length() != 39)
+        OrderGuid = data.getData();
+
+        ScannerApplication appState = ((ScannerApplication)this.Activity.getApplication());
+        String userpass =  appState.serverConnection.GetUsernameAndPassword();
+        String url= appState.serverConnection.GetOrderProductURL(OrderGuid);
+
+        OrderHelper orderHelper = new OrderHelper(url, userpass);
+
+        OrderStructureModel serverResult = orderHelper.GetModel();
+
+        if(serverResult ==null)
         {
             this.Activity.runOnUiThread(new Runnable() {
                 public void run() {
@@ -42,31 +53,25 @@ public class OrderCommand implements Command {
         }
         else
             {
-                OrderGuid = data.getData();
+                appState.orderStructureModel = serverResult;
 
                 FragmentHelper fragmentHelper = new FragmentHelper(Activity);
                 fragmentHelper.closeFragment(orderInfoFragment);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("order", appState.orderStructureModel);
+
+                Fragment orderNameInfoFragment = new OrderInfoFragment();
+                orderNameInfoFragment.setArguments(bundle);
+               // FragmentHelper fragmentHelper = new FragmentHelper(this.Activity);
+                fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
         }
     }
 
     @Override
     public void PostAction( ) {
 
-        ScannerApplication appState = ((ScannerApplication)this.Activity.getApplication());
-        String userpass =  appState.serverConnection.GetUsernameAndPassword();
-        String url= appState.serverConnection.GetOrderProductURL(OrderGuid);
 
-        OrderHelper orderHelper = new OrderHelper(url, userpass);
-
-        appState.orderStructureModel = orderHelper.GetModel();
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("order", orderHelper.GetModel());
-
-        Fragment orderInfoFragment = new OrderInfoFragment();
-        orderInfoFragment.setArguments(bundle);
-        FragmentHelper fragmentHelper = new FragmentHelper(this.Activity);
-        fragmentHelper.replaceFragment(orderInfoFragment, R.id.frOrderInfo);
 
     }
 }
