@@ -3,7 +3,6 @@ package ru.zferma.zebrascanner;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -116,14 +115,6 @@ public class ProgressOrderFragment extends Fragment {
                 ex.getMessage();
             }
         }
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                view.setVisibility(View.GONE);
-                return false;
-            }
-        });
 
         return view;
     }
