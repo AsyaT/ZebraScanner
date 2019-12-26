@@ -50,6 +50,19 @@ public class DataTableControl {
         return null;
     }
 
+    public Boolean IsProductExists(String productGuid)
+    {
+        for(ProductListViewModel product : DataTable)
+        {
+            if(product.getProductGuid().equalsIgnoreCase(productGuid))
+            {
+                return Boolean.TRUE;
+            }
+        }
+
+        return Boolean.FALSE;
+    }
+
     public void ItemClicked(View view, int position)
     {
         if(ItemsToDelete.contains(position))

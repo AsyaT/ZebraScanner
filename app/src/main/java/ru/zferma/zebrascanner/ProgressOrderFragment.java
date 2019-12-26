@@ -40,7 +40,11 @@ public class ProgressOrderFragment extends Fragment {
                 Double doneKilos = 0.0;
                 Integer doneItems = 0;
 
-                //TODO : set how many scanned to doneKilos and doneItems . Use FullDataTableControl to keep all scnned
+                if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
+                {
+                    doneKilos = Double.parseDouble(activity.dataTableControl.GetExitingProduct(product.GetProductGuid()).getWeight());
+                    doneItems = Integer.parseInt(activity.dataTableControl.GetExitingProduct(product.GetProductGuid()).getCoefficient());
+                }
 
                 TextView txtView = new TextView(getActivity());
                 txtView.setLayoutParams(new TableRow.LayoutParams(120, TableRow.LayoutParams.WRAP_CONTENT));
