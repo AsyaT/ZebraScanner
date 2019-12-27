@@ -165,6 +165,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 startActivity(operationSelectionIntent);
             }
         });
+
+        Button btnExecute = findViewById(R.id.btnExecute);
+        btnExecute.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                // 1. Если по заказу - то сравнить заказано и отсканено
+                // 2. Считать бейдж
+                // 3. Отправить POST
+                // 4. GET для печатной формы
+            }
+        });
     }
 
     protected void ShowFragmentScanOrder()
