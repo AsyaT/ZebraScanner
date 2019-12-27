@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     public ScannerStateHelper scannerState = new ScannerStateHelper();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
+    protected String BadgeGuid = "";
 
     OperationTypesStructureModel ScanningPermissions;
 
@@ -172,10 +173,25 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
                 // 1. Если по заказу - то сравнить заказано и отсканено
                 // 2. Считать бейдж
+                scannerState.Set(ScannerState.BADGE);
+                ShowFragmentScanBedge();
                 // 3. Отправить POST
+
                 // 4. GET для печатной формы
             }
         });
+    }
+
+    public void SetBadgeGuid(String guid)
+    {
+        BadgeGuid = guid;
+    }
+
+    protected void ShowFragmentScanBedge()
+    {
+        Fragment scanBadgeFragment = new ScanBadgeFragment();
+        FragmentHelper fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.replaceFragment(scanBadgeFragment,R.id.frBarcodeInfo);
     }
 
     protected void ShowFragmentScanOrder()

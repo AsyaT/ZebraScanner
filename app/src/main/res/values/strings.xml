@@ -16,4 +16,5 @@
         <item>По заказу</item>
     </array>
     <string name="PleaseChoseNomenclature">Выберете номенклатуру</string>
+    <string name="PleaseScanBadge">Сканируйте Ваш бэйдж</string>
 </resources>
