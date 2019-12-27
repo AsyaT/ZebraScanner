@@ -30,15 +30,24 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 
-import businesslogic.BarcodeExecutor;
-import businesslogic.LocationContext;
-import businesslogic.DataTableControl;
-import businesslogic.ListViewPresentationModel;
-import businesslogic.ProductHelper;
+import ScanningCommand.BarcodeExecutor;
+import ScanningCommand.ListViewPresentationModel;
+import businesslogic.OperationTypesStructureModel;
 import businesslogic.ScannerState;
 import businesslogic.ScannerStateHelper;
+import presentation.CustomListAdapter;
+import presentation.DataTableControl;
+import presentation.FragmentHelper;
+import serverDatabaseInteraction.BarcodeHelper;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -56,21 +65,19 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         return scanner;
     }
 
-    public ProductHelper productHelper = null;
-
     DataTableControl dataTableControl;
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
 
-    ScannerStateHelper scannerState = new ScannerStateHelper();
+    public ScannerStateHelper scannerState = new ScannerStateHelper();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
 
-    LocationContext ScanningPermissions;
+    OperationTypesStructureModel ScanningPermissions;
 
-    public Boolean isAllowedToScan(ScanDataCollection.LabelType labelType)
+    public Boolean IsAllowedToScan(ScanDataCollection.LabelType labelType)
     {
-        return ScanningPermissions.isAllowed(labelType);
+        return ScanningPermissions.IsAllowed(labelType);
     }
 
 
@@ -85,13 +92,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
-        ScanningPermissions = (LocationContext) getIntent().getSerializableExtra("location_context");
+        ScanningPermissions = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
 
-        ScannerApplication appState = ((ScannerApplication)this.getApplication());
-
-        productHelper = new ProductHelper(
-                appState.serverConnection.GetProductURL( ScanningPermissions.GetAccountingAreaGUID()),
-                appState.serverConnection.GetUsernameAndPassword());
+        new AsyncGetProducts().execute(ScanningPermissions.GetAccountingAreaGUID());
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -252,6 +255,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     }
 
     @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onData(ScanDataCollection scanDataCollection) {
 
         try {
@@ -267,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                         BarcodeExecutor executor = new BarcodeExecutor();
                         executor.Execute(scannerState.GetCurrent(), data,this);
-                        scannerState.Set(ScannerState.PRODUCT);
+
                     }
                 }
         }
@@ -471,6 +483,62 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             alertDialog.show();
             super.onPostExecute(message);
         }
+    }
+
+    public class AsyncGetProducts extends AsyncTask<String, Void,Void>
+    {
+
+        @Override
+        protected Void doInBackground(String... voids) {
+          /*  try {
+                scanner.read();
+            } catch (ScannerException e) {
+                e.printStackTrace();
+            }
+
+           */
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+
+            String result = "";
+            try {
+                File file = new File("/storage/emulated/0/Download/barcodes.txt");
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+
+                String st;
+                while ((st = br.readLine()) != null)
+                    result+=st;
+
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ScannerApplication appState = ((ScannerApplication) getApplication());
+
+            BarcodeHelper bh = null;
+            try {
+                bh = new BarcodeHelper(result);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            appState.barcodeStructureModel = bh.BarcodeModel;
+            appState.productStructureModel =bh.ProductModel;
+            appState.characterisiticStructureModel = bh.CharacteristicModel;
+
+ 
+        }
+
     }
 /*
     private class DataBaseCaller extends AsyncTask<Void, Void, Void>

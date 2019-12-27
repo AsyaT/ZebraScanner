@@ -9,26 +9,26 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 
-import businesslogic.ProductHelper;
-import businesslogic.ProductModel;
+import serverDatabaseInteraction.BarcodeHelper;
+import serverDatabaseInteraction.BarcodeModel;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ProductHelper.class })
-public class ProductHelperTest {
+@PrepareForTest({ BarcodeHelper.class })
+public class BarcodeHelperTest {
 
-    ProductHelper productHelper;
-    ProductModel model;
+    BarcodeHelper barcodeHelper;
+    BarcodeModel model;
 
 
-    public  ProductHelperTest() {
-        model = new ProductModel();
-        model.BarCodeList = new ArrayList<ProductModel.ProductListModel>();
+    public BarcodeHelperTest() {
+        model = new BarcodeModel();
+        model.BarCodeList = new ArrayList<BarcodeModel.ProductListModel>();
 
-        ProductModel.ProductListModel productListModel = new ProductModel.ProductListModel();
+        BarcodeModel.ProductListModel productListModel = new BarcodeModel.ProductListModel();
         productListModel.Barcode = "2407394";
-        productListModel.PropertiesList = new ArrayList<ProductModel.PropertiesListModel>();
+        productListModel.PropertiesList = new ArrayList<BarcodeModel.PropertiesListModel>();
 
-        ProductModel.PropertiesListModel propertiesListModel =new ProductModel.PropertiesListModel();
+        BarcodeModel.PropertiesListModel propertiesListModel =new BarcodeModel.PropertiesListModel();
         propertiesListModel.ProductName="Филе бедра \\\"Здоровая Ферма\\\", охл.~0,80 кг*6/~4,8 кг/ (подложка, стрейч)";
         propertiesListModel.ProductGUID="ddc4578e-e49f-11e7-80c5-a4bf011ce3c3";
         propertiesListModel.ProductCharactName="Дикси";
@@ -38,15 +38,15 @@ public class ProductHelperTest {
         productListModel.PropertiesList.add(propertiesListModel);
         model.BarCodeList.add(productListModel);
 
-        productHelper = new ProductHelper("","");
+        barcodeHelper = new BarcodeHelper("","");
 
-        Whitebox.setInternalState(productHelper,"Model",model);
+        Whitebox.setInternalState(barcodeHelper,"Model",model);
     }
 
     @Test
     public void Test_FindProductByBarcode()
     {
-        ProductModel.ProductListModel result = productHelper.FindProductByBarcode("2407394");
+        BarcodeModel.ProductListModel result = barcodeHelper.FindProductByBarcode("2407394");
 
         Assert.assertEquals(model.BarCodeList.get(0),result);
     }

@@ -1,4 +1,4 @@
-package businesslogic;
+package presentation;
 
 public class ProductListViewModel extends Object {
     private String ProductGuid;

@@ -1,8 +1,10 @@
-package businesslogic;
+package ScanningCommand;
 
 import android.app.Activity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
+
+import businesslogic.ScannerState;
 
 public class BarcodeExecutor {
     public void Execute(ScannerState state, ScanDataCollection.ScanData data, Activity activity) throws InstantiationException, IllegalAccessException {

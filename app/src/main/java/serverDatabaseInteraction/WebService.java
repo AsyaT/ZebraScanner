@@ -1,4 +1,4 @@
-package businesslogic;
+package serverDatabaseInteraction;
 
 import android.os.AsyncTask;
 
@@ -14,7 +14,8 @@ import java.net.URL;
 public class WebService extends AsyncTask<String, Void, String> {
 
     @Override
-    protected String doInBackground(String... urlString) {
+    protected String doInBackground(String... urlString)
+    {
         try {
             URL url= new URL(urlString[0] );
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -47,7 +48,7 @@ public class WebService extends AsyncTask<String, Void, String> {
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            throw ex;
         }
 
         return null;

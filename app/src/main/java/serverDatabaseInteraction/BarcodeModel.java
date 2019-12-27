@@ -1,14 +1,9 @@
-package businesslogic;
+package serverDatabaseInteraction;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.List;
-import java.util.Locale;
 
-public class ProductModel {
+public class BarcodeModel {
     public List<ProductListModel> BarCodeList;
-
-
 
     public static class ProductListModel {
         public String Barcode;
@@ -21,10 +16,5 @@ public class ProductModel {
         public String ProductCharactName;
         public String ProductCharactGUID;
         public String Quant;
-        public Double Quantity() throws ParseException {
-            NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
-            Number number = format.parse(this.Quant);
-            return number.doubleValue();
-        }
     }
 }

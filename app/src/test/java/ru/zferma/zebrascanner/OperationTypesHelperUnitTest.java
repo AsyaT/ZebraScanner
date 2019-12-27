@@ -2,8 +2,8 @@ package ru.zferma.zebrascanner;
 
 import org.junit.Test;
 
-import businesslogic.OperationTypesHelper;
-import businesslogic.OperationTypesAndAccountingAreasModel;
+import serverDatabaseInteraction.OperationTypesHelper;
+import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,4 +1,4 @@
-package ru.zferma.zebrascanner;
+package presentation;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -20,6 +20,7 @@ public class FragmentHelper {
         FragmentManager fragmentManager = ((AppCompatActivity)ActivityInUse).getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(var1, destFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -29,6 +30,7 @@ public class FragmentHelper {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.hide(fragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

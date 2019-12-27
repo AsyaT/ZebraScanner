@@ -1,41 +1,56 @@
 package ru.zferma.zebrascanner;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import businesslogic.LocationContext;
-import businesslogic.OperationTypesHelper;
+import businesslogic.OperationTypesStructureModel;
+import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import presentation.AccountingAreasAdapter;
+import presentation.AccountingAreasListViewModel;
+import presentation.FragmentHelper;
 
 public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
-    LocationContext LocationContext ;
+    OperationTypesStructureModel OperationTypesStructureModel;
+    AccountingAreasListViewModel SelectedAccountingArea;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        LocationContext = (LocationContext) getIntent().getSerializableExtra("location_context");
+        OperationTypesStructureModel = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
-        operationTypeTextView.setText(LocationContext.GetOperationName());
+        operationTypeTextView.setText(OperationTypesStructureModel.GetOperationName());
 
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
+        OperationsTypesAccountingAreaStructureModel data = appState.operationsTypesAccountingAreaStructureModel;
 
-        OperationTypesHelper AccountingAreaIncomeData = new OperationTypesHelper(
-                appState.serverConnection.GetOperationTypesURL(),
-                appState.serverConnection.GetUsernameAndPassword());
-        listItem = AccountingAreaIncomeData.GetAccountingAreas(LocationContext.GetOperationName());
+        ArrayList<AccountingAreasListViewModel> listItem = new ArrayList<>();
+
+        HashMap<String,OperationsTypesAccountingAreaStructureModel.AccountingArea> accountAreas = data.GetAccountingAreas(OperationTypesStructureModel.GetOperationGuid());
+
+         for(String accountAreaGuid: accountAreas.keySet() )
+         {
+             AccountingAreasListViewModel result = new AccountingAreasListViewModel();
+             result.AccountingAreaGuid = accountAreaGuid;
+             result.AccountingAreaName = accountAreas.get(accountAreaGuid).GetName();
+             listItem.add(result);
+         }
 
         if(listItem == null)
         {
@@ -47,27 +62,49 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         }
 
         listView = (ListView)findViewById(R.id.AccountAreaListView);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, listItem); // WHAT Is IT "simple_list_item_1" ???
+        final AccountingAreasAdapter adapter = new AccountingAreasAdapter(this, listItem); // WHAT Is IT "simple_list_item_1" ???
 
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(ClickAction);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                AccountingAreasListViewModel tap = (AccountingAreasListViewModel) adapter.getItem(position);
+
+                if(SelectedAccountingArea == null || SelectedAccountingArea != tap)
+                {
+                    for (int i = 0; i < listView.getChildCount(); i++) {
+                        View listItem = listView.getChildAt(i);
+                        listItem.setBackgroundColor(Color.WHITE);
+                    }
+
+                    view.setBackgroundColor(Color.YELLOW);
+                    SelectedAccountingArea = tap;
+                }
+                else{
+                    view.setBackgroundColor(Color.WHITE);
+                    SelectedAccountingArea = null;
+                }
+            }
+        });
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SelectedType.isEmpty() == false)
+                if(SelectedAccountingArea != null)
                 {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(LocationContext.GetOperationName()).getActivityClass());
+                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(OperationTypesStructureModel.GetOperationName()).getActivityClass());
 
-                    LocationContext locationContext = new LocationContext(
-                            LocationContext.GetOperationName(),
-                            SelectedType,
-                            AccountingAreaIncomeData.GetAccountingAreaGUID(SelectedType),
-                            AccountingAreaIncomeData.GetScanningPermissions(SelectedType),
-                            AccountingAreaIncomeData.IsPackageListScanningAllowed(SelectedType));
+                    OperationTypesStructureModel operationTypesStructureModel = new OperationTypesStructureModel(
+                            OperationTypesStructureModel.GetOperationName(),
+                            OperationTypesStructureModel.GetOperationGuid(),
+                            SelectedAccountingArea.AccountingAreaName,
+                            SelectedAccountingArea.AccountingAreaGuid,
+                            accountAreas.get(SelectedAccountingArea.AccountingAreaGuid).GetScanningPermissions(),
+                            accountAreas.get(SelectedAccountingArea.AccountingAreaGuid).IsPackageListAllowed());
 
-                    goToMainActivityIntent.putExtra("location_context", (Serializable) locationContext);
+                    goToMainActivityIntent.putExtra("location_context", (Serializable) operationTypesStructureModel);
 
                     startActivity(goToMainActivityIntent);
                 }

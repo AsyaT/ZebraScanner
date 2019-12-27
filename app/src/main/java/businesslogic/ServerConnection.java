@@ -12,7 +12,13 @@ public class ServerConnection {
         this.Password = password;
     }
 
-    public String GetProductURL(String accountingAreaGuid)
+    public String GetProductURL()
+    {
+        //TODO: implement server connection
+        return "";
+    }
+
+    public String GetBarcodeListURL(String accountingAreaGuid)
     {
         return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Products/v1/GetList?AccountingAreaGUID="+accountingAreaGuid;
     }
@@ -21,6 +27,11 @@ public class ServerConnection {
     {
         return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetList?UserName="+ this.Username;
 
+    }
+
+    public String GetOrderProductURL(String orderGUID)
+    {
+        return "http://"+this.ServerIP+"/erp_troyan/hs/TSD_Feed/ClientOrders/v1/GetByGUID?GUID="+orderGUID;
     }
 
     public String GetUsernameAndPassword()

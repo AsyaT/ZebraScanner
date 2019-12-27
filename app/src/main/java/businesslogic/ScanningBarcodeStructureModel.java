@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class BarcodeStructure {
+public class ScanningBarcodeStructureModel {
     private String UniqueIdentifier;
     private Double Weight;
     private BarcodeTypes LabelType;
@@ -108,7 +108,7 @@ public class BarcodeStructure {
         }
     }
 
-    public BarcodeStructure( String fullBarcode, BarcodeTypes labelType) throws ParseException {
+    public ScanningBarcodeStructureModel(String fullBarcode, BarcodeTypes labelType) throws ParseException {
         FullBarcode = fullBarcode;
         LabelType = labelType;
 

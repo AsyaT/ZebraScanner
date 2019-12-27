@@ -3,9 +3,9 @@ package ru.zferma.zebrascanner;
 import org.junit.Before;
 import org.junit.Test;
 
-import businesslogic.DataTableControl;
-import businesslogic.ListViewPresentationModel;
-import businesslogic.ProductListViewModel;
+import presentation.DataTableControl;
+import ScanningCommand.ListViewPresentationModel;
+import presentation.ProductListViewModel;
 
 import static junit.framework.TestCase.assertEquals;
 

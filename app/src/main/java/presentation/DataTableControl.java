@@ -1,4 +1,4 @@
-package businesslogic;
+package presentation;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -7,6 +7,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import ScanningCommand.ListViewPresentationModel;
 
 public class DataTableControl {
 
@@ -33,6 +35,32 @@ public class DataTableControl {
     public ProductListViewModel GetExitingProduct(String uniqueBarcode, String productGuid )
     {
         return DataTable.stream().filter(x-> uniqueBarcode.equalsIgnoreCase(x.getBarCode()) && productGuid.equalsIgnoreCase(x.getProductGuid())).findAny().orElse(null);
+    }
+
+    public ProductListViewModel GetExitingProduct(String productGuid )
+    {
+        for(ProductListViewModel product : DataTable)
+        {
+            if(product.getProductGuid().equalsIgnoreCase(productGuid))
+            {
+                return product;
+            }
+        }
+
+        return null;
+    }
+
+    public Boolean IsProductExists(String productGuid)
+    {
+        for(ProductListViewModel product : DataTable)
+        {
+            if(product.getProductGuid().equalsIgnoreCase(productGuid))
+            {
+                return Boolean.TRUE;
+            }
+        }
+
+        return Boolean.FALSE;
     }
 
     public void ItemClicked(View view, int position)
@@ -72,7 +100,7 @@ public class DataTableControl {
             DataTable.remove(existingTableModel);
 
             Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
-            Double newWeight = Double.parseDouble(existingTableModel.getWeight()) + model.Weight;
+            Double newWeight = Double.parseDouble( existingTableModel.getWeight()) + model.Weight;
 
             result = new ProductListViewModel(
                     model.ProductGuid,

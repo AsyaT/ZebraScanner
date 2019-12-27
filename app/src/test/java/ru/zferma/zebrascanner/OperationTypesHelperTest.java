@@ -10,8 +10,8 @@ import org.powermock.reflect.Whitebox;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import businesslogic.OperationTypesAndAccountingAreasModel;
-import businesslogic.OperationTypesHelper;
+import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
+import serverDatabaseInteraction.OperationTypesHelper;
 
 import static com.symbol.emdk.barcode.ScanDataCollection.LabelType;
 
