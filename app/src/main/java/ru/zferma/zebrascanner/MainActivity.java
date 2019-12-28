@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
-       
+
         new AsyncGetProducts().execute(appState.LocationContext.GetAccountingAreaGUID());
 
         dataTableControl = new DataTableControl();

@@ -29,14 +29,15 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        OperationTypesStructureModel = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+        OperationTypesStructureModel = appState.LocationContext;
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
         operationTypeTextView.setText(OperationTypesStructureModel.GetOperationName());
 
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
         OperationsTypesAccountingAreaStructureModel data = appState.operationsTypesAccountingAreaStructureModel;
 
         ArrayList<AccountingAreasListViewModel> listItem = new ArrayList<>();
