@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import businesslogic.OrderStructureModel;
+import businesslogic.ScannerStateHelper;
 import businesslogic.ServerConnection;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.ProductStructureModel;
@@ -26,7 +28,12 @@ public class ScannerApplication extends Application {
     public ProductStructureModel productStructureModel = null;
     public CharacterisiticStructureModel characterisiticStructureModel = null;
     public OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel = null;
+
+    //Context entities
+    public ScannerStateHelper scannerState = new ScannerStateHelper();
+    public OperationTypesStructureModel LocationContext;
     public OrderStructureModel orderStructureModel = null;
+    public String BadgeGuid = null;
 
     public void onCreate() {
         super.onCreate();

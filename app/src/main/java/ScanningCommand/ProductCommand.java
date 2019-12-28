@@ -148,7 +148,9 @@ public class ProductCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
 
-        if(((MainActivity)this.Activity).IsAllowedToScan(data.getLabelType()) == false)
+        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
+
+        if(appState.LocationContext.IsAllowed(data.getLabelType()) == false)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.Activity);
 

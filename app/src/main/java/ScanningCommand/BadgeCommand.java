@@ -9,6 +9,7 @@ import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanBadgeFragment;
+import ru.zferma.zebrascanner.ScannerApplication;
 
 public class BadgeCommand implements Command  {
 
@@ -27,7 +28,8 @@ public class BadgeCommand implements Command  {
     @Override
     public void ParseData(ScanDataCollection.ScanData data)
     {
-        ((MainActivity) Activity).SetBadgeGuid(data.getData());
+        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
+        appState.BadgeGuid = data.getData();
 
     }
 

@@ -46,7 +46,6 @@ import ScanningCommand.ListViewPresentationModel;
 import businesslogic.OperationTypesStructureModel;
 import businesslogic.ResponseStructureModel;
 import businesslogic.ScannerState;
-import businesslogic.ScannerStateHelper;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
@@ -73,18 +72,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
 
-    public ScannerStateHelper scannerState = new ScannerStateHelper();
-
     public Boolean IsBarcodeInfoFragmentShowed = false;
-    protected String BadgeGuid = null;
-
-    OperationTypesStructureModel ScanningPermissions;
-
-    public Boolean IsAllowedToScan(ScanDataCollection.LabelType labelType)
-    {
-        return ScanningPermissions.IsAllowed(labelType);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +85,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
-        ScanningPermissions = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
+        ScannerApplication appState = ((ScannerApplication) getApplication());
+        appState.LocationContext = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
 
-        new AsyncGetProducts().execute(ScanningPermissions.GetAccountingAreaGUID());
+        new AsyncGetProducts().execute(appState.LocationContext.GetAccountingAreaGUID());
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -177,7 +166,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
                 // TODO: 1. Если по заказу - то сравнить заказано и отсканено
                 // 2. Считать бейдж
-                scannerState.Set(ScannerState.BADGE);
+                ScannerApplication appState = ((ScannerApplication) getApplication());
+                appState.scannerState.Set(ScannerState.BADGE);
                 ShowFragmentScanBedge();
 
             }
@@ -192,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         String url = appState.serverConnection.getResponseUrl();
 
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = ScanningPermissions.GetAccountingAreaGUID();
-        responseStructureModel.UserID = BadgeGuid;
+        responseStructureModel.AccountingAreaGUID = appState.LocationContext.GetAccountingAreaGUID();
+        responseStructureModel.UserID = appState.BadgeGuid;
         if(appState.orderStructureModel != null)
         {
             responseStructureModel.DocumentID = appState.orderStructureModel.GetOrderId();
@@ -216,10 +206,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         // TODO: 4. GET для печатной формы
     }
 
-    public void SetBadgeGuid(String guid)
-    {
-        BadgeGuid = guid;
-    }
 
     protected void ShowFragmentScanBedge()
     {
@@ -233,7 +219,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
         fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo);
-        scannerState.Set(ScannerState.ORDER);
+
+        ScannerApplication appState = ((ScannerApplication) getApplication());
+        appState.scannerState.Set(ScannerState.ORDER);
     }
 
     // Method to initialize and enable Scanner and its listeners
@@ -339,7 +327,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     {
 
                         BarcodeExecutor executor = new BarcodeExecutor();
-                        executor.Execute(scannerState.GetCurrent(), data,this);
+                        ScannerApplication appState = ((ScannerApplication) getApplication());
+                        executor.Execute(appState.scannerState.GetCurrent(), data,this);
 
                     }
                 }
