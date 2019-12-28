@@ -180,9 +180,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 scannerState.Set(ScannerState.BADGE);
                 ShowFragmentScanBedge();
 
-
-                //TODO: очищать таблицы или переходить на выбор операции
-                // TODO: 4. GET для печатной формы
             }
         });
     }
@@ -214,6 +211,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        //TODO: очищать таблицы или переходить на выбор операции
+        // TODO: 4. GET для печатной формы
     }
 
     public void SetBadgeGuid(String guid)
