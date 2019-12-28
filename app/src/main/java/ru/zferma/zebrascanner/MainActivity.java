@@ -43,7 +43,6 @@ import java.util.concurrent.ExecutionException;
 
 import ScanningCommand.BarcodeExecutor;
 import ScanningCommand.ListViewPresentationModel;
-import businesslogic.OperationTypesStructureModel;
 import businesslogic.ResponseStructureModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
@@ -86,8 +85,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
-        appState.LocationContext = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
-
+       
         new AsyncGetProducts().execute(appState.LocationContext.GetAccountingAreaGUID());
 
         dataTableControl = new DataTableControl();

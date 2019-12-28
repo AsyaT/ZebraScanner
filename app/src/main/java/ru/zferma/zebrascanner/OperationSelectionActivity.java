@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -37,9 +36,9 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         okButton = (Button) findViewById(R.id.OKButton);
         cancelButton = (Button) findViewById(R.id.CancelButton);
 
-        try {
-            ScannerApplication appState = ((ScannerApplication) this.getApplication());
+        ScannerApplication appState = ((ScannerApplication) this.getApplication());
 
+        try {
             OperationTypesHelper operationTypesHelper = new OperationTypesHelper(
                     appState.serverConnection.GetOperationTypesURL(),
                     appState.serverConnection.GetUsernameAndPassword());
@@ -100,11 +99,11 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                 if (SelectedOperation != null)
                 {
                     Class NextActivityClass ;
-                    OperationTypesStructureModel operationTypesStructureModel;
+
                     if (data.HasSeveralAccountingAreas(SelectedOperation.OperationGuid))
                     {
                         NextActivityClass =  AccountAreaSelectionActivity.class;
-                        operationTypesStructureModel = new OperationTypesStructureModel(
+                        appState.LocationContext = new OperationTypesStructureModel(
                                 SelectedOperation.OperationName,
                                 SelectedOperation.OperationGuid,
                                 null,
@@ -119,7 +118,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                                 data.GetAccountingAreas(SelectedOperation.OperationGuid).get(accountingAreaGuid);
 
                         NextActivityClass =  getOperationsEnum(SelectedOperation.OperationName).getActivityClass();
-                        operationTypesStructureModel = new OperationTypesStructureModel(
+                        appState.LocationContext = new OperationTypesStructureModel(
                                 SelectedOperation.OperationName,
                                 SelectedOperation.OperationGuid,
                                 accountingArea.GetName(),
@@ -129,9 +128,6 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                     }
 
                     Intent nextActivityIntent = new Intent(getBaseContext(), NextActivityClass);
-
-                    nextActivityIntent.putExtra("location_context", (Serializable) operationTypesStructureModel);
-
                     startActivity(nextActivityIntent);
 
                 }
