@@ -67,7 +67,8 @@ public class BadgeCommand implements Command  {
             e.printStackTrace();
         }
 
-        //TODO: очищать таблицы или переходить на выбор операции
+
         // TODO: 4. GET для печатной формы
+        // TODO: 5. очищать таблицы или переходить на выбор операции
     }
 }

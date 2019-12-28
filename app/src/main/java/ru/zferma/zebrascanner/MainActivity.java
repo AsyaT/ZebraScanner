@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
 
-        new AsyncGetProducts().execute(appState.LocationContext.GetAccountingAreaGUID());
+        new AsyncGetProducts().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -159,26 +159,21 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onClick(View view) {
                 // TODO: 1. Если по заказу - то сравнить заказано и отсканено
-                // 2. Считать бейдж
-                ScannerApplication appState = ((ScannerApplication) getApplication());
-                appState.scannerState.Set(ScannerState.BADGE);
-                ShowFragmentScanBedge();
 
+                // 2. Считать бейдж
+                ShowFragmentScanBedge();
             }
         });
     }
-
-    public void SendServerPOST()
-    {
-
-    }
-
 
     protected void ShowFragmentScanBedge()
     {
         Fragment scanBadgeFragment = new ScanBadgeFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
         fragmentHelper.replaceFragment(scanBadgeFragment,R.id.frBarcodeInfo);
+
+        ScannerApplication appState = ((ScannerApplication) getApplication());
+        appState.scannerState.Set(ScannerState.BADGE);
     }
 
     protected void ShowFragmentScanOrder()
