@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.symbol.emdk.EMDKManager;
 import com.symbol.emdk.EMDKManager.EMDKListener;
 import com.symbol.emdk.EMDKResults;
@@ -39,17 +38,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import ScanningCommand.BarcodeExecutor;
 import ScanningCommand.ListViewPresentationModel;
-import businesslogic.ResponseStructureModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
 import serverDatabaseInteraction.BarcodeHelper;
-import serverDatabaseInteraction.WebServiceResponse;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -174,34 +170,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     public void SendServerPOST()
     {
-        // 3. Отправить POST
 
-        ScannerApplication appState = ((ScannerApplication) getApplication());
-        String url = appState.serverConnection.getResponseUrl();
-
-        ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = appState.LocationContext.GetAccountingAreaGUID();
-        responseStructureModel.UserID = appState.BadgeGuid;
-        if(appState.orderStructureModel != null)
-        {
-            responseStructureModel.DocumentID = appState.orderStructureModel.GetOrderId();
-        }
-
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(responseStructureModel);
-
-        try {
-            String result = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
-
-            new MessageDialog().execute(result);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //TODO: очищать таблицы или переходить на выбор операции
-        // TODO: 4. GET для печатной формы
     }
 
 
