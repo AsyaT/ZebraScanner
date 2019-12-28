@@ -4,14 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import businesslogic.BarcodeStructureModel;
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.FullDataTableControl;
 import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import businesslogic.OrderStructureModel;
+import businesslogic.ProductStructureModel;
 import businesslogic.ScannerStateHelper;
 import businesslogic.ServerConnection;
-import businesslogic.BarcodeStructureModel;
-import businesslogic.ProductStructureModel;
 
 public class ScannerApplication extends Application {
 
@@ -34,6 +35,8 @@ public class ScannerApplication extends Application {
     public OperationTypesStructureModel LocationContext;
     public OrderStructureModel orderStructureModel = null;
     public String BadgeGuid = null;
+
+    public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
 
     public void onCreate() {
         super.onCreate();
