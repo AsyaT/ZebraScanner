@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     public ScannerStateHelper scannerState = new ScannerStateHelper();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
-    protected String BadgeGuid = "";
+    protected String BadgeGuid = null;
 
     OperationTypesStructureModel ScanningPermissions;
 
@@ -179,35 +179,41 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 // 2. Считать бейдж
                 scannerState.Set(ScannerState.BADGE);
                 ShowFragmentScanBedge();
-                // 3. Отправить POST
 
-                ScannerApplication appState = ((ScannerApplication) getApplication());
-                String url = appState.serverConnection.getResponseUrl();
 
-                ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-                responseStructureModel.AccountingAreaGUID = ScanningPermissions.GetAccountingAreaGUID();
-                responseStructureModel.UserID = BadgeGuid;
-                if(appState.orderStructureModel != null)
-                {
-                    responseStructureModel.DocumentID = appState.orderStructureModel.GetOrderId();
-                }
-
-                Gson gson = new Gson();
-                String jsonResponse = gson.toJson(responseStructureModel);
-
-                try {
-                    String result = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
-
-                    new MessageDialog().execute(result);
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+                //TODO: очищать таблицы или переходить на выбор операции
                 // TODO: 4. GET для печатной формы
             }
         });
+    }
+
+    public void SendServerPOST()
+    {
+        // 3. Отправить POST
+
+        ScannerApplication appState = ((ScannerApplication) getApplication());
+        String url = appState.serverConnection.getResponseUrl();
+
+        ResponseStructureModel responseStructureModel = new ResponseStructureModel();
+        responseStructureModel.AccountingAreaGUID = ScanningPermissions.GetAccountingAreaGUID();
+        responseStructureModel.UserID = BadgeGuid;
+        if(appState.orderStructureModel != null)
+        {
+            responseStructureModel.DocumentID = appState.orderStructureModel.GetOrderId();
+        }
+
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(responseStructureModel);
+
+        try {
+            String result = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
+
+            new MessageDialog().execute(result);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void SetBadgeGuid(String guid)

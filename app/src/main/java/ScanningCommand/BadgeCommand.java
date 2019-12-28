@@ -33,6 +33,6 @@ public class BadgeCommand implements Command  {
 
     @Override
     public void PostAction() {
-
+        ((MainActivity) Activity).SendServerPOST();
     }
 }
