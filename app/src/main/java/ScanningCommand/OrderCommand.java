@@ -49,6 +49,7 @@ public class OrderCommand implements Command {
             OrderStructureModel serverResult = orderHelper.GetModel();
 
             appState.orderStructureModel = serverResult;
+            appState.orderStructureModel.SetOrderGuid(data.getData());
 
             FragmentHelper fragmentHelper = new FragmentHelper(Activity);
             fragmentHelper.closeFragment(orderInfoFragment);

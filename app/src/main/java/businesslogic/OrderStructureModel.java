@@ -7,12 +7,23 @@ import java.util.List;
 public class OrderStructureModel implements Serializable {
 
     private String Name;
+    private String OrderGuid;
     private List<ProductOrderStructureModel> ProductList;
 
     public OrderStructureModel(String name)
     {
         this.Name = name;
         this.ProductList = new ArrayList<>();
+    }
+
+    public String GetOrderId()
+    {
+        return OrderGuid;
+    }
+
+    public void SetOrderGuid(String guid)
+    {
+        this.OrderGuid = guid;
     }
 
     public void Add(ProductOrderStructureModel product)
