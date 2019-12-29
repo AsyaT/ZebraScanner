@@ -152,22 +152,22 @@ public class ProductCommand implements Command {
 
     protected businesslogic.BarcodeStructureModel.ProductStructureModel GetProductFromCollection(String uniqueIdentifierBarcode)
     {
-        List<businesslogic.BarcodeStructureModel.ProductStructureModel> ProductModel = BarcodeStructureModel.FindProductByBarcode(uniqueIdentifierBarcode);
+        List<businesslogic.BarcodeStructureModel.ProductStructureModel> listOfProducts = BarcodeStructureModel.FindProductByBarcode(uniqueIdentifierBarcode);
 
-        if(ProductModel == null)
+        if(listOfProducts == null)
         {
             AlarmAndNotify("Такой штрих-код не найден в номенклатуре!");
         }
         else
         {
             businesslogic.BarcodeStructureModel.ProductStructureModel product=null;
-            if(ProductModel.size()>1)
+            if(listOfProducts.size()>1)
             {
-                SelectionDialog(ProductModel);
+                SelectionDialog(listOfProducts);
             }
             else
             {
-                product = ProductModel.get(0);
+                product = listOfProducts.get(0);
             }
 
             if((this.OrderStructureModel != null) && (this.OrderStructureModel.IfProductExists(product.GetProductGuid()) == false))
@@ -237,27 +237,7 @@ public class ProductCommand implements Command {
 
         if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
-            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 ) {
-
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
-            }
-
-            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
-/*
-                SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
-                dbHandler.insertDatabar(
-                        barCode.getUniqueIdentifier(),
-                        barCode.getWeight().toString(),
-                        barCode.getLotNumber(),
-                        barCode.getProductionDate(),
-                        barCode.getExpirationDate(),
-                        barCode.getSerialNumber(),
-                        barCode.getInternalProducer(),
-                        barCode.getInternalEquipment() );
-
- */
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
-            }
+            ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
         }
         else if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
         {
