@@ -14,16 +14,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import businesslogic.BarcodeStructureModel;
+import businesslogic.BarcodeTypes;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.FullDataTableControl;
 import businesslogic.OrderStructureModel;
 import businesslogic.ProductStructureModel;
 import businesslogic.ScanningBarcodeStructureModel;
-import businesslogic.BarcodeTypes;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
-import businesslogic.BarcodeStructureModel;
 
 public class ProductCommand implements Command {
 
@@ -217,6 +217,10 @@ public class ProductCommand implements Command {
                 WeightCalculation(product.GetQuantity()),
                 product.GetProductGuid());
 
+        if(appState.ScannedProductsToSend == null)
+        {
+            appState.ScannedProductsToSend = new FullDataTableControl();
+        }
         appState.ScannedProductsToSend.Add(
                 product.GetProductGuid(),
                 product.GetCharacteristicGUID(),
@@ -247,10 +251,6 @@ public class ProductCommand implements Command {
         {
             ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
 
-            if(appState.ScannedProductsToSend == null)
-            {
-                appState.ScannedProductsToSend = new FullDataTableControl();
-            }
         }
         else if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
         {
