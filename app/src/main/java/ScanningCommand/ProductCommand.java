@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.FullDataTableControl;
 import businesslogic.OrderStructureModel;
 import businesslogic.ProductStructureModel;
 import businesslogic.ScanningBarcodeStructureModel;
@@ -27,6 +28,7 @@ import businesslogic.BarcodeStructureModel;
 public class ProductCommand implements Command {
 
     ListViewPresentationModel viewUpdateModel = null;
+
     BarcodeStructureModel BarcodeStructureModel = null;
     ProductStructureModel ProductStructureModel = null;
     CharacterisiticStructureModel CharacterisiticStructureModel = null;
@@ -37,13 +39,14 @@ public class ProductCommand implements Command {
 
     Activity Activity;
     Scanner CurrentScanner;
+    ScannerApplication appState;
 
     @Override
     public void Action(Activity activity) {
         this.Activity = activity;
         this.CurrentScanner = ((MainActivity)activity).getScanner();
 
-        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
+        appState = ((ScannerApplication) Activity.getApplication());
         BarcodeStructureModel = appState.barcodeStructureModel;
         ProductStructureModel = appState.productStructureModel;
         CharacterisiticStructureModel = appState.characterisiticStructureModel;
@@ -88,12 +91,7 @@ public class ProductCommand implements Command {
                                 }
                                 else
                                 {
-                                    viewUpdateModel = new ListViewPresentationModel(
-                                            barCode.getUniqueIdentifier(),
-                                            ProductStructureModel.FindProductByGuid( result[0].GetProductGuid()),
-                                            CharacterisiticStructureModel.FindCharacteristicByGuid(result[0].GetCharacteristicGUID()),
-                                            WeightCalculation(result[0].GetQuantity()),
-                                            result[0].GetProductGuid());
+                                    CreateResultModels(barCode.getUniqueIdentifier(), result[0]);
 
                                     PostAction();
 
@@ -186,8 +184,6 @@ public class ProductCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
 
-        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-
         if(appState.LocationContext.IsAllowed(data.getLabelType()) == false)
         {
             AlarmAndNotify("Тип "+data.getLabelType().name() +" запрещен к сканированию.");
@@ -200,12 +196,8 @@ public class ProductCommand implements Command {
                 businesslogic.BarcodeStructureModel.ProductStructureModel product = GetProductFromCollection(uniqueIdentifier);
 
                 if(product!=null) {
-                    viewUpdateModel = new ListViewPresentationModel(
-                            uniqueIdentifier,
-                            this.ProductStructureModel.FindProductByGuid(product.GetProductGuid()),
-                            this.CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
-                            WeightCalculation(product.GetQuantity()),
-                            product.GetProductGuid());
+
+                    CreateResultModels(uniqueIdentifier, product);
                 }
 
             }
@@ -214,6 +206,22 @@ public class ProductCommand implements Command {
                 ex.getMessage();
             }
         }
+    }
+
+    private void CreateResultModels(String uniqueIdentifier, businesslogic.BarcodeStructureModel.ProductStructureModel product)
+    {
+        viewUpdateModel = new ListViewPresentationModel(
+                uniqueIdentifier,
+                this.ProductStructureModel.FindProductByGuid(product.GetProductGuid()),
+                this.CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
+                WeightCalculation(product.GetQuantity()),
+                product.GetProductGuid());
+
+        appState.ScannedProductsToSend.Add(
+                product.GetProductGuid(),
+                product.GetCharacteristicGUID(),
+                String.valueOf(barCode.getInternalProducer()), //TODO: Find Manufacturer id
+                barCode);
     }
 
     private Double WeightCalculation(Double modelQuantity )  {
@@ -238,6 +246,11 @@ public class ProductCommand implements Command {
         if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
             ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
+
+            if(appState.ScannedProductsToSend == null)
+            {
+                appState.ScannedProductsToSend = new FullDataTableControl();
+            }
         }
         else if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
         {

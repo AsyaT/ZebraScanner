@@ -8,6 +8,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.concurrent.ExecutionException;
 
+import businesslogic.FullDataTableControl;
 import businesslogic.ResponseStructureModel;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
@@ -54,6 +55,19 @@ public class BadgeCommand implements Command  {
             responseStructureModel.DocumentID = appState.orderStructureModel.GetOrderId();
         }
 
+        for(FullDataTableControl.Details product : appState.ScannedProductsToSend.GetListOfProducts())
+        {
+            ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
+            rpsm.ProductGUID = product.getProductGuid();
+            rpsm.ProductCharactGUID = product.getCharacteristicGuid();
+            rpsm.Weigth = String.valueOf(product.getInfoFromScanner().getWeight() * product.getQuantity());
+            rpsm.Pieces = String.valueOf(product.getQuantity());
+            rpsm.DateOfProduction = String.valueOf(product.getInfoFromScanner().getProductionDate());
+            rpsm.DataOfExpiration = String.valueOf(product.getInfoFromScanner().getExpirationDate());
+            rpsm.ManufacturerGUID = product.getManufacturerGUID();
+            responseStructureModel.ProductList.add(rpsm);
+        }
+
         Gson gson = new Gson();
         String jsonResponse = gson.toJson(responseStructureModel);
 
@@ -61,6 +75,14 @@ public class BadgeCommand implements Command  {
             String result = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
 
             ((MainActivity)this.Activity).new MessageDialog().execute(result);
+
+            if(result == "200")
+            {
+                appState.ScannedProductsToSend.CleanListOfProducts();
+
+                // TODO: 5. очищать таблицы или переходить на выбор операции
+            }
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -69,6 +91,6 @@ public class BadgeCommand implements Command  {
 
 
         // TODO: 4. GET для печатной формы
-        // TODO: 5. очищать таблицы или переходить на выбор операции
+
     }
 }

@@ -3,12 +3,18 @@ package businesslogic;
 import java.util.ArrayList;
 
 public class ResponseStructureModel {
+
+    public ResponseStructureModel()
+    {
+        this.ProductList = new ArrayList<>();
+    }
+
     public String AccountingAreaGUID;
     public String UserID;
     public String DocumentID;
     public ArrayList<ResponseProductStructureModel> ProductList;
 
-    public class ResponseProductStructureModel
+    public static class ResponseProductStructureModel
     {
         public String ProductGUID;
         public String ProductCharactGUID;
