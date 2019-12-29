@@ -126,41 +126,6 @@ public class ProductCommand implements Command {
 
     }
 
-    protected void LabelTypeForbiddenDialog()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.Activity);
-
-        this.Activity.runOnUiThread(new Runnable() {
-            public void run() {
-                builder.setTitle("Такой тип запрещен к сканированию")
-                        .setMessage("Сканируйте другой штрих-код")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                try {
-                                    CurrentScanner.enable();
-                                    CurrentScanner.read();
-                                } catch (ScannerException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.setCancelable(false);
-                alertDialog.setCanceledOnTouchOutside(false);
-                alertDialog.show();
-
-                try {
-                    CurrentScanner.disable();
-                } catch (ScannerException e) {
-                    e.printStackTrace();
-                }
-
-                mediaPlayer.start();
-            }
-        });
-    }
-
     protected void AlarmAndNotify(String message)
     {
         try {
@@ -225,7 +190,7 @@ public class ProductCommand implements Command {
 
         if(appState.LocationContext.IsAllowed(data.getLabelType()) == false)
         {
-            LabelTypeForbiddenDialog();
+            AlarmAndNotify("Тип "+data.getLabelType().name() +" запрещен к сканированию.");
         }
         else
         {
