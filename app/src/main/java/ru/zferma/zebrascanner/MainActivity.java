@@ -150,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     emdkManager = null;
                 }
 
+                appState.CleanContextEntities();
+
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
                 startActivity(operationSelectionIntent);
             }

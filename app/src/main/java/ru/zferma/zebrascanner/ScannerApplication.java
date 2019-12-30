@@ -34,11 +34,18 @@ public class ScannerApplication extends Application {
 
     //Context entities
     public ScannerStateHelper scannerState = new ScannerStateHelper();
-    public OperationTypesStructureModel LocationContext;
+    public OperationTypesStructureModel LocationContext = null;
     public OrderStructureModel orderStructureModel = null;
     public String BadgeGuid = null;
-
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
+
+    public void CleanContextEntities()
+    {
+        LocationContext = null;
+        orderStructureModel = null;
+        BadgeGuid = null;
+        ScannedProductsToSend = new FullDataTableControl();
+    }
 
     public void onCreate() {
         super.onCreate();
