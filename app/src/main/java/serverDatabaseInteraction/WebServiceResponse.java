@@ -9,10 +9,10 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class WebServiceResponse extends AsyncTask<String, Void, String>
+public class WebServiceResponse extends AsyncTask<String, Void, Integer>
 {
     @Override
-    protected String doInBackground(String... urlString) {
+    protected Integer doInBackground(String... urlString) {
         try{
             URL url= new URL(urlString[0] );
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -28,7 +28,7 @@ public class WebServiceResponse extends AsyncTask<String, Void, String>
                 outputStream.write(urlString[2].getBytes());
                 outputStream.flush();
             }
-            return String.valueOf(urlConnection.getResponseCode());
+            return urlConnection.getResponseCode();
 
         } catch (
             ProtocolException exception) {

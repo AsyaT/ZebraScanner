@@ -72,11 +72,11 @@ public class BadgeCommand implements Command  {
         String jsonResponse = gson.toJson(responseStructureModel);
 
         try {
-            String result = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
+            Integer resultCode = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
 
-            ((MainActivity)this.Activity).new MessageDialog().execute(result);
+            ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
 
-            if(result == "200")
+            if(resultCode == 200)
             {
                 appState.ScannedProductsToSend.CleanListOfProducts();
 
