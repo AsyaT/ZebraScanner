@@ -39,6 +39,11 @@ public class ServerConnection {
         return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Execute/v1/Execute";
     }
 
+    public String getManufacturersURL()
+    {
+        return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Manufacturers/v1/GetList";
+    }
+
     public String GetUsernameAndPassword()
     {
         return this.Username + ":" + this.Password;

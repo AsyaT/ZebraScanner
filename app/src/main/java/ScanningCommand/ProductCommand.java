@@ -224,7 +224,7 @@ public class ProductCommand implements Command {
         appState.ScannedProductsToSend.Add(
                 product.GetProductGuid(),
                 product.GetCharacteristicGUID(),
-                String.valueOf(barCode.getInternalProducer()), //TODO: Find Manufacturer id
+                appState.manufacturerStructureModel.GetManufacturerGuid(barCode.getInternalProducer()),
                 barCode);
     }
 

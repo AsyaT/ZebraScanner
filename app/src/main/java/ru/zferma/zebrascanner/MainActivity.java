@@ -46,6 +46,7 @@ import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
 import serverDatabaseInteraction.BarcodeHelper;
+import serverDatabaseInteraction.ManufacturerHelper;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -548,7 +549,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             appState.productStructureModel =bh.ProductModel;
             appState.characterisiticStructureModel = bh.CharacteristicModel;
 
- 
+
+            ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
+            appState.manufacturerStructureModel = manufacturerHelper.GetData();
+
         }
 
     }
