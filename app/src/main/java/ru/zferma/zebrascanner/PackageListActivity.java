@@ -2,12 +2,14 @@ package ru.zferma.zebrascanner;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 
 public class PackageListActivity extends MainActivity {
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PackageListActivity.this);
         builder.setTitle(R.string.ChoseAction)

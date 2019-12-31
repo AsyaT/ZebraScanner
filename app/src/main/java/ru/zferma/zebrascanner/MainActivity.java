@@ -244,19 +244,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     }
 
     @Override
-    protected void onPause() {
-
-        if (emdkManager != null) {
-
-            emdkManager.release();
-            emdkManager = null;
-        }
-
-        super.onPause();
-    }
-
-
-    @Override
     public void onClosed() {
 // The EMDK closed abruptly. // Clean up the objects created by EMDK
 // manager
