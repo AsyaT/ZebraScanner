@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     {
         Fragment scanBadgeFragment = new ScanBadgeFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.replaceFragment(scanBadgeFragment,R.id.frBarcodeInfo);
+        fragmentHelper.replaceFragment(scanBadgeFragment,R.id.frBarcodeInfo, "ScanBadge");
 
         ScannerApplication appState = ((ScannerApplication) getApplication());
         appState.scannerState.Set(ScannerState.BADGE);
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     {
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo);
+        fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo, "ScanOrder");
 
         ScannerApplication appState = ((ScannerApplication) getApplication());
         appState.scannerState.Set(ScannerState.ORDER);
@@ -256,11 +256,26 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-        {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
             FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
-            if(topFragment.getName()!=null && topFragment.getName().equalsIgnoreCase("OrderProgress")) {
+            if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("OrderProgress") )
+            {
+                getSupportFragmentManager().popBackStack();
+            }
+            else if (topFragment.getName() != null && topFragment.getName().equalsIgnoreCase("ScanOrder") )
+            {
+                if (emdkManager != null) {
+
+                    emdkManager.release();
+                    emdkManager = null;
+                }
+
+                Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
+                startActivity(operationSelectionIntent);
+            }
+            else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("ScanBadge") )
+            {
                 getSupportFragmentManager().popBackStack();
             }
             else
