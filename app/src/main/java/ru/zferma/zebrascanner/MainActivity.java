@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,9 +162,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         btnExecute.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                // TODO: 1. Если по заказу - то сравнить заказано и отсканено
-
-                // 2. Считать бейдж
+                // Считать бейдж
                 ShowFragmentScanBedge();
             }
         });
@@ -270,8 +269,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        {
+            Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
+            FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+            if(topFragment.getName()!=null && topFragment.getName().equalsIgnoreCase("OrderProgress")) {
+                getSupportFragmentManager().popBackStack();
+            }
+            else
+            {
+                // do nothing
+            }
         } else {
             super.onBackPressed();
         }

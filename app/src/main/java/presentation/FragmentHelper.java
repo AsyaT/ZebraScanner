@@ -17,16 +17,21 @@ public class FragmentHelper {
 
     public void replaceFragment(Fragment destFragment, int var1)
     {
+        this.replaceFragment(destFragment, var1, null );
+    }
+
+    public void replaceFragment(Fragment destFragment, int var1, String fragmentName )
+    {
         FragmentManager fragmentManager = ((AppCompatActivity)ActivityInUse).getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(var1, destFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack(fragmentName);
         fragmentTransaction.commit();
     }
 
     public void closeFragment(Fragment fragment)
     {
-        android.support.v4.app.FragmentManager fragmentManager = ((AppCompatActivity)ActivityInUse).getSupportFragmentManager();
+        FragmentManager fragmentManager = ((AppCompatActivity)ActivityInUse).getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.hide(fragment);
