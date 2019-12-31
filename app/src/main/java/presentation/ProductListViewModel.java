@@ -19,6 +19,11 @@ public class ProductListViewModel extends Object {
     }
     public String getStringNumber(){return StringNumber;}
 
+    public void setStringNumber(String newStringNumber)
+    {
+        this.StringNumber = newStringNumber;
+    }
+
     public String getBarCode(){
         return BarCode;
     }

@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                dataTableControl.ItemClicked(view,position);
+                dataTableControl.ItemClicked(view,position-1);
             }
         });
 
