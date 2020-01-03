@@ -1,7 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -42,7 +40,7 @@ public class BarcodeHelperTest {
 
         Whitebox.setInternalState(barcodeHelper,"Model",model);
     }
-
+/*
     @Test
     public void Test_FindProductByBarcode()
     {
@@ -50,4 +48,6 @@ public class BarcodeHelperTest {
 
         Assert.assertEquals(model.BarCodeList.get(0),result);
     }
+
+ */
 }
