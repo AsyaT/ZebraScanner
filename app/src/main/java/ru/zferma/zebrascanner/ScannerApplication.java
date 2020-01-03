@@ -4,12 +4,16 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import businesslogic.BarcodeStructureModel;
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.FullDataTableControl;
+import businesslogic.ManufacturerStructureModel;
+import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import businesslogic.OrderStructureModel;
-import businesslogic.ServerConnection;
-import businesslogic.BarcodeStructureModel;
 import businesslogic.ProductStructureModel;
+import businesslogic.ScannerStateHelper;
+import businesslogic.ServerConnection;
 
 public class ScannerApplication extends Application {
 
@@ -26,7 +30,22 @@ public class ScannerApplication extends Application {
     public ProductStructureModel productStructureModel = null;
     public CharacterisiticStructureModel characterisiticStructureModel = null;
     public OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel = null;
+    public ManufacturerStructureModel manufacturerStructureModel = null;
+
+    //Context entities
+    public ScannerStateHelper scannerState = new ScannerStateHelper();
+    public OperationTypesStructureModel LocationContext = null;
     public OrderStructureModel orderStructureModel = null;
+    public String BadgeGuid = null;
+    public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
+
+    public void CleanContextEntities()
+    {
+        LocationContext = null;
+        orderStructureModel = null;
+        BadgeGuid = null;
+        ScannedProductsToSend = new FullDataTableControl();
+    }
 
     public void onCreate() {
         super.onCreate();

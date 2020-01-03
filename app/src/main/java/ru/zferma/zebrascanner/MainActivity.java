@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,13 +42,12 @@ import java.util.ArrayList;
 
 import ScanningCommand.BarcodeExecutor;
 import ScanningCommand.ListViewPresentationModel;
-import businesslogic.OperationTypesStructureModel;
 import businesslogic.ScannerState;
-import businesslogic.ScannerStateHelper;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
 import serverDatabaseInteraction.BarcodeHelper;
+import serverDatabaseInteraction.ManufacturerHelper;
 
 public class MainActivity extends AppCompatActivity implements EMDKListener, StatusListener, DataListener {
 
@@ -69,17 +69,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
 
-    public ScannerStateHelper scannerState = new ScannerStateHelper();
-
     public Boolean IsBarcodeInfoFragmentShowed = false;
-
-    OperationTypesStructureModel ScanningPermissions;
-
-    public Boolean IsAllowedToScan(ScanDataCollection.LabelType labelType)
-    {
-        return ScanningPermissions.IsAllowed(labelType);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +82,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
-        ScanningPermissions = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
+        ScannerApplication appState = ((ScannerApplication) getApplication());
 
-        new AsyncGetProducts().execute(ScanningPermissions.GetAccountingAreaGUID());
+        new AsyncGetProducts().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -110,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                dataTableControl.ItemClicked(view,position);
+                dataTableControl.ItemClicked(view,position-1);
             }
         });
 
@@ -161,18 +151,41 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     emdkManager = null;
                 }
 
+                appState.CleanContextEntities();
+
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
                 startActivity(operationSelectionIntent);
             }
         });
+
+        Button btnExecute = findViewById(R.id.btnExecute);
+        btnExecute.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                // Считать бейдж
+                ShowFragmentScanBedge();
+            }
+        });
+    }
+
+    protected void ShowFragmentScanBedge()
+    {
+        Fragment scanBadgeFragment = new ScanBadgeFragment();
+        FragmentHelper fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.replaceFragment(scanBadgeFragment,R.id.frBarcodeInfo, "ScanBadge");
+
+        ScannerApplication appState = ((ScannerApplication) getApplication());
+        appState.scannerState.Set(ScannerState.BADGE);
     }
 
     protected void ShowFragmentScanOrder()
     {
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo);
-        scannerState.Set(ScannerState.ORDER);
+        fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo, "ScanOrder");
+
+        ScannerApplication appState = ((ScannerApplication) getApplication());
+        appState.scannerState.Set(ScannerState.ORDER);
     }
 
     // Method to initialize and enable Scanner and its listeners
@@ -231,19 +244,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     }
 
     @Override
-    protected void onPause() {
-
-        if (emdkManager != null) {
-
-            emdkManager.release();
-            emdkManager = null;
-        }
-
-        super.onPause();
-    }
-
-
-    @Override
     public void onClosed() {
 // The EMDK closed abruptly. // Clean up the objects created by EMDK
 // manager
@@ -256,8 +256,32 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
+            FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+            if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("OrderProgress") )
+            {
+                getSupportFragmentManager().popBackStack();
+            }
+            else if (topFragment.getName() != null && topFragment.getName().equalsIgnoreCase("ScanOrder") )
+            {
+                if (emdkManager != null) {
+
+                    emdkManager.release();
+                    emdkManager = null;
+                }
+
+                Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
+                startActivity(operationSelectionIntent);
+            }
+            else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("ScanBadge") )
+            {
+                getSupportFragmentManager().popBackStack();
+            }
+            else
+            {
+                // do nothing
+            }
         } else {
             super.onBackPressed();
         }
@@ -278,7 +302,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     {
 
                         BarcodeExecutor executor = new BarcodeExecutor();
-                        executor.Execute(scannerState.GetCurrent(), data,this);
+                        ScannerApplication appState = ((ScannerApplication) getApplication());
+                        executor.Execute(appState.scannerState.GetCurrent(), data,this);
 
                     }
                 }
@@ -536,7 +561,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             appState.productStructureModel =bh.ProductModel;
             appState.characterisiticStructureModel = bh.CharacteristicModel;
 
- 
+
+            ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
+            appState.manufacturerStructureModel = manufacturerHelper.GetData();
+
         }
 
     }

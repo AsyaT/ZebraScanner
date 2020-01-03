@@ -49,6 +49,18 @@ public class ScanningBarcodeStructureModel {
 
     public Short getInternalEquipment() {return this.InternalEquipment;}
 
+    public Boolean isEqual(ScanningBarcodeStructureModel toCompare)
+    {
+        if(this.getFullBarcode().equalsIgnoreCase(toCompare.getFullBarcode()))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private void Cycle(String fullBarcode) throws ParseException {
         String gtin = "01";
         String newWeight = "3103";

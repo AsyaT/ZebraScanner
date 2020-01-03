@@ -36,7 +36,7 @@ public class OrderInfoFragment extends Fragment {
                 Fragment progressOrderFragment = new ProgressOrderFragment();
                 progressOrderFragment.setArguments(bundle);
                 FragmentHelper fragmentHelper = new FragmentHelper(getActivity());
-                fragmentHelper.replaceFragment(progressOrderFragment,R.id.frBarcodeInfo);
+                fragmentHelper.replaceFragment(progressOrderFragment,R.id.frBarcodeInfo,"OrderProgress");
 
                 return false;
             }

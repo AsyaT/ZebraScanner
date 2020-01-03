@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,14 +29,15 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        OperationTypesStructureModel = (OperationTypesStructureModel) getIntent().getSerializableExtra("location_context");
+        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+        OperationTypesStructureModel = appState.LocationContext;
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
         operationTypeTextView.setText(OperationTypesStructureModel.GetOperationName());
 
         okButton = (Button) findViewById(R.id.OKButtonAA);
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
-        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+
         OperationsTypesAccountingAreaStructureModel data = appState.operationsTypesAccountingAreaStructureModel;
 
         ArrayList<AccountingAreasListViewModel> listItem = new ArrayList<>();
@@ -96,15 +96,13 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
                 {
                     Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(OperationTypesStructureModel.GetOperationName()).getActivityClass());
 
-                    OperationTypesStructureModel operationTypesStructureModel = new OperationTypesStructureModel(
+                    appState.LocationContext = new OperationTypesStructureModel(
                             OperationTypesStructureModel.GetOperationName(),
                             OperationTypesStructureModel.GetOperationGuid(),
                             SelectedAccountingArea.AccountingAreaName,
                             SelectedAccountingArea.AccountingAreaGuid,
                             accountAreas.get(SelectedAccountingArea.AccountingAreaGuid).GetScanningPermissions(),
                             accountAreas.get(SelectedAccountingArea.AccountingAreaGuid).IsPackageListAllowed());
-
-                    goToMainActivityIntent.putExtra("location_context", (Serializable) operationTypesStructureModel);
 
                     startActivity(goToMainActivityIntent);
                 }

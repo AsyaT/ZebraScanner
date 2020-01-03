@@ -14,19 +14,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import businesslogic.BarcodeStructureModel;
+import businesslogic.BarcodeTypes;
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.FullDataTableControl;
 import businesslogic.OrderStructureModel;
 import businesslogic.ProductStructureModel;
 import businesslogic.ScanningBarcodeStructureModel;
-import businesslogic.BarcodeTypes;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
-import businesslogic.BarcodeStructureModel;
 
 public class ProductCommand implements Command {
 
     ListViewPresentationModel viewUpdateModel = null;
+
     BarcodeStructureModel BarcodeStructureModel = null;
     ProductStructureModel ProductStructureModel = null;
     CharacterisiticStructureModel CharacterisiticStructureModel = null;
@@ -34,16 +36,17 @@ public class ProductCommand implements Command {
 
     MediaPlayer mediaPlayer;
     ScanningBarcodeStructureModel barCode;
-    List<businesslogic.BarcodeStructureModel.ProductStructureModel> ProductModel;
+
     Activity Activity;
     Scanner CurrentScanner;
+    ScannerApplication appState;
 
     @Override
     public void Action(Activity activity) {
         this.Activity = activity;
         this.CurrentScanner = ((MainActivity)activity).getScanner();
 
-        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
+        appState = ((ScannerApplication) Activity.getApplication());
         BarcodeStructureModel = appState.barcodeStructureModel;
         ProductStructureModel = appState.productStructureModel;
         CharacterisiticStructureModel = appState.characterisiticStructureModel;
@@ -80,49 +83,26 @@ public class ProductCommand implements Command {
                             public void onClick(DialogInterface dialogInterface, int i) {
 
                                 result[0] = listNomenclature.get(i);
-                                try {
-                                    if (ProductModel != null) {
 
-                                        if(OrderStructureModel.IfProductExists(result[0].GetProductGuid())==false)
-                                        {
-                                            try {
-                                                CurrentScanner.disable();
-                                            } catch (ScannerException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            mediaPlayer.start();
-
-                                            if (((MainActivity)Activity).IsBarcodeInfoFragmentShowed)
-                                            {
-                                                ((MainActivity)Activity).new AsyncBarcodeInfoUpdate().execute("Такой продукт не найден в заказе");
-                                            }
-                                            else {
-                                                ((MainActivity)Activity).new MessageDialog().execute("Заказ не содержит такого продукта!");
-                                            }
-                                        }
-                                        else{
-                                            viewUpdateModel = new ListViewPresentationModel(
-                                                    barCode.getUniqueIdentifier(),
-                                                    ProductStructureModel.FindProductByGuid( result[0].GetProductGuid()),
-                                                    CharacterisiticStructureModel.FindCharacteristicByGuid(result[0].GetCharacteristicGUID()),
-                                                    WeightCalculation(result[0].GetQuantity()),
-                                                    result[0].GetProductGuid());
-
-                                            PostAction();
-
-                                            try {
-                                                CurrentScanner.enable();
-                                                CurrentScanner.read();
-                                            } catch (ScannerException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                } catch (Exception ex)
+                                if((OrderStructureModel != null) && (OrderStructureModel.IfProductExists(result[0].GetProductGuid()) == false))
                                 {
-                                    ex.getMessage();
+                                    AlarmAndNotify("Такой продукт не найден в заказе");
+
                                 }
+                                else
+                                {
+                                    CreateResultModels(barCode.getUniqueIdentifier(), result[0]);
+
+                                    PostAction();
+
+                                    try {
+                                        CurrentScanner.enable();
+                                        CurrentScanner.read();
+                                    } catch (ScannerException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
                                 dialogInterface.dismiss();
                             }
                         });
@@ -144,94 +124,82 @@ public class ProductCommand implements Command {
 
     }
 
+    protected void AlarmAndNotify(String message)
+    {
+        try {
+            CurrentScanner.disable();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+
+        mediaPlayer.start();
+
+        if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed)
+        {
+            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(message);
+        }
+        else {
+            ((MainActivity)this.Activity).new MessageDialog().execute(message);
+        }
+    }
+
+    protected String ParseBarcode(String barcode, BarcodeTypes type) throws ParseException {
+        barCode = new ScanningBarcodeStructureModel(barcode, type);
+        return barCode.getUniqueIdentifier();
+    }
+
+    protected businesslogic.BarcodeStructureModel.ProductStructureModel GetProductFromCollection(String uniqueIdentifierBarcode)
+    {
+        List<businesslogic.BarcodeStructureModel.ProductStructureModel> listOfProducts = BarcodeStructureModel.FindProductByBarcode(uniqueIdentifierBarcode);
+
+        if(listOfProducts == null)
+        {
+            AlarmAndNotify("Такой штрих-код не найден в номенклатуре!");
+        }
+        else
+        {
+            businesslogic.BarcodeStructureModel.ProductStructureModel product=null;
+            if(listOfProducts.size()>1)
+            {
+                SelectionDialog(listOfProducts);
+            }
+            else
+            {
+                product = listOfProducts.get(0);
+            }
+
+            if((this.OrderStructureModel != null) && (this.OrderStructureModel.IfProductExists(product.GetProductGuid()) == false))
+            {
+                AlarmAndNotify("Такой продукт не найден в заказе");
+
+            }
+            else
+            {
+                return product;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
 
-        if(((MainActivity)this.Activity).IsAllowedToScan(data.getLabelType()) == false)
+        if(appState.LocationContext.IsAllowed(data.getLabelType()) == false)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.Activity);
-
-            this.Activity.runOnUiThread(new Runnable() {
-                public void run() {
-                    builder.setTitle("Такой тип запрещен к сканированию")
-                    .setMessage("Сканируйте другой штрих-код")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            try {
-                                CurrentScanner.enable();
-                                CurrentScanner.read();
-                            } catch (ScannerException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.setCancelable(false);
-                    alertDialog.setCanceledOnTouchOutside(false);
-                    alertDialog.show();
-
-                    try {
-                        CurrentScanner.disable();
-                    } catch (ScannerException e) {
-                        e.printStackTrace();
-                    }
-
-                    mediaPlayer.start();
-                }
-            });
+            AlarmAndNotify("Тип "+data.getLabelType().name() +" запрещен к сканированию.");
         }
-        else{
-
+        else
+        {
             try {
-                barCode = new ScanningBarcodeStructureModel(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
-                ProductModel = BarcodeStructureModel.FindProductByBarcode(barCode.getUniqueIdentifier());
+                String uniqueIdentifier = ParseBarcode(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-                if(ProductModel == null)
-                {
-                    return;
+                businesslogic.BarcodeStructureModel.ProductStructureModel product = GetProductFromCollection(uniqueIdentifier);
+
+                if(product!=null) {
+
+                    CreateResultModels(uniqueIdentifier, product);
                 }
 
-                BarcodeStructureModel.ProductStructureModel propertyModel = null;
-
-                if(ProductModel.size()>1)
-                {
-                    SelectionDialog(ProductModel);
-                }
-                else
-                {
-                    propertyModel = ProductModel.get(0);
-
-                    if(this.OrderStructureModel.IfProductExists(propertyModel.GetProductGuid())==false)
-                    {
-                        try {
-                            CurrentScanner.disable();
-                        } catch (ScannerException e) {
-                            e.printStackTrace();
-                        }
-
-                        mediaPlayer.start();
-
-                        if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed)
-                        {
-                            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute("Такой продукт не найден в заказе");
-                        }
-                        else {
-                            ((MainActivity)this.Activity).new MessageDialog().execute("Заказ не содержит такого продукта!");
-                        }
-                        return;
-                    }
-                    else {
-                        viewUpdateModel = new ListViewPresentationModel(
-                                barCode.getUniqueIdentifier(),
-                                this.ProductStructureModel.FindProductByGuid(propertyModel.GetProductGuid()),
-                                this.CharacterisiticStructureModel.FindCharacteristicByGuid(propertyModel.GetCharacteristicGUID()),
-                                WeightCalculation(propertyModel.GetQuantity()),
-                                propertyModel.GetProductGuid());
-                    }
-
-                }
             }
             catch (Exception ex)
             {
@@ -240,7 +208,27 @@ public class ProductCommand implements Command {
         }
     }
 
-    private Double WeightCalculation(Double modelQuantity ) throws ParseException {
+    private void CreateResultModels(String uniqueIdentifier, businesslogic.BarcodeStructureModel.ProductStructureModel product)
+    {
+        viewUpdateModel = new ListViewPresentationModel(
+                uniqueIdentifier,
+                this.ProductStructureModel.FindProductByGuid(product.GetProductGuid()),
+                this.CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
+                WeightCalculation(product.GetQuantity()),
+                product.GetProductGuid());
+
+        if(appState.ScannedProductsToSend == null)
+        {
+            appState.ScannedProductsToSend = new FullDataTableControl();
+        }
+        appState.ScannedProductsToSend.Add(
+                product.GetProductGuid(),
+                product.GetCharacteristicGUID(),
+                appState.manufacturerStructureModel.GetManufacturerGuid(barCode.getInternalProducer()),
+                barCode);
+    }
+
+    private Double WeightCalculation(Double modelQuantity )  {
 
         if(barCode.getWeight() == null)
         {
@@ -254,53 +242,15 @@ public class ProductCommand implements Command {
     @Override
     public void PostAction() {
 
-        if(viewUpdateModel == null && ProductModel!=null)
+        if(viewUpdateModel == null )
         {
             return;
         }
 
-        if (ProductModel == null)
+        if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
-            try {
-                CurrentScanner.disable();
-            } catch (ScannerException e) {
-                e.printStackTrace();
-            }
+            ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
 
-            mediaPlayer.start();
-
-            if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed)
-            {
-                ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute("Такой штрихкод не найден в коллекции");
-            }
-            else {
-                ((MainActivity)this.Activity).new MessageDialog().execute("Такой штрихкод не найден в коллекции");
-            }
-
-        }
-        else if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
-        {
-            if (barCode.getLabelType() == BarcodeTypes.LocalEAN13 ) {
-
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
-            }
-
-            else if(barCode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
-/*
-                SQLiteDBHelper dbHandler = new SQLiteDBHelper(this);
-                dbHandler.insertDatabar(
-                        barCode.getUniqueIdentifier(),
-                        barCode.getWeight().toString(),
-                        barCode.getLotNumber(),
-                        barCode.getProductionDate(),
-                        barCode.getExpirationDate(),
-                        barCode.getSerialNumber(),
-                        barCode.getInternalProducer(),
-                        barCode.getInternalEquipment() );
-
- */
-                ((MainActivity)this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
-            }
         }
         else if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
         {

@@ -6,8 +6,9 @@
     <TextView
         android:id="@+id/txtAccountingAreaName"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         android:layout_marginTop="0dp"
+        android:gravity="center_vertical"
         android:padding="5dp"
         android:text="TextView"
         android:textSize="18sp" />

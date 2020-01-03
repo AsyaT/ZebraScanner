@@ -10,7 +10,6 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import businesslogic.OrderStructureModel;
 import businesslogic.ScannerState;
 import presentation.FragmentHelper;
-import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
@@ -49,6 +48,7 @@ public class OrderCommand implements Command {
             OrderStructureModel serverResult = orderHelper.GetModel();
 
             appState.orderStructureModel = serverResult;
+            appState.orderStructureModel.SetOrderGuid(data.getData());
 
             FragmentHelper fragmentHelper = new FragmentHelper(Activity);
             fragmentHelper.closeFragment(orderInfoFragment);
@@ -61,7 +61,7 @@ public class OrderCommand implements Command {
            // FragmentHelper fragmentHelper = new FragmentHelper(this.Activity);
             fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
 
-            ((MainActivity)Activity).scannerState.Set(ScannerState.PRODUCT);
+            appState.scannerState.Set(ScannerState.PRODUCT);
         }
         catch (ApplicationException e)
         {

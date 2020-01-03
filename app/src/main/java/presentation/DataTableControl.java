@@ -63,17 +63,17 @@ public class DataTableControl {
         return Boolean.FALSE;
     }
 
-    public void ItemClicked(View view, int position)
+    public void ItemClicked(View view, int index)
     {
-        if(ItemsToDelete.contains(position))
+        if(ItemsToDelete.contains(index))
         {
             view.setBackgroundColor(Color.WHITE);
-            ItemsToDelete.remove((Integer) position);
+            ItemsToDelete.remove((Integer) index);
         }
         else
         {
             view.setBackgroundColor(Color.YELLOW);
-            ItemsToDelete.add(position);
+            ItemsToDelete.add(index);
         }
     }
 
@@ -125,7 +125,15 @@ public class DataTableControl {
     public void RemoveSelected()
     {
         for (Integer x : ItemsToDelete) {
-            DataTable.remove((int) x);
+            ProductListViewModel removedItem = DataTable.remove((int) x);
+
+            for(ProductListViewModel leftProduct : DataTable)
+            {
+                if(Integer.valueOf( leftProduct.getStringNumber()) > Integer.valueOf(removedItem.getStringNumber()) )
+                {
+                    leftProduct.setStringNumber(String.valueOf(Integer.valueOf( leftProduct.getStringNumber()) - 1));
+                }
+            }
         };
         ItemsToDelete.clear();
     }
