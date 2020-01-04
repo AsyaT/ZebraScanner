@@ -558,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
 
             appState.barcodeStructureModel = bh.BarcodeModel;
-            appState.productStructureModel =bh.ProductModel;
+            appState.nomenclatureStructureModel =bh.ProductModel;
             appState.characterisiticStructureModel = bh.CharacteristicModel;
 
 

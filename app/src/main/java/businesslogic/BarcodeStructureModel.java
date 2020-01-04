@@ -17,11 +17,6 @@ public class BarcodeStructureModel {
         private String CharacteristicGUID;
         private Double Quantity;
 
-        public ProductStructureModel()
-        {
-
-        }
-
         public ProductStructureModel(String productGUID, String characteristicGUID, Double quant) {
             this.ProductGUID = productGUID;
             this.CharacteristicGUID = characteristicGUID;

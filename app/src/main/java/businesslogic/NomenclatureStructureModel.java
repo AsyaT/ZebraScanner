@@ -2,7 +2,7 @@ package businesslogic;
 
 import java.util.HashMap;
 
-public class ProductStructureModel {
+public class NomenclatureStructureModel {
 
     HashMap<String,String> Product = new HashMap<>();
 

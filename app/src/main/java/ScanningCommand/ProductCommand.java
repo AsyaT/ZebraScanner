@@ -19,7 +19,7 @@ import businesslogic.BarcodeTypes;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.FullDataTableControl;
 import businesslogic.OrderStructureModel;
-import businesslogic.ProductStructureModel;
+import businesslogic.NomenclatureStructureModel;
 import businesslogic.ScanningBarcodeStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
@@ -30,7 +30,7 @@ public class ProductCommand implements Command {
     ListViewPresentationModel viewUpdateModel = null;
 
     BarcodeStructureModel BarcodeStructureModel = null;
-    ProductStructureModel ProductStructureModel = null;
+    NomenclatureStructureModel NomenclatureStructureModel = null;
     CharacterisiticStructureModel CharacterisiticStructureModel = null;
     OrderStructureModel OrderStructureModel = null;
 
@@ -48,7 +48,7 @@ public class ProductCommand implements Command {
 
         appState = ((ScannerApplication) Activity.getApplication());
         BarcodeStructureModel = appState.barcodeStructureModel;
-        ProductStructureModel = appState.productStructureModel;
+        NomenclatureStructureModel = appState.nomenclatureStructureModel;
         CharacterisiticStructureModel = appState.characterisiticStructureModel;
         OrderStructureModel = appState.orderStructureModel;
 
@@ -65,7 +65,7 @@ public class ProductCommand implements Command {
         for(BarcodeStructureModel.ProductStructureModel nomenclature : listNomenclature)
         {
             nomenclatures.add(
-                    this.ProductStructureModel.FindProductByGuid( nomenclature.GetProductGuid())+
+                    this.NomenclatureStructureModel.FindProductByGuid( nomenclature.GetProductGuid())+
                             "\n Характеристика: "+this.CharacterisiticStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID())+
                             "\n Вес: "+nomenclature.GetQuantity().toString()+"\n\n");
         }
@@ -212,7 +212,7 @@ public class ProductCommand implements Command {
     {
         viewUpdateModel = new ListViewPresentationModel(
                 uniqueIdentifier,
-                this.ProductStructureModel.FindProductByGuid(product.GetProductGuid()),
+                this.NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
                 this.CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
                 WeightCalculation(product.GetQuantity()),
                 product.GetProductGuid());

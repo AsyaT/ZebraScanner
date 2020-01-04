@@ -1,53 +1,66 @@
 package ru.zferma.zebrascanner;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import businesslogic.BarcodeStructureModel;
+import businesslogic.CharacterisiticStructureModel;
+import businesslogic.NomenclatureStructureModel;
 import serverDatabaseInteraction.BarcodeHelper;
-import serverDatabaseInteraction.BarcodeModel;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BarcodeHelper.class })
 public class BarcodeHelperTest {
 
-    BarcodeHelper barcodeHelper;
-    BarcodeModel model;
+    BarcodeStructureModel barcodeStructureModel = new BarcodeStructureModel();
+    NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
+    CharacterisiticStructureModel characterisiticStructureModel = new CharacterisiticStructureModel();
 
 
-    public BarcodeHelperTest() {
-        model = new BarcodeModel();
-        model.BarCodeList = new ArrayList<BarcodeModel.ProductListModel>();
-
-        BarcodeModel.ProductListModel productListModel = new BarcodeModel.ProductListModel();
-        productListModel.Barcode = "2407394";
-        productListModel.PropertiesList = new ArrayList<BarcodeModel.PropertiesListModel>();
-
-        BarcodeModel.PropertiesListModel propertiesListModel =new BarcodeModel.PropertiesListModel();
-        propertiesListModel.ProductName="Филе бедра \\\"Здоровая Ферма\\\", охл.~0,80 кг*6/~4,8 кг/ (подложка, стрейч)";
-        propertiesListModel.ProductGUID="ddc4578e-e49f-11e7-80c5-a4bf011ce3c3";
-        propertiesListModel.ProductCharactName="Дикси";
-        propertiesListModel.ProductCharactGUID="a947f0a5-3c92-11e8-80c7-a4bf011ce3c3";
-        propertiesListModel.Quant="1";
-
-        productListModel.PropertiesList.add(propertiesListModel);
-        model.BarCodeList.add(productListModel);
-
-        barcodeHelper = new BarcodeHelper("","");
-
-        Whitebox.setInternalState(barcodeHelper,"Model",model);
-    }
-/*
-    @Test
-    public void Test_FindProductByBarcode()
+    public BarcodeHelperTest()
     {
-        BarcodeModel.ProductListModel result = barcodeHelper.FindProductByBarcode("2407394");
+        nomenclatureStructureModel.Add("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3","Филе бедра \\\"Здоровая Ферма\\\", охл.~0,80 кг*6/~4,8 кг/ (подложка, стрейч)");
 
-        Assert.assertEquals(model.BarCodeList.get(0),result);
+        characterisiticStructureModel.Add("a947f0a5-3c92-11e8-80c7-a4bf011ce3c3", "Дикси");
+
+        ArrayList<BarcodeStructureModel.ProductStructureModel> productList = new ArrayList<>();
+
+        BarcodeStructureModel.ProductStructureModel psm = new BarcodeStructureModel.ProductStructureModel(
+                "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3","a947f0a5-3c92-11e8-80c7-a4bf011ce3c3", 1.0);
+        productList.add(psm);
+
+        barcodeStructureModel.Add("2407394",productList);
+
     }
 
- */
+    @Test
+    public void Test_FindProductsByBarcode()
+    {
+        List<BarcodeStructureModel.ProductStructureModel> result =  barcodeStructureModel.FindProductByBarcode("2407394");
+        Assert.assertEquals(1, result.size());
+
+        Assert.assertEquals("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",result.get(0).GetProductGuid());
+        Assert.assertEquals("a947f0a5-3c92-11e8-80c7-a4bf011ce3c3",result.get(0).GetCharacteristicGUID());
+        Assert.assertEquals((Double)1.0,result.get(0).GetQuantity());
+    }
+
+    @Test
+    public void TestFindProductByGuid()
+    {
+        String productName = nomenclatureStructureModel.FindProductByGuid("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3");
+        Assert.assertEquals("Филе бедра \\\"Здоровая Ферма\\\", охл.~0,80 кг*6/~4,8 кг/ (подложка, стрейч)", productName);
+    }
+
+    @Test
+    public void TestFindCharacteristic()
+    {
+        String characteristicName = characterisiticStructureModel.FindCharacteristicByGuid("a947f0a5-3c92-11e8-80c7-a4bf011ce3c3");
+        Assert.assertEquals("Дикси", characteristicName);
+    }
 }
