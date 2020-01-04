@@ -1,12 +1,20 @@
 package ru.zferma.zebrascanner;
 
+import com.symbol.emdk.barcode.ScanDataCollection;
+
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
+import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import serverDatabaseInteraction.ApplicationException;
 import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
 import serverDatabaseInteraction.OperationTypesHelper;
 
@@ -18,8 +26,27 @@ class OperationTypesHelperTest {
 
     OperationTypesAndAccountingAreasModel model;
 
+    OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel;
+
     public OperationTypesHelperTest()
     {
+        /*
+        OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel = new OperationsTypesAccountingAreaStructureModel();
+
+        OperationsTypesAccountingAreaStructureModel.Operation operation = new OperationsTypesAccountingAreaStructureModel.Operation();
+        operation.SetName("Ротация");
+
+        OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea = new OperationsTypesAccountingAreaStructureModel.AccountingArea();
+
+        HashMap<ScanDataCollection.LabelType, Boolean> rules = new HashMap<>();
+        rules.put(ScanDataCollection.LabelType.EAN13, false);
+        rules.put(ScanDataCollection.LabelType.GS1_DATABAR_EXP, true);
+
+        accountingArea.Add("Ротация",rules,false);
+        operation.AddAccountingArea("97e2d02c-ad73-11e7-80c4-a4bf011ce3c3",accountingArea);
+
+        operationsTypesAccountingAreaStructureModel.Add("Ротация",operation);
+*/
 
         model = new OperationTypesAndAccountingAreasModel();
         model.Error = false;
@@ -64,52 +91,70 @@ class OperationTypesHelperTest {
         model.AccountingAreasAndTypes.add(opType_2);
 
 
-        //helper = new OperationTypesHelper("","");
+        try {
+            helper = new OperationTypesHelper("","");
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Whitebox.setInternalState(helper,"InputModel",model);
+        try {
+            Whitebox.invokeMethod(helper,"ParseIncomeData");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        operationsTypesAccountingAreaStructureModel = helper.GetData();
     }
-/*
+
     @Test
     public void Test_HasSeveralAccountingAreas()
     {
-        Assert.assertFalse(helper.HasSeveralAccountingAreas("Ротация"));
+        Assert.assertFalse(operationsTypesAccountingAreaStructureModel.HasSeveralAccountingAreas("Ротация"));
         
-        Assert.assertTrue(helper.HasSeveralAccountingAreas("Приемка"));
+        Assert.assertTrue(operationsTypesAccountingAreaStructureModel.HasSeveralAccountingAreas("Приемка"));
     }
 
     @Test
     public void Test_GetAccountingAreas()
     {
-        ArrayList<String> accountingAreas = new ArrayList<String>();
-        accountingAreas.add("Приемка на 6-4-1");
-        accountingAreas.add("Приемка на 6-4-2");
-        Assert.assertEquals(accountingAreas,helper.GetAccountingAreas("Приемка"));
-    }
-
-    @Test
-    public void Test_GetSingleAccountingArea()
-    {
-        Assert.assertEquals(model.AccountingAreasAndTypes.get(0).AccountingAreas.get(0),helper.GetSingleAccountingArea("Ротация"));
-        Assert.assertEquals(null,helper.GetSingleAccountingArea("Приемка"));
+        Assert.assertTrue(operationsTypesAccountingAreaStructureModel.GetAccountingAreas("Приемка").containsKey("414d48d4-f210-11e6-80cb-001e67e5da8c"));
+        Assert.assertTrue(operationsTypesAccountingAreaStructureModel.GetAccountingAreas("Приемка").containsKey("b50985a2-ddad-11e8-80cd-a4bf011ce3c3"));
     }
 
     @Test
     public void Test_Permissions()
     {
-        HashMap<LabelType, Boolean> permissions = new HashMap<>();
-        permissions.put(LabelType.EAN13, Boolean.FALSE);
-        permissions.put(LabelType.GS1_DATABAR_EXP, Boolean.TRUE);
+        HashMap<ScanDataCollection.LabelType, Boolean> permissions = new HashMap<>();
+        permissions.put(ScanDataCollection.LabelType.EAN13, Boolean.FALSE);
+        permissions.put(ScanDataCollection.LabelType.GS1_DATABAR_EXP, Boolean.TRUE);
 
-        Assert.assertEquals(permissions, helper.GetScanningPermissions("Ротация"));
-        Assert.assertEquals(permissions, helper.GetScanningPermissions("Приемка на 6-4-2"));
+        OperationsTypesAccountingAreaStructureModel.AccountingArea aa_Rotation = operationsTypesAccountingAreaStructureModel
+                .GetAccountingAreas("Ротация")
+                .get("97e2d02c-ad73-11e7-80c4-a4bf011ce3c3");
+        OperationsTypesAccountingAreaStructureModel.AccountingArea aa_Aception = operationsTypesAccountingAreaStructureModel
+                .GetAccountingAreas("Приемка")
+                .get("b50985a2-ddad-11e8-80cd-a4bf011ce3c3");
 
-        Assert.assertEquals(Boolean.FALSE, helper.IsPackageListScanningAllowed("Ротация"));
+        Assert.assertEquals(permissions, aa_Rotation.GetScanningPermissions());
+        Assert.assertEquals(permissions, aa_Aception.GetScanningPermissions());
+
+        Assert.assertEquals(Boolean.TRUE, aa_Rotation.IsPackageListAllowed());
     }
 
     @Test
-    public void Test_AccountingAreaGuid()
+    public void Test_GetOperationName()
     {
-        Assert.assertEquals("97e2d02c-ad73-11e7-80c4-a4bf011ce3c3", helper.GetAccountingAreaGUID("Ротация"));
+        Assert.assertEquals("Приемка", operationsTypesAccountingAreaStructureModel.GetOperationName("Приемка"));
     }
 
- */
+    @Test
+    public void Test_GetoperationSet()
+    {
+        Assert.assertEquals(2,operationsTypesAccountingAreaStructureModel.GetOperationKeys().size());
+    }
+
 }
