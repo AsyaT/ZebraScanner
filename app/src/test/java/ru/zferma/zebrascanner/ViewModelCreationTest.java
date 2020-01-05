@@ -24,15 +24,24 @@ public class ViewModelCreationTest {
     public void Init()
     {
         BarcodeStructureModel BarcodeStructureModel = new BarcodeStructureModel();
+
         ArrayList<businesslogic.BarcodeStructureModel.ProductStructureModel> productList = new ArrayList<>();
-        productList.add(new BarcodeStructureModel.ProductStructureModel("f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0));
+        productList.add(new BarcodeStructureModel.ProductStructureModel(
+                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0));
         BarcodeStructureModel.Add("4660017708243", productList);
+
+        productList = new ArrayList<>();
+        productList.add(new BarcodeStructureModel.ProductStructureModel(
+                "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3","760d9dfd-93ba-11e8-80cc-a4bf011ce3c3",10.0));
+        BarcodeStructureModel.Add("2308107", productList);
 
         NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
         nomenclatureStructureModel.Add("f50d315d-7ca8-11e6-80d7-e4115bea65d2", "Бедрышко куриное \"Здоровая Ферма\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)");
+        nomenclatureStructureModel.Add("6130fe3f-93ba-11e8-80cc-a4bf011ce3c3", "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)");
 
         CharacterisiticStructureModel characterisiticStructureModel = new CharacterisiticStructureModel();
         characterisiticStructureModel.Add("41dbf472-19d8-11e7-80cb-001e67e5da8c","Метро");
+        characterisiticStructureModel.Add("760d9dfd-93ba-11e8-80cc-a4bf011ce3c3","Тандер");
         productLogic = new ProductLogic(BarcodeStructureModel, nomenclatureStructureModel, characterisiticStructureModel);
     }
 
