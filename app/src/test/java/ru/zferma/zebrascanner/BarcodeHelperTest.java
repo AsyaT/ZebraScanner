@@ -47,7 +47,7 @@ public class BarcodeHelperTest {
 
         Assert.assertEquals("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",result.get(0).GetProductGuid());
         Assert.assertEquals("a947f0a5-3c92-11e8-80c7-a4bf011ce3c3",result.get(0).GetCharacteristicGUID());
-        Assert.assertEquals((Double)1.0,result.get(0).GetQuantity());
+        Assert.assertEquals((Double)1.0,result.get(0).GetWeight());
     }
 
     @Test

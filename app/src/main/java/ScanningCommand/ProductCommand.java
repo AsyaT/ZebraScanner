@@ -67,7 +67,7 @@ public class ProductCommand implements Command {
             nomenclatures.add(
                     this.NomenclatureStructureModel.FindProductByGuid( nomenclature.GetProductGuid())+
                             "\n Характеристика: "+this.CharacterisiticStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID())+
-                            "\n Вес: "+nomenclature.GetQuantity().toString()+"\n\n");
+                            "\n Вес: "+nomenclature.GetWeight().toString()+"\n\n");
         }
 
         CharSequence[] showedNomenclatures = nomenclatures.toArray(new CharSequence[nomenclatures.size()]);
@@ -214,7 +214,7 @@ public class ProductCommand implements Command {
                 uniqueIdentifier,
                 this.NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
                 this.CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
-                WeightCalculation(product.GetQuantity()),
+                WeightCalculation(product.GetWeight()),
                 product.GetProductGuid());
 
         if(appState.ScannedProductsToSend == null)
@@ -224,6 +224,7 @@ public class ProductCommand implements Command {
         appState.ScannedProductsToSend.Add(
                 product.GetProductGuid(),
                 product.GetCharacteristicGUID(),
+                product.GetWeight(),
                 barCode);
     }
 

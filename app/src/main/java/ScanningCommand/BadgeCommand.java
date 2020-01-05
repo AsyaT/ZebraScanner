@@ -9,12 +9,13 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.FullDataTableControl;
-import serverDatabaseInteraction.ResponseStructureModel;
+import businesslogic.ScanningBarcodeStructureModel;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanBadgeFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
+import serverDatabaseInteraction.ResponseStructureModel;
 import serverDatabaseInteraction.WebServiceResponse;
 
 public class BadgeCommand implements Command  {
@@ -39,6 +40,19 @@ public class BadgeCommand implements Command  {
 
     }
 
+    //TODO: This is business logic - move somewhere
+    private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, FullDataTableControl.Details databaseData)
+    {
+        if(scannedBarcode.getWeight() == null)
+        {
+            return databaseData.getWeightFromDatabase();
+        }
+        else
+        {
+            return scannedBarcode.getWeight();
+        }
+    }
+
     @Override
     public void PostAction()
     {
@@ -60,8 +74,8 @@ public class BadgeCommand implements Command  {
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.ProductGUID = product.getProductGuid();
             rpsm.ProductCharactGUID = product.getCharacteristicGuid();
-            rpsm.Weigth = String.valueOf(product.getInfoFromScanner().getWeight() * product.getQuantity());
-            rpsm.Pieces = String.valueOf(product.getQuantity());
+            rpsm.Weigth = String.valueOf( WeightCalculator( product.getInfoFromScanner(),product) * product.getScannedQuantity());
+            rpsm.Pieces = String.valueOf(product.getScannedQuantity());
             rpsm.DateOfProduction = String.valueOf(product.getInfoFromScanner().getProductionDate());
             rpsm.DataOfExpiration = String.valueOf(product.getInfoFromScanner().getExpirationDate());
             rpsm.ManufacturerGUID = appState.manufacturerStructureModel.GetManufacturerGuid(product.getInfoFromScanner().getInternalProducer());

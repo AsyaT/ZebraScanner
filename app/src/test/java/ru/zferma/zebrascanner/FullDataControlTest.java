@@ -29,6 +29,7 @@ public class FullDataControlTest {
         fullDataTableControl.Add(
                 "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",
                 "400211e8-a6e7-11e9-80d1-a4bf011ce3c3",
+                10.0,
                 scannedBarcode);
     }
 
@@ -45,13 +46,14 @@ public class FullDataControlTest {
         fullDataTableControl.Add(
                 "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",
                 "400211e8-a6e7-11e9-80d1-a4bf011ce3c3",
+                10.0,
                 scannedBarcode);
 
         Assert.assertEquals(1, fullDataTableControl.GetListOfProducts().size());
 
         Integer quantity = 2;
 
-        Assert.assertEquals(quantity, fullDataTableControl.GetListOfProducts().get(0).getQuantity());
+        Assert.assertEquals(quantity, fullDataTableControl.GetListOfProducts().get(0).getScannedQuantity());
 
     }
 
@@ -70,6 +72,7 @@ public class FullDataControlTest {
         fullDataTableControl.Add(
                 "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",
                 "400211e8-a6e7-11e9-80d1-a4bf011ce3c3",
+                1.0,
                 scannedBarcode);
 
         Assert.assertEquals(2, fullDataTableControl.GetListOfProducts().size());
@@ -85,6 +88,7 @@ public class FullDataControlTest {
         fullDataTableControl.Add(
                 "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",
                 "400211e8-a6e7-11e9-80d1-a4bf011ce3c3",
+                25.0,
                 scannedBarcode);
 
         Assert.assertEquals(3, fullDataTableControl.GetListOfProducts().size());
@@ -100,6 +104,7 @@ public class FullDataControlTest {
         fullDataTableControl.Add(
                 "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",
                 "400211e8-a6e7-11e9-80d1-a4bf011ce3c3",
+                4.0,
                 scannedBarcode);
 
         Assert.assertEquals(4, fullDataTableControl.GetListOfProducts().size());
@@ -115,9 +120,29 @@ public class FullDataControlTest {
         fullDataTableControl.Add(
                 "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",
                 "400211e8-a6e7-11e9-80d1-a4bf011ce3c3",
+                1.0,
                 scannedBarcode);
 
         Assert.assertEquals(5, fullDataTableControl.GetListOfProducts().size());
     }
 
+    @Test
+    public void AddEAN13_Test()
+    {
+        ScanningBarcodeStructureModel scannedBarcode = null;
+
+        try {
+            scannedBarcode = new ScanningBarcodeStructureModel("04660088807529", BarcodeTypes.LocalEAN13);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        fullDataTableControl.Add(
+                "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",
+                "400211e8-a6e7-11e9-80d1-a4bf011ce3c3",
+                10.0,
+                scannedBarcode);
+
+        Assert.assertEquals(2, fullDataTableControl.GetListOfProducts().size());
+    }
 }

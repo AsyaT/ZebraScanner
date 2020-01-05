@@ -21,13 +21,14 @@ public class FullDataTableControl
        ListOfProducts = new ArrayList<>();
    }
 
-   private Details IsProductExists(String productGuid, String characteristicGuid, ScanningBarcodeStructureModel barcodeParsed)
+   private Details IsProductExists(String productGuid, String characteristicGuid, Double weightFromDatabase, ScanningBarcodeStructureModel barcodeParsed)
    {
            for(Details existsProduct : ListOfProducts)
            {
                    if(
                            (existsProduct.ProductGuid.equalsIgnoreCase(productGuid)) &&
                                    (existsProduct.CharacteristicGuid.equalsIgnoreCase(characteristicGuid)) &&
+                                   (existsProduct.WeightFromDatabase.equals(weightFromDatabase)) &&
                                    (existsProduct.InformationFromScanner.isEqual(barcodeParsed))
                    )
                    {
@@ -37,58 +38,53 @@ public class FullDataTableControl
            return null;
    }
 
-   public void Add(String productGuid, String characteristicGuid, ScanningBarcodeStructureModel barcodeParsed)
+   public void Add(String productGuid, String characteristicGuid, Double weightFromDatabase, ScanningBarcodeStructureModel barcodeParsed)
    {
-           Details newProduct = IsProductExists(productGuid,characteristicGuid,barcodeParsed);
+           Details newProduct = IsProductExists(productGuid,characteristicGuid, weightFromDatabase, barcodeParsed);
 
            if( newProduct != null)
            {
                    this.ListOfProducts.remove(newProduct);
-                   newProduct.Quantity = newProduct.Quantity + 1;
+                   newProduct.ScannedQuantity = newProduct.ScannedQuantity + 1;
                    this.ListOfProducts.add(newProduct);
            }
            else
            {
                    newProduct = new Details();
                    newProduct.ProductGuid = productGuid;
-                   newProduct.CharacteristicGuid = characteristicGuid;;
+                   newProduct.CharacteristicGuid = characteristicGuid;
+                   newProduct.WeightFromDatabase = weightFromDatabase;
                    newProduct.InformationFromScanner = barcodeParsed;
-                   newProduct.Quantity = 1;
+                   newProduct.ScannedQuantity = 1;
                    this.ListOfProducts.add(newProduct);
            }
    }
 
    public static class Details
    {
-       public Details()
-       {
+       ScanningBarcodeStructureModel InformationFromScanner;
+       String ProductGuid;
+       String CharacteristicGuid;
+       Double WeightFromDatabase;
+       Integer ScannedQuantity;
 
+       public String getProductGuid()
+       {
+           return this.ProductGuid;
        }
 
-           ScanningBarcodeStructureModel InformationFromScanner;
-           String ProductGuid;
-           String CharacteristicGuid;
-           Integer Quantity;
+       public String getCharacteristicGuid()
+       {
+           return this.CharacteristicGuid;
+       }
 
-           public String getProductGuid()
+       public ScanningBarcodeStructureModel getInfoFromScanner() { return this.InformationFromScanner; }
+
+       public Integer getScannedQuantity()
            {
-               return this.ProductGuid;
+               return this.ScannedQuantity;
            }
 
-           public String getCharacteristicGuid()
-           {
-               return this.CharacteristicGuid;
-           }
-
-
-           public ScanningBarcodeStructureModel getInfoFromScanner()
-           {
-               return this.InformationFromScanner;
-           }
-
-           public Integer getQuantity()
-           {
-               return this.Quantity;
-           }
+       public Double getWeightFromDatabase() { return this.WeightFromDatabase;}
    }
 }
