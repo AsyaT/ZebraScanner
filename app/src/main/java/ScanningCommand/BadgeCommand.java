@@ -9,7 +9,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.FullDataTableControl;
-import businesslogic.ResponseStructureModel;
+import serverDatabaseInteraction.ResponseStructureModel;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
