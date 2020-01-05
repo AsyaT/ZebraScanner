@@ -64,7 +64,7 @@ public class BadgeCommand implements Command  {
             rpsm.Pieces = String.valueOf(product.getQuantity());
             rpsm.DateOfProduction = String.valueOf(product.getInfoFromScanner().getProductionDate());
             rpsm.DataOfExpiration = String.valueOf(product.getInfoFromScanner().getExpirationDate());
-            rpsm.ManufacturerGUID = product.getManufacturerGUID();
+            rpsm.ManufacturerGUID = appState.manufacturerStructureModel.GetManufacturerGuid(product.getInfoFromScanner().getInternalProducer());
             responseStructureModel.ProductList.add(rpsm);
         }
 

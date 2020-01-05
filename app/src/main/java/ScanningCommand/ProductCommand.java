@@ -224,7 +224,6 @@ public class ProductCommand implements Command {
         appState.ScannedProductsToSend.Add(
                 product.GetProductGuid(),
                 product.GetCharacteristicGUID(),
-                appState.manufacturerStructureModel.GetManufacturerGuid(barCode.getInternalProducer()),
                 barCode);
     }
 

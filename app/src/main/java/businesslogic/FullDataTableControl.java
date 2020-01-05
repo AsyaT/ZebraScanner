@@ -21,14 +21,13 @@ public class FullDataTableControl
        ListOfProducts = new ArrayList<>();
    }
 
-   private Details IsProductExists(String productGuid, String characteristicGuid, String manufacturerGuid, ScanningBarcodeStructureModel barcodeParsed)
+   private Details IsProductExists(String productGuid, String characteristicGuid, ScanningBarcodeStructureModel barcodeParsed)
    {
            for(Details existsProduct : ListOfProducts)
            {
                    if(
                            (existsProduct.ProductGuid.equalsIgnoreCase(productGuid)) &&
                                    (existsProduct.CharacteristicGuid.equalsIgnoreCase(characteristicGuid)) &&
-                                   (existsProduct.ManufacturerGUID.equalsIgnoreCase(manufacturerGuid)) &&
                                    (existsProduct.InformationFromScanner.isEqual(barcodeParsed))
                    )
                    {
@@ -38,20 +37,21 @@ public class FullDataTableControl
            return null;
    }
 
-   public void Add(String productGuid, String characteristicGuid, String manufacturerGuid, ScanningBarcodeStructureModel barcodeParsed)
+   public void Add(String productGuid, String characteristicGuid, ScanningBarcodeStructureModel barcodeParsed)
    {
-           Details newProduct = IsProductExists(productGuid,characteristicGuid,manufacturerGuid,barcodeParsed);
+           Details newProduct = IsProductExists(productGuid,characteristicGuid,barcodeParsed);
 
            if( newProduct != null)
            {
-                   newProduct.Quantity =+ 1;
+                   this.ListOfProducts.remove(newProduct);
+                   newProduct.Quantity = newProduct.Quantity + 1;
+                   this.ListOfProducts.add(newProduct);
            }
            else
            {
                    newProduct = new Details();
                    newProduct.ProductGuid = productGuid;
-                   newProduct.CharacteristicGuid = characteristicGuid;
-                   newProduct.ManufacturerGUID = manufacturerGuid;
+                   newProduct.CharacteristicGuid = characteristicGuid;;
                    newProduct.InformationFromScanner = barcodeParsed;
                    newProduct.Quantity = 1;
                    this.ListOfProducts.add(newProduct);
@@ -68,7 +68,6 @@ public class FullDataTableControl
            ScanningBarcodeStructureModel InformationFromScanner;
            String ProductGuid;
            String CharacteristicGuid;
-           String ManufacturerGUID;
            Integer Quantity;
 
            public String getProductGuid()
@@ -81,10 +80,6 @@ public class FullDataTableControl
                return this.CharacteristicGuid;
            }
 
-           public String getManufacturerGUID()
-           {
-               return this.ManufacturerGUID;
-           }
 
            public ScanningBarcodeStructureModel getInfoFromScanner()
            {
