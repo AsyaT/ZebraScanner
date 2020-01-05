@@ -35,13 +35,20 @@ public class ViewModelCreationTest {
                 "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3","760d9dfd-93ba-11e8-80cc-a4bf011ce3c3",10.0));
         BarcodeStructureModel.Add("2308107", productList);
 
+        productList = new ArrayList<>();
+        productList.add(new BarcodeStructureModel.ProductStructureModel(
+                "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
+        BarcodeStructureModel.Add("4660017707116", productList);
+
         NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
         nomenclatureStructureModel.Add("f50d315d-7ca8-11e6-80d7-e4115bea65d2", "Бедрышко куриное \"Здоровая Ферма\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)");
         nomenclatureStructureModel.Add("6130fe3f-93ba-11e8-80cc-a4bf011ce3c3", "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)");
+        nomenclatureStructureModel.Add("b1cc5c45-7ca8-11e6-80d7-e4115bea65d2", "Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)");
 
         CharacterisiticStructureModel characterisiticStructureModel = new CharacterisiticStructureModel();
         characterisiticStructureModel.Add("41dbf472-19d8-11e7-80cb-001e67e5da8c","Метро");
         characterisiticStructureModel.Add("760d9dfd-93ba-11e8-80cc-a4bf011ce3c3","Тандер");
+        characterisiticStructureModel.Add("b9e89741-ef89-11e6-80cb-001e67e5da8c","Монетка");
         productLogic = new ProductLogic(BarcodeStructureModel, nomenclatureStructureModel, characterisiticStructureModel);
     }
 
