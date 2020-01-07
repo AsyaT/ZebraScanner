@@ -82,8 +82,8 @@ public class ScanningBarcodeStructureModelUnitTest {
         assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getWeight(), null);
         assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getProductionDate(), new SimpleDateFormat("dd/MM/yyyy").parse("20/08/2019"));
         assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getExpirationDate(), new SimpleDateFormat("dd/MM/yyyy").parse("09/09/2019"));
-        assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getLotNumber(),"0802");
-        assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getSerialNumber(),"0001");
+        assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getLotNumber(),"0820");
+        assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getSerialNumber(),"00001");
         Short expectedEquipment = 0;
         assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getInternalEquipment(), expectedEquipment);
         Byte expectedProducer = 6;
