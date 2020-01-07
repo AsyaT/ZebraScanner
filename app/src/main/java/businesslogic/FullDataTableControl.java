@@ -1,6 +1,7 @@
 package businesslogic;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class FullDataTableControl
 {
@@ -21,15 +22,17 @@ public class FullDataTableControl
        ListOfProducts = new ArrayList<>();
    }
 
-   private Details IsProductExists(String productGuid, String characteristicGuid, Double weightFromDatabase, ScanningBarcodeStructureModel barcodeParsed)
+   private Details IsProductExists(Details product)
    {
            for(Details existsProduct : ListOfProducts)
            {
                    if(
-                           (existsProduct.ProductGuid.equalsIgnoreCase(productGuid)) &&
-                                   (existsProduct.CharacteristicGuid.equalsIgnoreCase(characteristicGuid)) &&
-                                   (existsProduct.WeightFromDatabase.equals(weightFromDatabase)) &&
-                                   (existsProduct.InformationFromScanner.isEqual(barcodeParsed))
+                           (existsProduct.ProductGuid.equalsIgnoreCase(product.getProductGuid())) &&
+                                   (existsProduct.CharacteristicGuid.equalsIgnoreCase(product.getCharacteristicGuid())) &&
+                                   (existsProduct.Weight.equals(product.Weight)) &&
+                                   (existsProduct.ProductionDate.equals(product.getProductionDate())) &&
+                                   (existsProduct.ExpiredDate.equals(product.getExpiredDate())) &&
+                                   (existsProduct.ManufacturerGuid.equals(product.getManufacturerGuid()))
                    )
                    {
                         return existsProduct;
@@ -38,35 +41,45 @@ public class FullDataTableControl
            return null;
    }
 
-   public void Add(String productGuid, String characteristicGuid, Double weightFromDatabase, ScanningBarcodeStructureModel barcodeParsed)
+   public void Add(Details product)
    {
-           Details newProduct = IsProductExists(productGuid,characteristicGuid, weightFromDatabase, barcodeParsed);
+           Details newProduct = IsProductExists(product);
 
            if( newProduct != null)
            {
                    this.ListOfProducts.remove(newProduct);
-                   newProduct.ScannedQuantity = newProduct.ScannedQuantity + 1;
-                   this.ListOfProducts.add(newProduct);
+                   product.ScannedQuantity = newProduct.ScannedQuantity + 1;
+                   this.ListOfProducts.add(product);
            }
            else
            {
-                   newProduct = new Details();
-                   newProduct.ProductGuid = productGuid;
-                   newProduct.CharacteristicGuid = characteristicGuid;
-                   newProduct.WeightFromDatabase = weightFromDatabase;
-                   newProduct.InformationFromScanner = barcodeParsed;
-                   newProduct.ScannedQuantity = 1;
-                   this.ListOfProducts.add(newProduct);
+                  product.ScannedQuantity = 1;
+                  this.ListOfProducts.add(product);
            }
    }
 
    public static class Details
    {
-       ScanningBarcodeStructureModel InformationFromScanner;
        String ProductGuid;
        String CharacteristicGuid;
-       Double WeightFromDatabase;
+       Double Weight;
        Integer ScannedQuantity;
+       Date ProductionDate;
+       Date ExpiredDate;
+       String ManufacturerGuid;
+
+       public Details()
+       {}
+
+       public Details(String productGuid, String characteristicGuid, Double weight, Date productionDate, Date expiredDate, String manufacturerGuid)
+       {
+           this.ProductGuid = productGuid;
+           this.CharacteristicGuid= characteristicGuid;
+           this.Weight = weight;
+           this.ProductionDate = productionDate;
+           this.ExpiredDate = expiredDate;
+           this.ManufacturerGuid = manufacturerGuid;
+       }
 
        public String getProductGuid()
        {
@@ -78,13 +91,17 @@ public class FullDataTableControl
            return this.CharacteristicGuid;
        }
 
-       public ScanningBarcodeStructureModel getInfoFromScanner() { return this.InformationFromScanner; }
-
        public Integer getScannedQuantity()
            {
                return this.ScannedQuantity;
            }
 
-       public Double getWeightFromDatabase() { return this.WeightFromDatabase;}
+       public Double getWeight() { return this.Weight;}
+
+       public Date getProductionDate() { return this.ProductionDate;}
+
+       public Date getExpiredDate() { return this.ExpiredDate;}
+
+       public String getManufacturerGuid() { return this.ManufacturerGuid;}
    }
 }

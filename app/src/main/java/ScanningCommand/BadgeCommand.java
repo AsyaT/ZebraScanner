@@ -9,7 +9,6 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.FullDataTableControl;
-import businesslogic.ScanningBarcodeStructureModel;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
@@ -40,19 +39,6 @@ public class BadgeCommand implements Command  {
 
     }
 
-    //TODO: This is business logic - move somewhere
-    private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, FullDataTableControl.Details databaseData)
-    {
-        if(scannedBarcode.getWeight() == null)
-        {
-            return databaseData.getWeightFromDatabase();
-        }
-        else
-        {
-            return scannedBarcode.getWeight();
-        }
-    }
-
     @Override
     public void PostAction()
     {
@@ -74,11 +60,11 @@ public class BadgeCommand implements Command  {
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.ProductGUID = product.getProductGuid();
             rpsm.ProductCharactGUID = product.getCharacteristicGuid();
-            rpsm.Weigth = String.valueOf( WeightCalculator( product.getInfoFromScanner(),product) * product.getScannedQuantity());
+            rpsm.Weigth = String.valueOf(product.getWeight() * product.getScannedQuantity());
             rpsm.Pieces = String.valueOf(product.getScannedQuantity());
-            rpsm.DateOfProduction = String.valueOf(product.getInfoFromScanner().getProductionDate());
-            rpsm.DataOfExpiration = String.valueOf(product.getInfoFromScanner().getExpirationDate());
-            rpsm.ManufacturerGUID = appState.manufacturerStructureModel.GetManufacturerGuid(product.getInfoFromScanner().getInternalProducer());
+            rpsm.DateOfProduction = String.valueOf(product.getProductionDate());
+            rpsm.DataOfExpiration = String.valueOf(product.getExpiredDate());
+            rpsm.ManufacturerGUID = product.getManufacturerGuid();
             responseStructureModel.ProductList.add(rpsm);
         }
 
@@ -92,9 +78,9 @@ public class BadgeCommand implements Command  {
 
             if(resultCode == 200)
             {
+                // TODO: 5. очищать таблицы или переходить на выбор операции
                 appState.ScannedProductsToSend.CleanListOfProducts();
 
-                // TODO: 5. очищать таблицы или переходить на выбор операции
             }
 
         } catch (ExecutionException e) {

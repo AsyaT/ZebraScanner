@@ -49,7 +49,7 @@ public class ViewModelCreationTest {
         characterisiticStructureModel.Add("41dbf472-19d8-11e7-80cb-001e67e5da8c","Метро");
         characterisiticStructureModel.Add("760d9dfd-93ba-11e8-80cc-a4bf011ce3c3","Тандер");
         characterisiticStructureModel.Add("b9e89741-ef89-11e6-80cb-001e67e5da8c","Монетка");
-        productLogic = new ProductLogic(BarcodeStructureModel, nomenclatureStructureModel, characterisiticStructureModel);
+        productLogic = new ProductLogic(BarcodeStructureModel, nomenclatureStructureModel, characterisiticStructureModel, null,null,null);
     }
 
     @Test
@@ -59,7 +59,8 @@ public class ViewModelCreationTest {
 
         ListViewPresentationModel actual = null;
         try {
-            actual = productLogic.CreateViewModel(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            BarcodeStructureModel.ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (ApplicationException e) {
@@ -75,6 +76,7 @@ public class ViewModelCreationTest {
         );
 
         Assert.assertTrue(new ReflectionEquals(expected).matches(actual));
+
     }
 
     @Test
@@ -84,7 +86,8 @@ public class ViewModelCreationTest {
 
         ListViewPresentationModel actual = null;
         try {
-            actual = productLogic.CreateViewModel(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            BarcodeStructureModel.ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (ApplicationException e) {
@@ -109,7 +112,8 @@ public class ViewModelCreationTest {
 
         ListViewPresentationModel actual = null;
         try {
-            actual = productLogic.CreateViewModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
+            BarcodeStructureModel.ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (ApplicationException e) {
@@ -125,5 +129,20 @@ public class ViewModelCreationTest {
         );
 
         Assert.assertTrue(new ReflectionEquals(expected).matches(actual));
+
+    }
+
+    @Test
+    public void ExistsInOrder()
+    {
+       // TODO
+
+    }
+
+    @Test
+    public void DoesNotExistsInOrder()
+    {
+        // TODO
+
     }
 }

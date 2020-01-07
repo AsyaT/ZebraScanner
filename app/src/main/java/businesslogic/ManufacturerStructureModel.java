@@ -13,6 +13,10 @@ public class ManufacturerStructureModel
     {
         return this.Manufacturers.get(id).Guid;
     }
+    public String GetManufacturerName(Byte id)
+    {
+        return this.Manufacturers.get(id).Name;
+    }
 
     public void Add(Byte id, String name, String guid)
     {
