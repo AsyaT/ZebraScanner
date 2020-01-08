@@ -74,12 +74,16 @@ public class BadgeCommand implements Command  {
         try {
             Integer resultCode = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
 
+            //TODO: notification for user if Success or not
             ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
 
             if(resultCode == 200)
             {
                 // TODO: 5. очищать таблицы или переходить на выбор операции
                 appState.ScannedProductsToSend.CleanListOfProducts();
+                appState.LocationContext = null;
+                appState.orderStructureModel = null;
+                appState.BadgeGuid = null;
 
             }
 
