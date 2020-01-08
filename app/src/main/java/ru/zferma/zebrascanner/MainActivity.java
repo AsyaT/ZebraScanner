@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo, "ScanOrder");
 
         ScannerApplication appState = ((ScannerApplication) getApplication());
-        appState.scannerState.Set(ScannerState.ORDER);
+        appState.scannerState.Set(ScannerState.DOCUMENTBASE);
     }
 
     // Method to initialize and enable Scanner and its listeners

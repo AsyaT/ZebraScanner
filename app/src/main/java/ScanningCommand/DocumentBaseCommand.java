@@ -17,7 +17,7 @@ import ru.zferma.zebrascanner.ScannerApplication;
 import businesslogic.ApplicationException;
 import serverDatabaseInteraction.OrderHelper;
 
-public class OrderCommand implements Command {
+public class DocumentBaseCommand implements Command {
 
     String OrderGuid;
     Activity Activity;
