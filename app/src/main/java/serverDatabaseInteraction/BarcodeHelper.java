@@ -15,13 +15,13 @@ import java.util.Locale;
 
 import businesslogic.BarcodeStructureModel;
 import businesslogic.CharacterisiticStructureModel;
-import businesslogic.ProductStructureModel;
+import businesslogic.NomenclatureStructureModel;
 
 public class BarcodeHelper {
 
     private BarcodeModel Model;
     public BarcodeStructureModel BarcodeModel;
-    public ProductStructureModel ProductModel;
+    public NomenclatureStructureModel ProductModel;
     public CharacterisiticStructureModel CharacteristicModel;
 
 
@@ -30,7 +30,7 @@ public class BarcodeHelper {
         Gson g = new Gson();
         this.Model = g.fromJson(result, BarcodeModel.class);
         this.BarcodeModel = new BarcodeStructureModel();
-        this.ProductModel = new ProductStructureModel();
+        this.ProductModel = new NomenclatureStructureModel();
         this.CharacteristicModel = new CharacterisiticStructureModel();
 
         for(serverDatabaseInteraction.BarcodeModel.ProductListModel barcode : Model.BarCodeList)

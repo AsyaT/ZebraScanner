@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import ScanningCommand.BarcodeExecutor;
-import ScanningCommand.ListViewPresentationModel;
+import businesslogic.ListViewPresentationModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
@@ -558,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
 
             appState.barcodeStructureModel = bh.BarcodeModel;
-            appState.productStructureModel =bh.ProductModel;
+            appState.nomenclatureStructureModel =bh.ProductModel;
             appState.characterisiticStructureModel = bh.CharacteristicModel;
 
 

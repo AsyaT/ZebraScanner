@@ -6,6 +6,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
+import businesslogic.ApplicationException;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 
 public class OperationTypesHelper {
@@ -19,6 +20,12 @@ public class OperationTypesHelper {
 
         this.InputModel = ParseJson(jsonString);
 
+        if(this.InputModel != null) {
+            ParseIncomeData();
+        }
+    }
+
+    protected void ParseIncomeData() throws ApplicationException {
         if(InputModel.Error == false)
         {
             ResultModel = new OperationsTypesAccountingAreaStructureModel();
@@ -49,6 +56,12 @@ public class OperationTypesHelper {
     }
 
     protected String PullJsonData(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
+
+        if(url.isEmpty())
+        {
+            return null;
+        }
+
         String result = null;
         result =  (new WebService()).execute(url,userpass).get();
         if(result == null || result.isEmpty())

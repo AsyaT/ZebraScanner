@@ -14,7 +14,7 @@ import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
-import serverDatabaseInteraction.ApplicationException;
+import businesslogic.ApplicationException;
 import serverDatabaseInteraction.OrderHelper;
 
 public class OrderCommand implements Command {

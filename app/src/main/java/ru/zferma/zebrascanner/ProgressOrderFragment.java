@@ -50,7 +50,7 @@ public class ProgressOrderFragment extends Fragment {
                 txtView.setLayoutParams(new TableRow.LayoutParams(120, TableRow.LayoutParams.WRAP_CONTENT));
                 txtView.setTextSize(10);
                 txtView.setText(
-                        appState.productStructureModel.FindProductByGuid(product.GetProductGuid()) +
+                        appState.nomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()) +
                                 "\n" +
                                 appState.characterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGuid()));
                 txtView.setBackgroundResource(R.drawable.textviewborder);

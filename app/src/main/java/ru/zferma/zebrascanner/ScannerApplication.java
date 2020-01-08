@@ -11,7 +11,7 @@ import businesslogic.ManufacturerStructureModel;
 import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import businesslogic.OrderStructureModel;
-import businesslogic.ProductStructureModel;
+import businesslogic.NomenclatureStructureModel;
 import businesslogic.ScannerStateHelper;
 import businesslogic.ServerConnection;
 
@@ -27,7 +27,7 @@ public class ScannerApplication extends Application {
     public ServerConnection serverConnection = null;
 
     public BarcodeStructureModel barcodeStructureModel = null;
-    public ProductStructureModel productStructureModel = null;
+    public NomenclatureStructureModel nomenclatureStructureModel = null;
     public CharacterisiticStructureModel characterisiticStructureModel = null;
     public OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel = null;
     public ManufacturerStructureModel manufacturerStructureModel = null;

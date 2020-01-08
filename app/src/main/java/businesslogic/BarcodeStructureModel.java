@@ -2,7 +2,6 @@ package businesslogic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class BarcodeStructureModel {
     private HashMap<String, ArrayList<ProductStructureModel>> BarcodeUnique;
@@ -15,17 +14,12 @@ public class BarcodeStructureModel {
     public static class ProductStructureModel{
         private String ProductGUID;
         private String CharacteristicGUID;
-        private Double Quantity;
-
-        public ProductStructureModel()
-        {
-
-        }
+        private Double Weight;
 
         public ProductStructureModel(String productGUID, String characteristicGUID, Double quant) {
             this.ProductGUID = productGUID;
             this.CharacteristicGUID = characteristicGUID;
-            this.Quantity = quant;
+            this.Weight = quant;
         }
 
         public String GetProductGuid()
@@ -38,14 +32,14 @@ public class BarcodeStructureModel {
             return CharacteristicGUID;
         }
 
-        public Double GetQuantity()
+        public Double GetWeight()
         {
-            return Quantity;
+            return Weight;
         }
 
     }
 
-    public List<ProductStructureModel> FindProductByBarcode(String uniqueBarcode)
+    public ArrayList<ProductStructureModel> FindProductByBarcode(String uniqueBarcode)
     {
         return BarcodeUnique.get(uniqueBarcode);
     }

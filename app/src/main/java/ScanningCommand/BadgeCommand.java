@@ -9,12 +9,12 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.FullDataTableControl;
-import businesslogic.ResponseStructureModel;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanBadgeFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
+import serverDatabaseInteraction.ResponseStructureModel;
 import serverDatabaseInteraction.WebServiceResponse;
 
 public class BadgeCommand implements Command  {
@@ -60,11 +60,11 @@ public class BadgeCommand implements Command  {
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.ProductGUID = product.getProductGuid();
             rpsm.ProductCharactGUID = product.getCharacteristicGuid();
-            rpsm.Weigth = String.valueOf(product.getInfoFromScanner().getWeight() * product.getQuantity());
-            rpsm.Pieces = String.valueOf(product.getQuantity());
-            rpsm.DateOfProduction = String.valueOf(product.getInfoFromScanner().getProductionDate());
-            rpsm.DataOfExpiration = String.valueOf(product.getInfoFromScanner().getExpirationDate());
-            rpsm.ManufacturerGUID = product.getManufacturerGUID();
+            rpsm.Weigth = String.valueOf(product.getWeight() * product.getScannedQuantity());
+            rpsm.Pieces = String.valueOf(product.getScannedQuantity());
+            rpsm.DateOfProduction = String.valueOf(product.getProductionDate());
+            rpsm.DataOfExpiration = String.valueOf(product.getExpiredDate());
+            rpsm.ManufacturerGUID = product.getManufacturerGuid();
             responseStructureModel.ProductList.add(rpsm);
         }
 
@@ -74,13 +74,17 @@ public class BadgeCommand implements Command  {
         try {
             Integer resultCode = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
 
+            //TODO: notification for user if Success or not
             ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
 
             if(resultCode == 200)
             {
-                appState.ScannedProductsToSend.CleanListOfProducts();
-
                 // TODO: 5. очищать таблицы или переходить на выбор операции
+                appState.ScannedProductsToSend.CleanListOfProducts();
+                appState.LocationContext = null;
+                appState.orderStructureModel = null;
+                appState.BadgeGuid = null;
+
             }
 
         } catch (ExecutionException e) {

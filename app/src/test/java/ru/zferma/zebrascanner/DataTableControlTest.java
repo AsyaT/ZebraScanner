@@ -1,10 +1,15 @@
 package ru.zferma.zebrascanner;
 
+import android.view.View;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import businesslogic.ListViewPresentationModel;
 import presentation.DataTableControl;
-import ScanningCommand.ListViewPresentationModel;
 import presentation.ProductListViewModel;
 
 import static junit.framework.TestCase.assertEquals;
@@ -12,9 +17,15 @@ import static junit.framework.TestCase.assertEquals;
 public class DataTableControlTest {
 
     DataTableControl Table;
+
+    @Mock
+    private View testView;
+
     @Before
     public void Init()
     {
+        MockitoAnnotations.initMocks(this);
+
         Table = new DataTableControl();
         ListViewPresentationModel model = new ListViewPresentationModel(
                 "12345",
@@ -23,6 +34,8 @@ public class DataTableControlTest {
                 2.5,
                 "111-111-111-111"
         );
+        Table.AddOne(model);
+        Table.AddOne(model);
         Table.AddOne(model);
 
         model = new ListViewPresentationModel(
@@ -33,39 +46,95 @@ public class DataTableControlTest {
                 "222-222-222-222"
         );
         Table.AddOne(model);
+        Table.AddOne(model);
+
+        model = new ListViewPresentationModel(
+                "7927922108",
+                "Nomenclature 3",
+                "Char 1",
+                8.2,
+                "789-168-038-557"
+        );
+        Table.AddOne(model);
+
+        model = new ListViewPresentationModel(
+                "92460265",
+                "Nomenclature 4",
+                "Char 2",
+                25.6,
+                "493-58-33"
+        );
+        Table.AddOne(model);
+        Table.AddOne(model);
     }
 
     @Test
-    public void AddNewLine()
+    public void SizeOfList()
     {
-        Integer sizeOfList = 2;
+        Integer sizeOfList = 4;
         assertEquals(sizeOfList, Table.GetSizeOfList());
+    }
 
+    @Test
+    public void GetNewLine()
+    {
         ProductListViewModel presentationModel = new ProductListViewModel(
                 "222-222-222-222",
                 "2",
                 "Char 2",
                 "Nomenclature 2",
                 "67890",
-                "1",
-                "9.7");
+                "2",
+                "19.4");
 
         ProductListViewModel result =  Table.GetExitingProduct("67890","222-222-222-222");
-        assertEquals(presentationModel.getProductGuid(), result.getProductGuid());
-        assertEquals(presentationModel.getStringNumber(), result.getStringNumber());
-        assertEquals(presentationModel.getCharacteristic(), result.getCharacteristic());
-        assertEquals(presentationModel.getNomenclature(), result.getNomenclature());
-        assertEquals(presentationModel.getBarCode(), result.getBarCode());
-        assertEquals(presentationModel.getCoefficient(), result.getCoefficient());
-        assertEquals(presentationModel.getWeight(), result.getWeight());
+        CompareModels(result,presentationModel);
 
+        result = Table.GetExitingProduct("222-222-222-222");
+        CompareModels(result,presentationModel);
+    }
 
-        assertEquals( Table.GetExitingProduct("9602845","222-222-222-222"), null);
-        assertEquals( Table.GetExitingProduct("67890","111-111-111-111"), null);
+    private void CompareModels(ProductListViewModel actual, ProductListViewModel expected)
+    {
+        assertEquals(actual.getProductGuid(), expected.getProductGuid());
+        assertEquals(actual.getStringNumber(), expected.getStringNumber());
+        assertEquals(actual.getCharacteristic(), expected.getCharacteristic());
+        assertEquals(actual.getNomenclature(), expected.getNomenclature());
+        assertEquals(actual.getBarCode(), expected.getBarCode());
+        assertEquals(actual.getCoefficient(), expected.getCoefficient());
+        assertEquals(actual.getWeight(), expected.getWeight());
+    }
 
+    @Test
+    public void FindProduct()
+    {
+        assertEquals( null, Table.GetExitingProduct("9602845","222-222-222-222"));
+        assertEquals( null,  Table.GetExitingProduct("67890","111-111-111-111"));
+
+    }
+
+    @Test
+    public void RemoveProduct()
+    {
+        Table.ItemClicked(testView,2);
+        Table.ItemClicked(testView,0);
+        Table.RemoveSelected();
+
+        ProductListViewModel result = Table.GetExitingProduct("493-58-33");
+
+        assertEquals(result.getStringNumber(),"2");
+        assertEquals(result.getCoefficient(),"2");
+        assertEquals(result.getWeight(),"51.2");
+    }
+
+    @Test
+    @After
+    public void RemoveAll()
+    {
         Table.RemoveAll();
 
-        sizeOfList = 0;
-        assertEquals(sizeOfList, Table.GetSizeOfList());
+        Integer sizeOfList = 0;
+        assertEquals( Table.GetSizeOfList(), sizeOfList);
     }
+
 }

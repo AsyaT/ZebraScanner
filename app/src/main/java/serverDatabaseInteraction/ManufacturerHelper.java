@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.util.concurrent.ExecutionException;
 
+import businesslogic.ApplicationException;
 import businesslogic.ManufacturerStructureModel;
 
 public class ManufacturerHelper {
