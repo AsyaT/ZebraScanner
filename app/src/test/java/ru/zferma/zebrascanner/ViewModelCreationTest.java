@@ -8,13 +8,13 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import ScanningCommand.ListViewPresentationModel;
+import businesslogic.ListViewPresentationModel;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.BarcodeTypes;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.NomenclatureStructureModel;
 import businesslogic.ProductLogic;
-import serverDatabaseInteraction.ApplicationException;
+import businesslogic.ApplicationException;
 
 public class ViewModelCreationTest {
 

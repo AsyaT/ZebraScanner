@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import ScanningCommand.BarcodeExecutor;
-import ScanningCommand.ListViewPresentationModel;
+import businesslogic.ListViewPresentationModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;

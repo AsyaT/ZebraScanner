@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
-import serverDatabaseInteraction.ApplicationException;
+import businesslogic.ApplicationException;
 import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
 import serverDatabaseInteraction.OperationTypesHelper;
 

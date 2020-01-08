@@ -8,7 +8,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import ScanningCommand.ListViewPresentationModel;
+import businesslogic.ListViewPresentationModel;
 
 public class DataTableControl {
 

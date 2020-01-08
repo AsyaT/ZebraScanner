@@ -6,9 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import ScanningCommand.ListViewPresentationModel;
-import serverDatabaseInteraction.ApplicationException;
-
 public class ProductLogic {
 
     BarcodeStructureModel BarcodeStructureModel = null;

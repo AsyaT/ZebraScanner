@@ -16,11 +16,12 @@ import java.util.List;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
+import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductLogic;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
-import serverDatabaseInteraction.ApplicationException;
+import businesslogic.ApplicationException;
 
 public class ProductCommand implements Command {
 

@@ -6,6 +6,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
+import businesslogic.ApplicationException;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 
 public class OperationTypesHelper {

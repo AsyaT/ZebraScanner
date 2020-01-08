@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+import businesslogic.ApplicationException;
 import businesslogic.OrderStructureModel;
 
 public class OrderHelper {

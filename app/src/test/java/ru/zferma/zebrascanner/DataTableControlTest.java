@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import ScanningCommand.ListViewPresentationModel;
+import businesslogic.ListViewPresentationModel;
 import presentation.DataTableControl;
 import presentation.ProductListViewModel;
 

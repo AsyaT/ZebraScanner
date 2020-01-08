@@ -18,7 +18,7 @@ import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import presentation.OperationTypesListViewModel;
 import presentation.OperationsListAdapter;
-import serverDatabaseInteraction.ApplicationException;
+import businesslogic.ApplicationException;
 import serverDatabaseInteraction.OperationTypesHelper;
 
 public class OperationSelectionActivity extends BaseSelectionActivity{
