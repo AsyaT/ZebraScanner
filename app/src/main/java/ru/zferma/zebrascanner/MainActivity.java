@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         appState.scannerState.Set(ScannerState.BADGE);
     }
 
-    protected void ShowFragmentScanOrder()
+    protected void ShowFragmentScanBaseDocument()
     {
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
