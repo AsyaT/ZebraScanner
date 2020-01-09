@@ -101,11 +101,11 @@ public class ProductLogic {
     public Boolean IsExistsInOrder(businesslogic.BarcodeStructureModel.ProductStructureModel product) throws ApplicationException {
         if(this.OrderStructureModel != null && this.OrderStructureModel.IfProductExists(product.GetProductGuid()) )
         {
-            throw new ApplicationException("Этот продукт не содержится в документе-основании");
+            return true;
         }
         else
         {
-            return true;
+            throw new ApplicationException("Этот продукт не содержится в документе-основании");
         }
     }
 
