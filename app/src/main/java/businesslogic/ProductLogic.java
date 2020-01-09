@@ -12,7 +12,7 @@ public class ProductLogic {
     NomenclatureStructureModel NomenclatureStructureModel = null;
     CharacterisiticStructureModel CharacterisiticStructureModel = null;
     ManufacturerStructureModel ManufacturerStructureModel = null;
-    OrderStructureModel OrderStructureModel = null;
+    BaseDocumentStructureModel BaseDocumentStructureModel = null;
     OperationTypesStructureModel OperationTypesStructureModel = null;
 
     private ScanningBarcodeStructureModel parsedBarcode = null;
@@ -22,14 +22,14 @@ public class ProductLogic {
             NomenclatureStructureModel nomenclatureStructureModel,
             CharacterisiticStructureModel characterisiticStructureModel,
             ManufacturerStructureModel manufacturerStructureModel,
-            OrderStructureModel orderStructureModel,
+            BaseDocumentStructureModel baseDocumentStructureModel,
             OperationTypesStructureModel operationTypesStructureModel)
     {
        this.BarcodeStructureModel = barcodeStructureModel;
        this.NomenclatureStructureModel = nomenclatureStructureModel;
        this.CharacterisiticStructureModel = characterisiticStructureModel;
        this.ManufacturerStructureModel = manufacturerStructureModel;
-       this.OrderStructureModel = orderStructureModel;
+       this.BaseDocumentStructureModel = baseDocumentStructureModel;
        this.OperationTypesStructureModel = operationTypesStructureModel;
     }
 
@@ -99,7 +99,7 @@ public class ProductLogic {
     }
 
     public Boolean IsExistsInOrder(businesslogic.BarcodeStructureModel.ProductStructureModel product) throws ApplicationException {
-        if(this.OrderStructureModel != null && this.OrderStructureModel.IfProductExists(product.GetProductGuid()) )
+        if(this.BaseDocumentStructureModel != null && this.BaseDocumentStructureModel.IfProductExists(product.GetProductGuid()) )
         {
             return true;
         }

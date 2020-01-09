@@ -2,7 +2,7 @@ package serverDatabaseInteraction;
 
 import java.util.List;
 
-public class OrderModel  {
+public class BaseDocumentModel {
     public Boolean Error;
     public String ErrorMessage;
     public DocumentData DocumentData;

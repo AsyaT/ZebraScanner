@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderStructureModel implements Serializable {
+public class BaseDocumentStructureModel implements Serializable {
 
     private String Name;
-    private String OrderGuid;
+    private String BaseDocumentGuid;
     private List<ProductOrderStructureModel> ProductList;
 
-    public OrderStructureModel(String name)
+    public BaseDocumentStructureModel(String name)
     {
         this.Name = name;
         this.ProductList = new ArrayList<>();
@@ -18,12 +18,12 @@ public class OrderStructureModel implements Serializable {
 
     public String GetOrderId()
     {
-        return OrderGuid;
+        return BaseDocumentGuid;
     }
 
     public void SetOrderGuid(String guid)
     {
-        this.OrderGuid = guid;
+        this.BaseDocumentGuid = guid;
     }
 
     public void Add(ProductOrderStructureModel product)

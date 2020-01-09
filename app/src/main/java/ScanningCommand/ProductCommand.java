@@ -44,7 +44,7 @@ public class ProductCommand implements Command {
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
                 appState.manufacturerStructureModel,
-                appState.orderStructureModel,
+                appState.baseDocumentStructureModel,
                 appState.LocationContext);
 
 

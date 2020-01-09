@@ -7,14 +7,14 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import businesslogic.ApplicationException;
-import businesslogic.OrderStructureModel;
+import businesslogic.BaseDocumentStructureModel;
 
-public class OrderHelper {
+public class BaseDocumentHelper {
 
-    private OrderModel Model;
-    private OrderStructureModel ReturnModel;
+    private BaseDocumentModel Model;
+    private BaseDocumentStructureModel ReturnModel;
 
-    public OrderHelper(String url, String userpass) throws ApplicationException {
+    public BaseDocumentHelper(String url, String userpass) throws ApplicationException {
         String jsonString = "";
 
         try {
@@ -26,23 +26,23 @@ public class OrderHelper {
         }
 
         Gson g = new Gson();
-        Model = g.fromJson(jsonString, OrderModel.class);
+        Model = g.fromJson(jsonString, BaseDocumentModel.class);
 
         if(Model.Error == true)
         {
             throw new ApplicationException(Model.ErrorMessage);
         }
 
-        this.ReturnModel = new OrderStructureModel(Model.DocumentData.Name);
+        this.ReturnModel = new BaseDocumentStructureModel(Model.DocumentData.Name);
 
-        for(OrderModel.ProductListModel plm : Model.DocumentData.ProductList)
+        for(BaseDocumentModel.ProductListModel plm : Model.DocumentData.ProductList)
         {
             NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
             try {
                 Number OrderedNumber = format.parse(plm.Quantity);
                 Number DoneNumber = format.parse(plm.QuantityDone);
 
-            OrderStructureModel.ProductOrderStructureModel productOrderStructureModel = new OrderStructureModel.ProductOrderStructureModel(
+            BaseDocumentStructureModel.ProductOrderStructureModel productOrderStructureModel = new BaseDocumentStructureModel.ProductOrderStructureModel(
                     plm.Product,plm.Charact,
                     OrderedNumber.doubleValue(), DoneNumber.doubleValue(),
                     plm.Pieces, plm.PiecesDone
@@ -54,7 +54,7 @@ public class OrderHelper {
         }
     }
 
-    public OrderStructureModel GetModel()
+    public BaseDocumentStructureModel GetModel()
     {
         return ReturnModel;
     }
