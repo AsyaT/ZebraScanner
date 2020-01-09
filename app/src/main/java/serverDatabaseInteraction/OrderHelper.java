@@ -33,20 +33,19 @@ public class OrderHelper {
             throw new ApplicationException(Model.ErrorMessage);
         }
 
-        this.ReturnModel = new OrderStructureModel(Model.OrderName);
+        this.ReturnModel = new OrderStructureModel(Model.DocumentData.Name);
 
-        for(OrderModel.ProductListModel plm : Model.ProductList)
+        for(OrderModel.ProductListModel plm : Model.DocumentData.ProductList)
         {
             NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
             try {
-                Number OrderedNumber = format.parse(plm.Ordered);
-                Number DoneNumber = format.parse(plm.Done);
-                Number LeftNumber = format.parse(plm.Left);
+                Number OrderedNumber = format.parse(plm.Quantity);
+                Number DoneNumber = format.parse(plm.QuantityDone);
 
             OrderStructureModel.ProductOrderStructureModel productOrderStructureModel = new OrderStructureModel.ProductOrderStructureModel(
                     plm.Product,plm.Charact,
-                    OrderedNumber.doubleValue(), DoneNumber.doubleValue(), LeftNumber.doubleValue(),
-                    plm.PiecesOrdered, plm.PiecesDone, plm.PiecesLeft
+                    OrderedNumber.doubleValue(), DoneNumber.doubleValue(),
+                    plm.Pieces, plm.PiecesDone
             );
             this.ReturnModel.Add(productOrderStructureModel);
             } catch (ParseException e) {

@@ -39,7 +39,7 @@ public class DocumentBaseCommand implements Command {
 
         ScannerApplication appState = ((ScannerApplication)this.Activity.getApplication());
         String userpass =  appState.serverConnection.GetUsernameAndPassword();
-        String url= appState.serverConnection.GetOrderProductURL(OrderGuid);
+        String url= appState.serverConnection.GetOrderProductURL(appState.LocationContext.GetAccountingAreaGUID(),OrderGuid);
 
         OrderHelper orderHelper = null;
         try {

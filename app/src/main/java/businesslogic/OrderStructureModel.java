@@ -54,16 +54,16 @@ public class OrderStructureModel implements Serializable {
         private Integer DoneItems;
         private Integer LeftItems;
 
-        public  ProductOrderStructureModel(String productGuid, String characteristicGuid, Double orderedKilos, Double doneKilos, Double leftKilos, Integer orderedItems, Integer doneItems, Integer leftItems)
+        public  ProductOrderStructureModel(String productGuid, String characteristicGuid, Double orderedKilos, Double doneKilos, Integer orderedItems, Integer doneItems)
         {
             this.ProductGuid = productGuid;
             this.CharacteristicGuid = characteristicGuid;
             this.OrderedKilos = orderedKilos;
             this.DoneKilos = doneKilos;
-            this.LeftKilos = leftKilos;
+            this.LeftKilos = orderedKilos - doneKilos;
             this.OrderedItems = orderedItems;
             this.DoneItems = doneItems;
-            this.LeftItems = leftItems;
+            this.LeftItems = orderedItems - doneItems;
         }
 
         public String GetProductGuid()
