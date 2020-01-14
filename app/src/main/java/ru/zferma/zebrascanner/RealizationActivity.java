@@ -7,7 +7,7 @@ public class RealizationActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        ShowFragmentScanOrder();
+        ShowFragmentScanBaseDocument();
 
     }
 

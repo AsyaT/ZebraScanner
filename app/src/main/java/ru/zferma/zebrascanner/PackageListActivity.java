@@ -18,7 +18,7 @@ public class PackageListActivity extends MainActivity {
                         switch (which)
                         {
                             case 0: break;
-                            case 1: ShowFragmentScanOrder(); break;
+                            case 1: ShowFragmentScanBaseDocument(); break;
                             default: break;
                         }
                         dialog.dismiss();

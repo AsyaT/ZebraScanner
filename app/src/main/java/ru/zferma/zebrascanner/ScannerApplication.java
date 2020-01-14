@@ -10,7 +10,7 @@ import businesslogic.FullDataTableControl;
 import businesslogic.ManufacturerStructureModel;
 import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
-import businesslogic.OrderStructureModel;
+import businesslogic.BaseDocumentStructureModel;
 import businesslogic.NomenclatureStructureModel;
 import businesslogic.ScannerStateHelper;
 import businesslogic.ServerConnection;
@@ -35,14 +35,14 @@ public class ScannerApplication extends Application {
     //Context entities
     public ScannerStateHelper scannerState = new ScannerStateHelper();
     public OperationTypesStructureModel LocationContext = null;
-    public OrderStructureModel orderStructureModel = null;
+    public BaseDocumentStructureModel baseDocumentStructureModel = null;
     public String BadgeGuid = null;
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
 
     public void CleanContextEntities()
     {
         LocationContext = null;
-        orderStructureModel = null;
+        baseDocumentStructureModel = null;
         BadgeGuid = null;
         ScannedProductsToSend = new FullDataTableControl();
     }

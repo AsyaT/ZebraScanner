@@ -163,12 +163,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onClick(View view) {
                 // Считать бейдж
-                ShowFragmentScanBedge();
+                ShowFragmentScanBadge();
             }
         });
     }
 
-    protected void ShowFragmentScanBedge()
+    protected void ShowFragmentScanBadge()
     {
         Fragment scanBadgeFragment = new ScanBadgeFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
@@ -178,14 +178,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         appState.scannerState.Set(ScannerState.BADGE);
     }
 
-    protected void ShowFragmentScanOrder()
+    protected void ShowFragmentScanBaseDocument()
     {
         Fragment scanOrderFragment = new ScanOrderFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
         fragmentHelper.replaceFragment(scanOrderFragment,R.id.frBarcodeInfo, "ScanOrder");
 
         ScannerApplication appState = ((ScannerApplication) getApplication());
-        appState.scannerState.Set(ScannerState.ORDER);
+        appState.scannerState.Set(ScannerState.DOCUMENTBASE);
     }
 
     // Method to initialize and enable Scanner and its listeners

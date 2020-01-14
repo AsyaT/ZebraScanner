@@ -8,19 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import businesslogic.OrderStructureModel;
+import businesslogic.BaseDocumentStructureModel;
 import presentation.FragmentHelper;
 
 
 public class OrderInfoFragment extends Fragment {
 
-    private OrderStructureModel Order;
+    private BaseDocumentStructureModel Order;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Order = (OrderStructureModel) getArguments().getSerializable("order");
+        Order = (BaseDocumentStructureModel) getArguments().getSerializable("order");
 
         View view = inflater.inflate(R.layout.fragment_order_info, container, false);
 

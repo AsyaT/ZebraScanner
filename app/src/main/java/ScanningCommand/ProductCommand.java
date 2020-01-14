@@ -44,7 +44,7 @@ public class ProductCommand implements Command {
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
                 appState.manufacturerStructureModel,
-                appState.orderStructureModel,
+                appState.baseDocumentStructureModel,
                 appState.LocationContext);
 
 
@@ -82,6 +82,7 @@ public class ProductCommand implements Command {
                                 try
                                 {
                                     ProductLogic.IsExistsInOrder(result[0]);
+                                    SuccessSaveData(result[0]);
                                 }
                                 catch (ApplicationException ex)
                                 {
@@ -89,8 +90,6 @@ public class ProductCommand implements Command {
                                 }
                                 finally
                                 {
-                                    SuccessSaveData(result[0]);
-
                                     PostAction();
 
                                     try {
@@ -193,6 +192,7 @@ public class ProductCommand implements Command {
                     try
                     {
                         this.ProductLogic.IsExistsInOrder(products.get(0));
+                        SuccessSaveData(products.get(0));
                     }
                     catch (ApplicationException ex)
                     {
@@ -200,7 +200,7 @@ public class ProductCommand implements Command {
                     }
                     finally
                     {
-                        SuccessSaveData(products.get(0));
+
                     }
                 }
             }

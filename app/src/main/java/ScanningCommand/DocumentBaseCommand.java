@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
-import businesslogic.OrderStructureModel;
+import businesslogic.BaseDocumentStructureModel;
 import businesslogic.ScannerState;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.OrderInfoFragment;
@@ -15,9 +15,9 @@ import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
 import businesslogic.ApplicationException;
-import serverDatabaseInteraction.OrderHelper;
+import serverDatabaseInteraction.BaseDocumentHelper;
 
-public class OrderCommand implements Command {
+public class DocumentBaseCommand implements Command {
 
     String OrderGuid;
     Activity Activity;
@@ -39,22 +39,22 @@ public class OrderCommand implements Command {
 
         ScannerApplication appState = ((ScannerApplication)this.Activity.getApplication());
         String userpass =  appState.serverConnection.GetUsernameAndPassword();
-        String url= appState.serverConnection.GetOrderProductURL(OrderGuid);
+        String url= appState.serverConnection.GetOrderProductURL(appState.LocationContext.GetAccountingAreaGUID(),OrderGuid);
 
-        OrderHelper orderHelper = null;
+        BaseDocumentHelper baseDocumentHelper = null;
         try {
-            orderHelper = new OrderHelper(url, userpass);
+            baseDocumentHelper = new BaseDocumentHelper(url, userpass);
 
-            OrderStructureModel serverResult = orderHelper.GetModel();
+            BaseDocumentStructureModel serverResult = baseDocumentHelper.GetModel();
 
-            appState.orderStructureModel = serverResult;
-            appState.orderStructureModel.SetOrderGuid(data.getData());
+            appState.baseDocumentStructureModel = serverResult;
+            appState.baseDocumentStructureModel.SetOrderGuid(data.getData());
 
             FragmentHelper fragmentHelper = new FragmentHelper(Activity);
             fragmentHelper.closeFragment(orderInfoFragment);
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable("order", appState.orderStructureModel);
+            bundle.putSerializable("order", appState.baseDocumentStructureModel);
 
             Fragment orderNameInfoFragment = new OrderInfoFragment();
             orderNameInfoFragment.setArguments(bundle);

@@ -29,9 +29,9 @@ public class ServerConnection {
 
     }
 
-    public String GetOrderProductURL(String orderGUID)
+    public String GetOrderProductURL(String accountingAreaGuid, String orderGUID)
     {
-        return "http://"+this.ServerIP+"/erp_troyan/hs/TSD_Feed/ClientOrders/v1/GetByGUID?GUID="+orderGUID;
+        return "http://"+this.ServerIP+"/erp_troyan/hs/TSD_Feed/BaseDocument/v1/GetByGUID?AccountingAreaGUID="+accountingAreaGuid+"&GUID="+orderGUID;
     }
 
     public String getResponseUrl()

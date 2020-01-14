@@ -6,7 +6,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_pre_settings">PreSettingsActivity</string>
     <string name="no_connection">Соединение с сервером 1С отсутствует</string>
-    <string name="PleaseScanOrder">Сканируйте штрих-код заказа</string>
+    <string name="PleaseScanOrder">Сканируйте штрих-код документа-основания</string>
     <string name="BackToListButton">Назад к списку операций</string>
     <string name="ExecuteButton">Выполнить</string>
     <string name="ActionsNotRealized">Действия для этой операции не реализованы</string>

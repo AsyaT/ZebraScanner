@@ -50,9 +50,9 @@ public class BadgeCommand implements Command  {
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
         responseStructureModel.AccountingAreaGUID = appState.LocationContext.GetAccountingAreaGUID();
         responseStructureModel.UserID = appState.BadgeGuid;
-        if(appState.orderStructureModel != null)
+        if(appState.baseDocumentStructureModel != null)
         {
-            responseStructureModel.DocumentID = appState.orderStructureModel.GetOrderId();
+            responseStructureModel.DocumentID = appState.baseDocumentStructureModel.GetOrderId();
         }
 
         for(FullDataTableControl.Details product : appState.ScannedProductsToSend.GetListOfProducts())
@@ -82,7 +82,7 @@ public class BadgeCommand implements Command  {
                 // TODO: 5. очищать таблицы или переходить на выбор операции
                 appState.ScannedProductsToSend.CleanListOfProducts();
                 appState.LocationContext = null;
-                appState.orderStructureModel = null;
+                appState.baseDocumentStructureModel = null;
                 appState.BadgeGuid = null;
 
             }
