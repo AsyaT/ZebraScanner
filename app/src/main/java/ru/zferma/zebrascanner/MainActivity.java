@@ -163,12 +163,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onClick(View view) {
                 // Считать бейдж
-                ShowFragmentScanBedge();
+                ShowFragmentScanBadge();
             }
         });
     }
 
-    protected void ShowFragmentScanBedge()
+    protected void ShowFragmentScanBadge()
     {
         Fragment scanBadgeFragment = new ScanBadgeFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
