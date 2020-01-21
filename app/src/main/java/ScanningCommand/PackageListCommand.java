@@ -34,9 +34,11 @@ public class PackageListCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data)
     {
-        // ALARM if this client need to compile order only by Package Lists!!!
+        // ALARM if this client need to compile order only by Package Lists!!! - will be passed with Base document
+
         // DO Not scan each list twice
-        // CHECK order. Check each product or ALL products???
+
+        // CHECK order. Check each product or ALL products??? - order should include ALL products
 
         // GO to DB and get list of products
 
