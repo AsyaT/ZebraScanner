@@ -8,15 +8,16 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import businesslogic.ListViewPresentationModel;
+import businesslogic.ApplicationException;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.BarcodeTypes;
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.ListViewPresentationModel;
 import businesslogic.NomenclatureStructureModel;
 import businesslogic.ProductLogic;
-import businesslogic.ApplicationException;
+import businesslogic.ProductStructureModel;
 
-public class ViewModelCreationTest {
+public class ProductLogicTest {
 
     ProductLogic productLogic;
 
@@ -25,18 +26,18 @@ public class ViewModelCreationTest {
     {
         BarcodeStructureModel BarcodeStructureModel = new BarcodeStructureModel();
 
-        ArrayList<businesslogic.BarcodeStructureModel.ProductStructureModel> productList = new ArrayList<>();
-        productList.add(new BarcodeStructureModel.ProductStructureModel(
+        ArrayList<ProductStructureModel> productList = new ArrayList<>();
+        productList.add(new ProductStructureModel(
                 "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0));
         BarcodeStructureModel.Add("4660017708243", productList);
 
         productList = new ArrayList<>();
-        productList.add(new BarcodeStructureModel.ProductStructureModel(
+        productList.add(new ProductStructureModel(
                 "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3","760d9dfd-93ba-11e8-80cc-a4bf011ce3c3",10.0));
         BarcodeStructureModel.Add("2308107", productList);
 
         productList = new ArrayList<>();
-        productList.add(new BarcodeStructureModel.ProductStructureModel(
+        productList.add(new ProductStructureModel(
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
         BarcodeStructureModel.Add("4660017707116", productList);
 
@@ -59,7 +60,7 @@ public class ViewModelCreationTest {
 
         ListViewPresentationModel actual = null;
         try {
-            BarcodeStructureModel.ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -86,7 +87,7 @@ public class ViewModelCreationTest {
 
         ListViewPresentationModel actual = null;
         try {
-            BarcodeStructureModel.ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -112,7 +113,7 @@ public class ViewModelCreationTest {
 
         ListViewPresentationModel actual = null;
         try {
-            BarcodeStructureModel.ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
