@@ -16,6 +16,7 @@ import java.util.Locale;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.NomenclatureStructureModel;
+import businesslogic.ProductStructureModel;
 
 public class BarcodeHelper {
 
@@ -35,15 +36,15 @@ public class BarcodeHelper {
 
         for(serverDatabaseInteraction.BarcodeModel.ProductListModel barcode : Model.BarCodeList)
         {
-            ArrayList<BarcodeStructureModel.ProductStructureModel> listModel = new ArrayList<>();
+            ArrayList<ProductStructureModel> listModel = new ArrayList<>();
 
             for(serverDatabaseInteraction.BarcodeModel.PropertiesListModel plm : barcode.PropertiesList)
             {
                 NumberFormat format = NumberFormat.getInstance(Locale.GERMAN);
                 Number number = format.parse(plm.Quant);
 
-                BarcodeStructureModel.ProductStructureModel productModel =
-                        new BarcodeStructureModel.ProductStructureModel(plm.ProductGUID, plm.ProductCharactGUID, number.doubleValue());
+                ProductStructureModel productModel =
+                        new ProductStructureModel(plm.ProductGUID, plm.ProductCharactGUID, number.doubleValue());
                 listModel.add(productModel);
 
                 this.ProductModel.Add(plm.ProductGUID, plm.ProductName);

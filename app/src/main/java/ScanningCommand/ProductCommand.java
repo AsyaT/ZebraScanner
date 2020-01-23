@@ -13,15 +13,15 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import businesslogic.BarcodeStructureModel;
+import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductLogic;
+import businesslogic.ProductStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
-import businesslogic.ApplicationException;
 
 public class ProductCommand implements Command {
 
@@ -52,12 +52,12 @@ public class ProductCommand implements Command {
 
     }
 
-    protected void SelectionDialog(List<BarcodeStructureModel.ProductStructureModel> listNomenclature)
+    protected void SelectionDialog(List<ProductStructureModel> listNomenclature)
     {
         List<CharSequence> nomenclatures = new ArrayList<CharSequence>();
-        final BarcodeStructureModel.ProductStructureModel[] result = {null};
+        final ProductStructureModel[] result = {null};
 
-        for(BarcodeStructureModel.ProductStructureModel nomenclature : listNomenclature)
+        for(ProductStructureModel nomenclature : listNomenclature)
         {
             nomenclatures.add(
                     appState.nomenclatureStructureModel.FindProductByGuid( nomenclature.GetProductGuid())+
@@ -140,7 +140,8 @@ public class ProductCommand implements Command {
         }
     }
 
-    protected void SuccessSaveData( BarcodeStructureModel.ProductStructureModel product)
+    //TODO: code duplication
+    protected void SuccessSaveData( ProductStructureModel product)
     {
         ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
 
@@ -170,7 +171,7 @@ public class ProductCommand implements Command {
         }
         finally
         {
-            ArrayList<BarcodeStructureModel.ProductStructureModel> products = null;
+            ArrayList<ProductStructureModel> products = null;
             try
             {
                 products = this.ProductLogic.CreateProducts(data.getData(), BarcodeTypes.GetType(data.getLabelType()));

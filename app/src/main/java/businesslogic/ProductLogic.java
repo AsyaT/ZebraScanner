@@ -33,10 +33,10 @@ public class ProductLogic {
        this.OperationTypesStructureModel = operationTypesStructureModel;
     }
 
-    public ArrayList<BarcodeStructureModel.ProductStructureModel> CreateProducts(String scannedBarcode, BarcodeTypes type) throws ParseException, ApplicationException {
+    public ArrayList<ProductStructureModel> CreateProducts(String scannedBarcode, BarcodeTypes type) throws ParseException, ApplicationException {
         parsedBarcode = new ScanningBarcodeStructureModel(scannedBarcode, type);
 
-        ArrayList<BarcodeStructureModel.ProductStructureModel> listOfProducts =
+        ArrayList<ProductStructureModel> listOfProducts =
                 BarcodeStructureModel.FindProductByBarcode(parsedBarcode.getUniqueIdentifier());
 
         if(listOfProducts == null)
@@ -49,7 +49,7 @@ public class ProductLogic {
         }
     }
 
-    public ListViewPresentationModel CreateListView(businesslogic.BarcodeStructureModel.ProductStructureModel product)
+    public ListViewPresentationModel CreateListView(ProductStructureModel product)
     {
         return
                 new ListViewPresentationModel(
@@ -61,7 +61,7 @@ public class ProductLogic {
         ;
     }
 
-    public FullDataTableControl.Details CreateDetails(businesslogic.BarcodeStructureModel.ProductStructureModel product)
+    public FullDataTableControl.Details CreateDetails(ProductStructureModel product)
     {
         return new FullDataTableControl.Details(
                 product.GetProductGuid(),
@@ -72,7 +72,7 @@ public class ProductLogic {
                 this.ManufacturerStructureModel.GetManufacturerGuid(parsedBarcode.getInternalProducer()));
     }
 
-    public String CreateStringResponse(businesslogic.BarcodeStructureModel.ProductStructureModel product)
+    public String CreateStringResponse(ProductStructureModel product)
     {
         String resultText="";
 
@@ -98,7 +98,7 @@ public class ProductLogic {
         return resultText;
     }
 
-    public Boolean IsExistsInOrder(businesslogic.BarcodeStructureModel.ProductStructureModel product) throws ApplicationException {
+    public Boolean IsExistsInOrder(ProductStructureModel product) throws ApplicationException {
         if(this.BaseDocumentStructureModel != null && this.BaseDocumentStructureModel.IfProductExists(product.GetProductGuid()) )
         {
             return true;
@@ -120,7 +120,7 @@ public class ProductLogic {
         }
     }
 
-    private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, businesslogic.BarcodeStructureModel.ProductStructureModel product)
+    private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, ProductStructureModel product)
     {
         if(scannedBarcode.getWeight() == null)
         {

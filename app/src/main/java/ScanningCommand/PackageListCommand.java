@@ -4,11 +4,11 @@ import android.app.Activity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
-import businesslogic.BarcodeStructureModel;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.PackageListStructureModel;
 import businesslogic.ProductLogic;
+import businesslogic.ProductStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
@@ -46,13 +46,14 @@ public class PackageListCommand implements Command {
 
         // Add all products to tables
 
-        for( PackageListStructureModel.ProductStructureModel product : packageListStructureModel.GetProducts())
+        for( ProductStructureModel product : packageListStructureModel.GetProducts())
         {
             SuccessSaveData(product);
         }
     }
 
-    protected void SuccessSaveData( PackageListStructureModel.ProductStructureModel product)
+    //TODO: code duplication
+    protected void SuccessSaveData( ProductStructureModel product)
     {
         ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
 
