@@ -25,11 +25,11 @@ import ru.zferma.zebrascanner.ScannerApplication;
 
 public class ProductCommand implements Command {
 
-    MediaPlayer mediaPlayer;
-
     Activity Activity;
     Scanner CurrentScanner;
     ScannerApplication appState;
+
+    MediaPlayer mediaPlayer;
 
     ProductLogic ProductLogic;
 
@@ -47,9 +47,7 @@ public class ProductCommand implements Command {
                 appState.baseDocumentStructureModel,
                 appState.LocationContext);
 
-
-        mediaPlayer = MediaPlayer.create(activity, R.raw.beep01);
-
+        mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
     }
 
     protected void SelectionDialog(List<ProductStructureModel> listNomenclature)
@@ -86,7 +84,7 @@ public class ProductCommand implements Command {
                                 }
                                 catch (ApplicationException ex)
                                 {
-                                    AlarmAndNotify(ex.getMessage());
+                                    ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
                                 }
                                 finally
                                 {
@@ -121,24 +119,6 @@ public class ProductCommand implements Command {
 
     }
 
-    protected void AlarmAndNotify(String message)
-    {
-        try {
-            CurrentScanner.disable();
-        } catch (ScannerException e) {
-            e.printStackTrace();
-        }
-
-        mediaPlayer.start();
-
-        if (((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed)
-        {
-            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(message);
-        }
-        else {
-            ((MainActivity)this.Activity).new MessageDialog().execute(message);
-        }
-    }
 
     //TODO: code duplication
     protected void SuccessSaveData( ProductStructureModel product)
@@ -167,7 +147,7 @@ public class ProductCommand implements Command {
         }
         catch (ApplicationException ex)
         {
-            AlarmAndNotify(ex.getMessage());
+            ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
         }
         finally
         {
@@ -178,9 +158,9 @@ public class ProductCommand implements Command {
             }
             catch (ApplicationException ex)
             {
-                AlarmAndNotify(ex.getMessage());
+                ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
             } catch (ParseException e) {
-                AlarmAndNotify(e.getMessage());
+                ((MainActivity)Activity).AlarmAndNotify(e.getMessage());
             }
             finally
             {
@@ -197,12 +177,9 @@ public class ProductCommand implements Command {
                     }
                     catch (ApplicationException ex)
                     {
-                        AlarmAndNotify(ex.getMessage());
+                        ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
                     }
-                    finally
-                    {
 
-                    }
                 }
             }
         }

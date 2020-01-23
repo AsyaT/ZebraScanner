@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
+import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.PackageListStructureModel;
@@ -34,11 +35,9 @@ public class PackageListCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data)
     {
-        // ALARM if this client need to compile order only by Package Lists!!! - will be passed with Base document
+        // TODO: ALARM if this client need to compile order only by Package Lists!!! - will be passed with Base document
 
-        // DO Not scan each list twice
-
-        // CHECK order. Check each product or ALL products??? - order should include ALL products
+        // TODO: DO Not scan each list twice
 
         // GO to DB and get list of products
 
@@ -46,10 +45,26 @@ public class PackageListCommand implements Command {
 
         // Add all products to tables
 
+        Boolean areAllProductsContainsInOrder = null;
+
         for( ProductStructureModel product : packageListStructureModel.GetProducts())
         {
-            //TODO: error, because Products have no scanned barcodes. ProductLogic.CreateProducts() not called
-            SuccessSaveData(product);
+            try {
+                this.ProductLogic.IsExistsInOrder(product);
+                areAllProductsContainsInOrder = true;
+            }
+            catch (ApplicationException ex)
+            {
+                ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
+                areAllProductsContainsInOrder = false;
+            }
+        }
+
+        if(areAllProductsContainsInOrder == true) {
+            for( ProductStructureModel product : packageListStructureModel.GetProducts()) {
+                //TODO: error, because Products have no scanned barcodes. ProductLogic.CreateProducts() not called
+                SuccessSaveData(product);
+            }
         }
     }
 

@@ -192,6 +192,26 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         appState.scannerState.Set(ScannerState.DOCUMENTBASE);
     }
 
+    public void AlarmAndNotify(String message)
+    {
+        try {
+            scanner.disable();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
+        mediaPlayer.start();
+
+        if (this.IsBarcodeInfoFragmentShowed)
+        {
+            new AsyncBarcodeInfoUpdate().execute(message);
+        }
+        else {
+            new MessageDialog().execute(message);
+        }
+    }
+
     // Method to initialize and enable Scanner and its listeners
     private void initializeScanner() throws ScannerException {
         if (scanner == null) {
