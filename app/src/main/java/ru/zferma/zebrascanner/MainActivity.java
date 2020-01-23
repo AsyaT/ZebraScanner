@@ -304,9 +304,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData)
                     {
+                        ScannerApplication appState = ((ScannerApplication) getApplication());
+                        ScannerState state = appState.scannerState.GetCurrent();
+                        
+                        //TODO : set proper LabelType
+                        if(state == ScannerState.PRODUCT && data.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR) // TODO: also might be scanned GUID of PAckegeList
+                        {
+                            appState.scannerState.Set(ScannerState.PACKAGELIST);
+                        }
 
                         BarcodeExecutor executor = new BarcodeExecutor();
-                        ScannerApplication appState = ((ScannerApplication) getApplication());
+
                         executor.Execute(appState.scannerState.GetCurrent(), data,this);
 
                     }
