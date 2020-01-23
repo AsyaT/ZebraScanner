@@ -113,7 +113,7 @@ public class ProductLogicTest {
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -145,5 +145,22 @@ public class ProductLogicTest {
     {
         // TODO
 
+    }
+
+    @Test
+    public void ScanPackageList()
+    {
+        ProductStructureModel psm = new ProductStructureModel("6130fe3f-93ba-11e8-80cc-a4bf011ce3c3","760d9dfd-93ba-11e8-80cc-a4bf011ce3c3", 10.0);
+        ListViewPresentationModel actual = productLogic.CreateListView(psm);
+
+        ListViewPresentationModel expected = new ListViewPresentationModel(
+                "",
+                "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)",
+                "Тандер",
+                10.0,
+                "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3"
+        );
+
+        Assert.assertEquals(expected,actual);
     }
 }
