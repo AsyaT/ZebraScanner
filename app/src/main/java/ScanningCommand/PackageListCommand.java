@@ -9,7 +9,8 @@ import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.PackageListStructureModel;
 import businesslogic.ProductLogic;
-import businesslogic.ProductStructureModel;
+import businesslogic.ProductModel;
+import businesslogic.Product_PackageListStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
@@ -47,7 +48,7 @@ public class PackageListCommand implements Command {
 
         Boolean areAllProductsContainsInOrder = null;
 
-        for( ProductStructureModel product : packageListStructureModel.GetProducts())
+        for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts())
         {
             try {
                 this.ProductLogic.IsExistsInOrder(product);
@@ -61,7 +62,7 @@ public class PackageListCommand implements Command {
         }
 
         if(areAllProductsContainsInOrder == true) {
-            for( ProductStructureModel product : packageListStructureModel.GetProducts()) {
+            for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
                 //TODO: error, because Products have no scanned barcodes. ProductLogic.CreateProducts() not called
                 SuccessSaveData(product);
             }
@@ -69,7 +70,7 @@ public class PackageListCommand implements Command {
     }
 
     //TODO: code duplication
-    protected void SuccessSaveData( ProductStructureModel product)
+    protected void SuccessSaveData( ProductModel product)
     {
         ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
 

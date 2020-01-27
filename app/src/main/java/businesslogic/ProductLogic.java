@@ -49,7 +49,7 @@ public class ProductLogic {
         }
     }
 
-    public ListViewPresentationModel CreateListView(ProductStructureModel product)
+    public ListViewPresentationModel CreateListView(ProductModel product)
     {
         return
                 new ListViewPresentationModel(
@@ -61,7 +61,7 @@ public class ProductLogic {
         ;
     }
 
-    public FullDataTableControl.Details CreateDetails(ProductStructureModel product)
+    public FullDataTableControl.Details CreateDetails(ProductModel product)
     {
         return new FullDataTableControl.Details(
                 product.GetProductGuid(),
@@ -72,7 +72,7 @@ public class ProductLogic {
                 this.ManufacturerStructureModel.GetManufacturerGuid(parsedBarcode.getInternalProducer()));
     }
 
-    public String CreateStringResponse(ProductStructureModel product)
+    public String CreateStringResponse(ProductModel product)
     {
         String resultText="";
 
@@ -98,7 +98,7 @@ public class ProductLogic {
         return resultText;
     }
 
-    public Boolean IsExistsInOrder(ProductStructureModel product) throws ApplicationException {
+    public Boolean IsExistsInOrder(ProductModel product) throws ApplicationException {
         if(this.BaseDocumentStructureModel != null && this.BaseDocumentStructureModel.IfProductExists(product.GetProductGuid()) )
         {
             return true;
@@ -120,7 +120,7 @@ public class ProductLogic {
         }
     }
 
-    private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, ProductStructureModel product)
+    private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, ProductModel product)
     {
         if(scannedBarcode.getWeight() == null)
         {
