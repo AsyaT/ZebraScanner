@@ -1,9 +1,14 @@
 package businesslogic;
 
+import java.util.Date;
+
 public class ProductModel {
-    protected String ProductGUID ;
-    protected String CharacteristicGUID ;
-    protected Double Weight;
+    private String ProductGUID ;
+    private String CharacteristicGUID ;
+    private Double Weight;
+    private String ManufacturerGUID;
+    private Date ProductionDate;
+    private Date ExpirationDate;
 
     public String GetProductGuid()
     {
@@ -20,4 +25,30 @@ public class ProductModel {
         return Weight;
     }
 
+    public String GetManufacturerGuid(){return ManufacturerGUID;}
+
+    public Date GetProductionDate() { return ProductionDate;}
+
+    public Date getExpirationDate() { return ExpirationDate;}
+
+    public void SetWeight(Double scannedWeight)
+    {
+        if(scannedWeight != null)
+        {
+            this.Weight = scannedWeight;
+        }
+    }
+
+    public void SetProductionDate(Date scannedDate)
+    {
+        this.ProductionDate = scannedDate;
+    }
+    public void SetExpirationDate(Date scannedDate)
+    {
+        this.ExpirationDate = scannedDate;
+    }
+    public void SetManufacturerGuid(String scannedGuid)
+    {
+        this.ManufacturerGUID = scannedGuid;
+    }
 }

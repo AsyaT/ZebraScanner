@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import businesslogic.ApplicationException;
+import businesslogic.BarcodeProductLogic;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
@@ -31,7 +32,8 @@ public class ProductCommand implements Command {
 
     MediaPlayer mediaPlayer;
 
-    ProductLogic ProductLogic;
+    businesslogic.BarcodeProductLogic BarcodeProductLogic;
+    businesslogic.ProductLogic ProductLogic;
 
     @Override
     public void Action(Activity activity) {
@@ -40,12 +42,17 @@ public class ProductCommand implements Command {
 
         appState = ((ScannerApplication) Activity.getApplication());
 
-        this.ProductLogic = new ProductLogic(appState.barcodeStructureModel,
+        this.BarcodeProductLogic = new BarcodeProductLogic(appState.barcodeStructureModel,
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
                 appState.manufacturerStructureModel,
-                appState.baseDocumentStructureModel,
                 appState.LocationContext);
+
+        this.ProductLogic = new ProductLogic(
+                appState.nomenclatureStructureModel,
+                appState.characterisiticStructureModel,
+                appState.manufacturerStructureModel,
+                appState.baseDocumentStructureModel);
 
         mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
     }
@@ -131,7 +138,7 @@ public class ProductCommand implements Command {
         }
         else if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
         {
-            String result = this.ProductLogic.CreateStringResponse(product);
+            String result = this.BarcodeProductLogic.CreateStringResponse(product);
             ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
         }
 
@@ -143,7 +150,7 @@ public class ProductCommand implements Command {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         try {
-            this.ProductLogic.IsAllowedToScan(data.getLabelType());
+            this.BarcodeProductLogic.IsAllowedToScan(data.getLabelType());
         }
         catch (ApplicationException ex)
         {
@@ -154,7 +161,7 @@ public class ProductCommand implements Command {
             ArrayList<ProductStructureModel> products = null;
             try
             {
-                products = this.ProductLogic.CreateProducts(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+                products = this.BarcodeProductLogic.CreateProducts(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
             }
             catch (ApplicationException ex)
             {

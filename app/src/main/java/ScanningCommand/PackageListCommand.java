@@ -25,12 +25,11 @@ public class PackageListCommand implements Command {
     public void Action(Activity activity) {
         this.Activity = activity;
 
-        this.ProductLogic = new ProductLogic(appState.barcodeStructureModel,
+        this.ProductLogic = new ProductLogic(
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
                 appState.manufacturerStructureModel,
-                appState.baseDocumentStructureModel,
-                appState.LocationContext);
+                appState.baseDocumentStructureModel);
     }
 
     @Override
@@ -61,6 +60,16 @@ public class PackageListCommand implements Command {
             }
         }
 
+        //TODO: show full info about Package List
+        /*
+        if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
+        {
+            String result = this.ProductLogic.CreatePcageListInfo(packageList); // TODO: implement method
+            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
+        }
+
+         */
+
         if(areAllProductsContainsInOrder == true) {
             for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
                 //TODO: error, because Products have no scanned barcodes. ProductLogic.CreateProducts() not called
@@ -72,16 +81,10 @@ public class PackageListCommand implements Command {
     //TODO: code duplication
     protected void SuccessSaveData( ProductModel product)
     {
-        ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-
         if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
+            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
             ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
-        }
-        else if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
-        {
-            String result = this.ProductLogic.CreateStringResponse(product);
-            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
         }
 
         FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
