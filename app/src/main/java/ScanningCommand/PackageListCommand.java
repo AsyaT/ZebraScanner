@@ -73,7 +73,10 @@ public class PackageListCommand implements Command {
         if(areAllProductsContainsInOrder == true) {
             for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
                 //TODO: error, because Products have no scanned barcodes. ProductLogic.CreateProducts() not called
-                SuccessSaveData(product);
+
+                for(int i=1;  i<= product.GetItems() ; i++) {
+                    SuccessSaveData(product);
+                }
             }
         }
     }
