@@ -3,12 +3,12 @@ package businesslogic;
 import java.util.Date;
 
 public class ProductModel {
-    private String ProductGUID ;
-    private String CharacteristicGUID ;
-    private Double Weight;
-    private String ManufacturerGUID;
-    private Date ProductionDate;
-    private Date ExpirationDate;
+    protected String ProductGUID ;
+    protected String CharacteristicGUID ;
+    protected Double Weight;
+    protected String ManufacturerGUID;
+    protected Date ProductionDate;
+    protected Date ExpirationDate;
 
     public String GetProductGuid()
     {
