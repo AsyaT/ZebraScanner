@@ -4,6 +4,7 @@ public class ProductStructureModel extends ProductModel
 {
 public ProductStructureModel(String productGuid, String characteristicGuid, Double weight)
 {
+    super();
     this.ProductGUID = productGuid;
     this.CharacteristicGUID = characteristicGuid;
     this.Weight = weight;

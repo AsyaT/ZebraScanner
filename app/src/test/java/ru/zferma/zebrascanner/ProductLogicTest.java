@@ -147,20 +147,6 @@ public class ProductLogicTest {
     }
 
     @Test
-    public void ExistsInOrder()
-    {
-       // TODO
-
-    }
-
-    @Test
-    public void DoesNotExistsInOrder()
-    {
-        // TODO
-
-    }
-
-    @Test
     public void CreateSimpleProduct()
     {
         ProductStructureModel psm = new ProductStructureModel(

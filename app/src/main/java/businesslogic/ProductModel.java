@@ -10,6 +10,11 @@ public class ProductModel {
     protected Date ProductionDate;
     protected Date ExpirationDate;
 
+    protected ProductModel()
+    {
+
+    }
+
     public String GetProductGuid()
     {
         return ProductGUID;
