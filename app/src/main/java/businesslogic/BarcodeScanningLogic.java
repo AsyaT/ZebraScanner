@@ -4,6 +4,8 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 
 public class BarcodeScanningLogic
 {
+    //TODO: move here logic for PackageListScanning
+    
     OperationTypesStructureModel OperationTypesStructureModel = null;
 
     public BarcodeScanningLogic(OperationTypesStructureModel operationTypesStructureModel)
