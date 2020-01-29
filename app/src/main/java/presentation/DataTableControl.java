@@ -31,7 +31,7 @@ public class DataTableControl {
         return DataTable;
     }
 
-    public ProductListViewModel GetExitingProduct(String productGuid )
+    public ProductListViewModel FindProduct(String productGuid )
     {
         for(ProductListViewModel product : DataTable)
         {
@@ -76,7 +76,7 @@ public class DataTableControl {
     {
         ProductListViewModel result = null;
 
-        ProductListViewModel existingTableModel =  this.GetExitingProduct( model.ProductGuid);
+        ProductListViewModel existingTableModel =  this.FindProduct( model.ProductGuid);
         if(existingTableModel == null)
         {
             Integer newStringNumber = this.GetSizeOfList()+1;

@@ -12,6 +12,8 @@ import businesslogic.ListViewPresentationModel;
 import presentation.DataTableControl;
 import presentation.ProductListViewModel;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 
 public class DataTableControlTest {
@@ -72,21 +74,19 @@ public class DataTableControlTest {
     }
 
     @Test
-    public void GetNewLine()
+    public void FindProductTest()
     {
-        ProductListViewModel presentationModel = new ProductListViewModel(
+        ProductListViewModel expected = new ProductListViewModel(
+                "222-222-222-222",
                 "2",
                 "Char 2",
                 "Nomenclature 2",
-                "67890",
                 "2",
                 "19.4");
 
-        ProductListViewModel result =  Table.GetExitingProduct("222-222-222-222");
-        CompareModels(result,presentationModel);
+        ProductListViewModel actual =  Table.FindProduct("222-222-222-222");
+        CompareModels(actual,expected);
 
-        result = Table.GetExitingProduct("222-222-222-222");
-        CompareModels(result,presentationModel);
     }
 
     private void CompareModels(ProductListViewModel actual, ProductListViewModel expected)
@@ -100,11 +100,22 @@ public class DataTableControlTest {
     }
 
     @Test
-    public void FindProduct()
+    public void FindProductNotExists()
     {
-        assertEquals( null, Table.GetExitingProduct("222-222-222-222"));
-        assertEquals( null,  Table.GetExitingProduct("111-111-111-111"));
+        assertEquals( null,  Table.FindProduct("777-111-111-111"));
 
+    }
+
+    @Test
+    public void IsProductExistsTest()
+    {
+        assertTrue(Table.IsProductExists("493-58-33"));
+    }
+
+    @Test
+    public void IsProductDoesNotExistsTest()
+    {
+        assertFalse(Table.IsProductExists("024-556-224"));
     }
 
     @Test
@@ -114,7 +125,7 @@ public class DataTableControlTest {
         Table.ItemClicked(testView,0);
         Table.RemoveSelected();
 
-        ProductListViewModel result = Table.GetExitingProduct("493-58-33");
+        ProductListViewModel result = Table.FindProduct("493-58-33");
 
         assertEquals(result.getStringNumber(),"2");
         assertEquals(result.getCoefficient(),"2");

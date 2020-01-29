@@ -7,6 +7,7 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeProductLogic;
@@ -18,6 +19,7 @@ import businesslogic.ManufacturerStructureModel;
 import businesslogic.NomenclatureStructureModel;
 import businesslogic.ProductLogic;
 import businesslogic.ProductStructureModel;
+import businesslogic.Product_PackageListStructureModel;
 
 public class ProductLogicTest {
 
@@ -161,12 +163,39 @@ public class ProductLogicTest {
     }
 
     @Test
-    public void ScanPackageList()
+    public void CreateSimpleProduct()
     {
         ProductStructureModel psm = new ProductStructureModel(
                 "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3",
                 "760d9dfd-93ba-11e8-80cc-a4bf011ce3c3",
                 10.0);
+        ListViewPresentationModel actual = productLogic.CreateListView(psm);
+
+        ListViewPresentationModel expected = new ListViewPresentationModel(
+                "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)",
+                "Тандер",
+                10.0,
+                "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3"
+        );
+
+        Assert.assertEquals(expected.ProductGuid,actual.ProductGuid);
+        Assert.assertEquals(expected.Nomenclature,actual.Nomenclature);
+        Assert.assertEquals(expected.Characteristic,actual.Characteristic);
+        Assert.assertEquals(expected.Weight,actual.Weight);
+    }
+
+    @Test
+    public void ProductFromPackageList()
+    {
+        Product_PackageListStructureModel psm = new Product_PackageListStructureModel(
+                "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3",
+                "760d9dfd-93ba-11e8-80cc-a4bf011ce3c3",
+                10.0,
+                new Date(2019,9,18),
+                new Date(2019,9,28),
+                "23504297-7ee1-11e6-80d7-e4115bea65d2",
+                1
+        );
         ListViewPresentationModel actual = productLogic.CreateListView(psm);
 
         ListViewPresentationModel expected = new ListViewPresentationModel(
