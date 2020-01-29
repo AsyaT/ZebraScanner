@@ -9,16 +9,19 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import businesslogic.ApplicationException;
+import businesslogic.BarcodeProductLogic;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.BarcodeTypes;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.ListViewPresentationModel;
+import businesslogic.ManufacturerStructureModel;
 import businesslogic.NomenclatureStructureModel;
 import businesslogic.ProductLogic;
 import businesslogic.ProductStructureModel;
 
 public class ProductLogicTest {
 
+    BarcodeProductLogic barcodeProductLogic;
     ProductLogic productLogic;
 
     @Before
@@ -50,7 +53,20 @@ public class ProductLogicTest {
         characterisiticStructureModel.Add("41dbf472-19d8-11e7-80cb-001e67e5da8c","Метро");
         characterisiticStructureModel.Add("760d9dfd-93ba-11e8-80cc-a4bf011ce3c3","Тандер");
         characterisiticStructureModel.Add("b9e89741-ef89-11e6-80cb-001e67e5da8c","Монетка");
-        productLogic = new ProductLogic(BarcodeStructureModel, nomenclatureStructureModel, characterisiticStructureModel, null,null,null);
+
+        ManufacturerStructureModel manufacturerStructureModel = new ManufacturerStructureModel();
+        Byte manufacturer_1 = 1;
+        manufacturerStructureModel.Add(manufacturer_1, "УРАЛБРОЙЛЕР ЗАО (Ишалино)","23504297-7ee1-11e6-80d7-e4115bea65d2");
+
+        barcodeProductLogic = new BarcodeProductLogic(
+                BarcodeStructureModel,
+                nomenclatureStructureModel,
+                characterisiticStructureModel,
+                manufacturerStructureModel,
+                null);
+
+        productLogic = new ProductLogic(nomenclatureStructureModel,
+                characterisiticStructureModel,manufacturerStructureModel,null);
     }
 
     @Test
@@ -60,7 +76,7 @@ public class ProductLogicTest {
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = barcodeProductLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -69,7 +85,6 @@ public class ProductLogicTest {
         }
 
         ListViewPresentationModel expected = new ListViewPresentationModel(
-                "4660017708243",
                 "Бедрышко куриное \"Здоровая Ферма\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)",
                 "Метро",
                 8.0,
@@ -87,7 +102,7 @@ public class ProductLogicTest {
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = barcodeProductLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -96,7 +111,6 @@ public class ProductLogicTest {
         }
 
         ListViewPresentationModel expected = new ListViewPresentationModel(
-                "2308107",
                 "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)",
                 "Тандер",
                 8.3,
@@ -113,7 +127,7 @@ public class ProductLogicTest {
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = productLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
+            ProductStructureModel products = barcodeProductLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -122,7 +136,6 @@ public class ProductLogicTest {
         }
 
         ListViewPresentationModel expected = new ListViewPresentationModel(
-                "4660017707116",
                 "Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)",
                 "Монетка",
                 25.6,
@@ -150,17 +163,22 @@ public class ProductLogicTest {
     @Test
     public void ScanPackageList()
     {
-        ProductStructureModel psm = new ProductStructureModel("6130fe3f-93ba-11e8-80cc-a4bf011ce3c3","760d9dfd-93ba-11e8-80cc-a4bf011ce3c3", 10.0);
+        ProductStructureModel psm = new ProductStructureModel(
+                "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3",
+                "760d9dfd-93ba-11e8-80cc-a4bf011ce3c3",
+                10.0);
         ListViewPresentationModel actual = productLogic.CreateListView(psm);
 
         ListViewPresentationModel expected = new ListViewPresentationModel(
-                "",
                 "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)",
                 "Тандер",
                 10.0,
                 "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3"
         );
 
-        Assert.assertEquals(expected,actual);
+        Assert.assertEquals(expected.ProductGuid,actual.ProductGuid);
+        Assert.assertEquals(expected.Nomenclature,actual.Nomenclature);
+        Assert.assertEquals(expected.Characteristic,actual.Characteristic);
+        Assert.assertEquals(expected.Weight,actual.Weight);
     }
 }

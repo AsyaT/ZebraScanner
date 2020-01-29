@@ -40,7 +40,10 @@ public class BarcodeProductLogic {
             product.SetWeight(parsedBarcode.getWeight());
             product.SetProductionDate(parsedBarcode.getProductionDate());
             product.SetExpirationDate(parsedBarcode.getExpirationDate());
-            product.SetManufacturerGuid(ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer()));
+            if(parsedBarcode.getInternalProducer() !=null)
+            {
+                product.SetManufacturerGuid(ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer()));
+            }
         }
 
         if(listOfProducts == null)
