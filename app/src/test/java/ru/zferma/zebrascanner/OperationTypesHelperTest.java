@@ -152,7 +152,7 @@ class OperationTypesHelperTest {
     }
 
     @Test
-    public void Test_GetoperationSet()
+    public void Test_GetOperationSet()
     {
         Assert.assertEquals(2,operationsTypesAccountingAreaStructureModel.GetOperationKeys().size());
     }

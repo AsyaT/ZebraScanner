@@ -2,13 +2,10 @@ package businesslogic;
 
 public class ProductLogic {
 
-
     NomenclatureStructureModel NomenclatureStructureModel = null;
     CharacterisiticStructureModel CharacterisiticStructureModel = null;
     ManufacturerStructureModel ManufacturerStructureModel = null;
     BaseDocumentStructureModel BaseDocumentStructureModel = null;
-
-
 
     public ProductLogic(
             NomenclatureStructureModel nomenclatureStructureModel,
@@ -21,8 +18,6 @@ public class ProductLogic {
        this.ManufacturerStructureModel = manufacturerStructureModel;
        this.BaseDocumentStructureModel = baseDocumentStructureModel;
     }
-
-
 
     public ListViewPresentationModel CreateListView(ProductModel product)
     {

@@ -15,6 +15,7 @@ import java.util.List;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeProductLogic;
+import businesslogic.BarcodeScanningLogic;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
@@ -34,6 +35,7 @@ public class ProductCommand implements Command {
 
     businesslogic.BarcodeProductLogic BarcodeProductLogic;
     businesslogic.ProductLogic ProductLogic;
+    BarcodeScanningLogic barcodeScanningLogic;
 
     @Override
     public void Action(Activity activity) {
@@ -45,14 +47,15 @@ public class ProductCommand implements Command {
         this.BarcodeProductLogic = new BarcodeProductLogic(appState.barcodeStructureModel,
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
-                appState.manufacturerStructureModel,
-                appState.LocationContext);
+                appState.manufacturerStructureModel);
 
         this.ProductLogic = new ProductLogic(
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
                 appState.manufacturerStructureModel,
                 appState.baseDocumentStructureModel);
+
+        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext);
 
         mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
     }
@@ -150,7 +153,7 @@ public class ProductCommand implements Command {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         try {
-            this.BarcodeProductLogic.IsAllowedToScan(data.getLabelType());
+            this.barcodeScanningLogic.IsAllowedToScan(data.getLabelType());
         }
         catch (ApplicationException ex)
         {
@@ -161,7 +164,7 @@ public class ProductCommand implements Command {
             ArrayList<ProductStructureModel> products = null;
             try
             {
-                products = this.BarcodeProductLogic.CreateProducts(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+                products = this.BarcodeProductLogic.FindProductByBarcode(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
             }
             catch (ApplicationException ex)
             {

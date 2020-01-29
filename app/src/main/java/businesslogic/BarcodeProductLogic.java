@@ -10,7 +10,6 @@ public class BarcodeProductLogic {
     BarcodeStructureModel BarcodeStructureModel = null;
     NomenclatureStructureModel NomenclatureStructureModel = null;
     CharacterisiticStructureModel CharacterisiticStructureModel = null;
-    OperationTypesStructureModel OperationTypesStructureModel = null;
     ManufacturerStructureModel ManufacturerStructureModel = null;
 
     private ScanningBarcodeStructureModel parsedBarcode = null;
@@ -19,17 +18,16 @@ public class BarcodeProductLogic {
             BarcodeStructureModel barcodeStructureModel,
             NomenclatureStructureModel nomenclatureStructureModel,
             CharacterisiticStructureModel characterisiticStructureModel,
-            ManufacturerStructureModel manufacturerStructureModel,
-            OperationTypesStructureModel operationTypesStructureModel)
+            ManufacturerStructureModel manufacturerStructureModel
+            )
     {
         this.BarcodeStructureModel = barcodeStructureModel;
         this.NomenclatureStructureModel = nomenclatureStructureModel;
         this.CharacterisiticStructureModel = characterisiticStructureModel;
         this.ManufacturerStructureModel = manufacturerStructureModel;
-        this.OperationTypesStructureModel = operationTypesStructureModel;
     }
 
-    public ArrayList<ProductStructureModel> CreateProducts(String scannedBarcode, BarcodeTypes type) throws ParseException, ApplicationException {
+    public ArrayList<ProductStructureModel> FindProductByBarcode(String scannedBarcode, BarcodeTypes type) throws ParseException, ApplicationException {
         parsedBarcode = new ScanningBarcodeStructureModel(scannedBarcode, type);
 
         ArrayList<ProductStructureModel> listOfProducts =
@@ -94,14 +92,5 @@ public class BarcodeProductLogic {
         }
     }
 
-    public Boolean IsAllowedToScan(ScanDataCollection.LabelType type) throws ApplicationException {
-        if(this.OperationTypesStructureModel.IsAllowed(type))
-        {
-            return true;
-        }
-        else
-        {
-            throw new ApplicationException("Тип "+type.name()+" запрещен к сканирванию");
-        }
-    }
+
 }
