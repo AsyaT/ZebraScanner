@@ -1,7 +1,5 @@
 package businesslogic;
 
-import com.symbol.emdk.barcode.ScanDataCollection;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

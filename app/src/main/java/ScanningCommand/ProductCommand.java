@@ -17,6 +17,7 @@ import businesslogic.ApplicationException;
 import businesslogic.BarcodeProductLogic;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BarcodeTypes;
+import businesslogic.BaseDocumentLogic;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductLogic;
@@ -36,6 +37,7 @@ public class ProductCommand implements Command {
     businesslogic.BarcodeProductLogic BarcodeProductLogic;
     businesslogic.ProductLogic ProductLogic;
     BarcodeScanningLogic barcodeScanningLogic;
+    BaseDocumentLogic baseDocumentLogic;
 
     @Override
     public void Action(Activity activity) {
@@ -52,10 +54,11 @@ public class ProductCommand implements Command {
         this.ProductLogic = new ProductLogic(
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
-                appState.manufacturerStructureModel,
-                appState.baseDocumentStructureModel);
+                appState.manufacturerStructureModel
+                );
 
         this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext);
+        this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
 
         mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
     }
@@ -89,7 +92,7 @@ public class ProductCommand implements Command {
 
                                 try
                                 {
-                                    ProductLogic.IsExistsInOrder(result[0]);
+                                    baseDocumentLogic.IsExistsInOrder(result[0]);
                                     SuccessSaveData(result[0]);
                                 }
                                 catch (ApplicationException ex)
@@ -182,7 +185,7 @@ public class ProductCommand implements Command {
                 {
                     try
                     {
-                        this.ProductLogic.IsExistsInOrder(products.get(0));
+                        this.baseDocumentLogic.IsExistsInOrder(products.get(0));
                         SuccessSaveData(products.get(0));
                     }
                     catch (ApplicationException ex)

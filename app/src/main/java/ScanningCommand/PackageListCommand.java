@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.symbol.emdk.barcode.ScanDataCollection;
 
 import businesslogic.ApplicationException;
+import businesslogic.BaseDocumentLogic;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.PackageListStructureModel;
@@ -20,6 +21,7 @@ public class PackageListCommand implements Command {
     ScannerApplication appState;
 
     businesslogic.ProductLogic ProductLogic;
+    BaseDocumentLogic baseDocumentLogic;
 
     @Override
     public void Action(Activity activity) {
@@ -28,8 +30,9 @@ public class PackageListCommand implements Command {
         this.ProductLogic = new ProductLogic(
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
-                appState.manufacturerStructureModel,
-                appState.baseDocumentStructureModel);
+                appState.manufacturerStructureModel);
+
+        this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class PackageListCommand implements Command {
         for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts())
         {
             try {
-                this.ProductLogic.IsExistsInOrder(product);
+                this.baseDocumentLogic.IsExistsInOrder(product);
                 areAllProductsContainsInOrder = true;
             }
             catch (ApplicationException ex)

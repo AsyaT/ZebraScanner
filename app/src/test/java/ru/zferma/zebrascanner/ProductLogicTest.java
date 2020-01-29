@@ -64,11 +64,9 @@ public class ProductLogicTest {
                 BarcodeStructureModel,
                 nomenclatureStructureModel,
                 characterisiticStructureModel,
-                manufacturerStructureModel,
-                null);
+                manufacturerStructureModel);
 
-        productLogic = new ProductLogic(nomenclatureStructureModel,
-                characterisiticStructureModel,manufacturerStructureModel,null);
+        productLogic = new ProductLogic(nomenclatureStructureModel, characterisiticStructureModel,manufacturerStructureModel);
     }
 
     @Test
@@ -78,7 +76,7 @@ public class ProductLogicTest {
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = barcodeProductLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -104,7 +102,7 @@ public class ProductLogicTest {
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = barcodeProductLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -129,7 +127,7 @@ public class ProductLogicTest {
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = barcodeProductLogic.CreateProducts(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
+            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
