@@ -11,6 +11,8 @@ public class PackageListStructureModel
 
     private String BaseDocumentGuid;
 
+    private String SSCCCode;
+
     private ArrayList<Product_PackageListStructureModel> Products;
 
     public ArrayList<Product_PackageListStructureModel> GetProducts()

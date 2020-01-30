@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class Product_PackageListStructureModel   extends ProductModel{
 
-    protected String SSCCCode; //TODO : Maybe it related to Package List?
     protected Integer Items; // Now is using in PackageListCommand. TODO: move to logic?
 
     public Product_PackageListStructureModel(String productGuid,
