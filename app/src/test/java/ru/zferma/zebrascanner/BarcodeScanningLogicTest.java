@@ -1,7 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import com.symbol.emdk.barcode.ScanDataCollection;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +8,7 @@ import java.util.HashMap;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
+import businesslogic.BarcodeTypes;
 import businesslogic.OperationTypesStructureModel;
 
 public class BarcodeScanningLogicTest
@@ -19,12 +18,9 @@ public class BarcodeScanningLogicTest
     @Before
     public void Init()
     {
-        HashMap<ScanDataCollection.LabelType, Boolean> permissions = new HashMap<>();
-
-        ScanDataCollection.LabelType label_1 =ScanDataCollection.LabelType.EAN13;
-        permissions.put(label_1, true);
-        ScanDataCollection.LabelType label_2 =ScanDataCollection.LabelType.GS1_DATABAR_EXP;
-        permissions.put(label_2, false);
+        HashMap<BarcodeTypes, Boolean> permissions = new HashMap<>();
+        permissions.put(BarcodeTypes.LocalEAN13, true);
+        permissions.put(BarcodeTypes.LocalGS1_EXP, false);
 
         OperationTypesStructureModel model = new OperationTypesStructureModel(
                 "Ротация",
@@ -41,7 +37,7 @@ public class BarcodeScanningLogicTest
     public void BarcodeAllowed()
     {
         try{
-            Assert.assertTrue(barcodeScanningLogic.IsAllowedToScan(ScanDataCollection.LabelType.EAN13));
+            Assert.assertTrue(barcodeScanningLogic.IsAllowedToScan( BarcodeTypes.LocalEAN13));
         }
         catch (ApplicationException ex)
         {
@@ -53,23 +49,27 @@ public class BarcodeScanningLogicTest
     public void BarcodeDisallowed()
     {
         try{
-            Assert.assertFalse(barcodeScanningLogic.IsAllowedToScan(ScanDataCollection.LabelType.GS1_DATABAR_EXP));
+            Assert.assertFalse(barcodeScanningLogic.IsAllowedToScan( BarcodeTypes.LocalGS1_EXP ));
         }
         catch (ApplicationException ex)
         {
-            Assert.assertEquals("Тип GS1_DATABAR_EXP запрещен к сканирванию",ex.getMessage());
+            Assert.assertEquals("Тип LocalGS1_EXP запрещен к сканирванию",ex.getMessage());
         }
     }
 
+    //TODO: test if scanned not EAN13 or GS1_DATABAR_EXP, but something other, e.g. SSCC
+    /*
     @Test
     public void BarcodeDisallowedNotInList()
     {
         try{
-            Assert.assertFalse(barcodeScanningLogic.IsAllowedToScan(ScanDataCollection.LabelType.GS1_DATABAR));
+            Assert.assertFalse(barcodeScanningLogic.IsAllowedToScan());
         }
         catch (ApplicationException ex)
         {
             Assert.assertEquals("Тип GS1_DATABAR запрещен к сканирванию",ex.getMessage());
         }
     }
+
+     */
 }

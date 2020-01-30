@@ -156,7 +156,7 @@ public class ProductCommand implements Command {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         try {
-            this.barcodeScanningLogic.IsAllowedToScan(data.getLabelType());
+            this.barcodeScanningLogic.IsAllowedToScan(BarcodeTypes.GetType(data.getLabelType()));
         }
         catch (ApplicationException ex)
         {

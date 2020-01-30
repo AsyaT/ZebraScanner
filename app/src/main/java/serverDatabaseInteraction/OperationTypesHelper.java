@@ -1,12 +1,12 @@
 package serverDatabaseInteraction;
 
 import com.google.gson.Gson;
-import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
+import businesslogic.BarcodeTypes;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 
 public class OperationTypesHelper {
@@ -38,10 +38,10 @@ public class OperationTypesHelper {
                 for(OperationTypesAndAccountingAreasModel.AccountingAreaModel aa:otm.AccountingAreas)
                 {
                     OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea = new OperationsTypesAccountingAreaStructureModel.AccountingArea();
-                    HashMap<ScanDataCollection.LabelType, Boolean> permissions = new HashMap<>();
+                    HashMap<BarcodeTypes, Boolean> permissions = new HashMap<>();
 
-                    permissions.put(ScanDataCollection.LabelType.EAN13, ! aa.EAN13_Denied);
-                    permissions.put(ScanDataCollection.LabelType.GS1_DATABAR_EXP, ! aa.DataBar_Denied);
+                    permissions.put(BarcodeTypes.LocalEAN13, ! aa.EAN13_Denied);
+                    permissions.put(BarcodeTypes.LocalGS1_EXP, ! aa.DataBar_Denied);
 
                     accountingArea.Add(aa.Name, permissions, !aa.PackageList_Denied);
                     data.AddAccountingArea(aa.GUID, accountingArea);

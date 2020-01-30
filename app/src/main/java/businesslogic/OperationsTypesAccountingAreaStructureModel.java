@@ -1,7 +1,5 @@
 package businesslogic;
 
-import com.symbol.emdk.barcode.ScanDataCollection;
-
 import java.util.HashMap;
 import java.util.Set;
 
@@ -37,7 +35,7 @@ public class OperationsTypesAccountingAreaStructureModel {
 
     public static class AccountingArea {
         private String AccountingAreaName;
-        private HashMap<ScanDataCollection.LabelType, Boolean> Rules = new HashMap<>();
+        private HashMap<BarcodeTypes, Boolean> Rules = new HashMap<>();
         private Boolean PackedListScanningAllowed;
 
         public String GetName()
@@ -45,7 +43,7 @@ public class OperationsTypesAccountingAreaStructureModel {
             return AccountingAreaName;
         }
 
-        public  HashMap<ScanDataCollection.LabelType, Boolean> GetScanningPermissions()
+        public  HashMap<BarcodeTypes, Boolean> GetScanningPermissions()
         {
             return Rules;
         }
@@ -55,7 +53,7 @@ public class OperationsTypesAccountingAreaStructureModel {
             return PackedListScanningAllowed;
         }
 
-        public void Add(String accountingAreaString, HashMap<ScanDataCollection.LabelType, Boolean> permissions, Boolean packedListScanningAllowed)
+        public void Add(String accountingAreaString, HashMap<BarcodeTypes, Boolean> permissions, Boolean packedListScanningAllowed)
         {
             this.AccountingAreaName = accountingAreaString;
             this.Rules = permissions;
