@@ -1,10 +1,9 @@
 <resources>
-    <string name="app_name">ZebraScanner</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_operation_selection">OperationSelectionActivity</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_pre_settings">PreSettingsActivity</string>
+    <string name="app_name">Здоровая ферма - сканер</string>
+    <string name="action_settings">Настройки</string>
+    <string name="title_activity_operation_selection">Выбор орерации</string>
+    <string name="hello_blank_fragment">Фрагмент</string>
+    <string name="title_activity_pre_settings">Начало</string>
     <string name="no_connection">Соединение с сервером 1С отсутствует</string>
     <string name="PleaseScanOrder">Сканируйте штрих-код документа-основания</string>
     <string name="BackToListButton">Назад к списку операций</string>
