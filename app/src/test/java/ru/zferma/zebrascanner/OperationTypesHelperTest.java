@@ -127,7 +127,6 @@ class OperationTypesHelperTest {
     @Test
     public void Test_Permissions()
     {
-        //TODO: permissions not inited
         HashMap<BarcodeTypes, Boolean> permissions = new HashMap<>();
         permissions.put(BarcodeTypes.LocalEAN13, Boolean.FALSE);
         permissions.put(BarcodeTypes.LocalGS1_EXP, Boolean.TRUE);

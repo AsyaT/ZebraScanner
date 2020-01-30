@@ -378,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
         try {
             if (scanner != null) {
@@ -425,7 +424,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     try {
                     scanner.read();
                     } catch (ScannerException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     break;
