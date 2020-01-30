@@ -132,24 +132,22 @@ public class ProductCommand implements Command {
 
     }
 
-
-    //TODO: code duplication
     protected void SuccessSaveData( ProductStructureModel product)
     {
-        ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-
         if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
+            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
+
             ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
+
+            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
+            appState.ScannedProductsToSend.Add(detailsModel);
         }
         else if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
         {
             String result = this.BarcodeProductLogic.CreateStringResponse(product);
             ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
         }
-
-        FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
-        appState.ScannedProductsToSend.Add(detailsModel);
     }
 
     @Override

@@ -75,7 +75,6 @@ public class PackageListCommand implements Command {
 
         if(areAllProductsContainsInOrder == true) {
             for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
-                //TODO: error, because Products have no scanned barcodes. ProductLogic.CreateProducts() not called
 
                 for(int i=1;  i<= product.GetItems() ; i++) {
                     SuccessSaveData(product);
@@ -84,17 +83,16 @@ public class PackageListCommand implements Command {
         }
     }
 
-    //TODO: code duplication
     protected void SuccessSaveData( ProductModel product)
     {
         if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
             ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
             ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
-        }
 
-        FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
-        appState.ScannedProductsToSend.Add(detailsModel);
+            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
+            appState.ScannedProductsToSend.Add(detailsModel);
+        }
     }
 
     @Override
