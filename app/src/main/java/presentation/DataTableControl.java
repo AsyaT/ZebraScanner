@@ -114,6 +114,11 @@ public class DataTableControl {
         });
     }
 
+    public ProductListViewModel GetItemByIndex(Integer index)
+    {
+        return DataTable.get(index);
+    }
+
     public void RemoveSelected()
     {
         for (Integer x : ItemsToDelete) {
@@ -132,6 +137,8 @@ public class DataTableControl {
 
     public void RemoveAll()
     {
+
         DataTable.clear();
+        ItemsToDelete.clear();
     }
 }

@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 dataTableControl.ItemClicked(view,position-1);
+                appState.ScannedProductsToSend.ItemIsClicked(dataTableControl.GetItemByIndex(position-1).getProductGuid());
             }
         });
 
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 dataTableControl.RemoveSelected();
                 customListAdapter.notifyDataSetChanged();
 
-                //TODO: remove from main collection appState.ScannedProductsToSend
+                appState.ScannedProductsToSend.RemoveSelected();
             }
         });
 
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 dataTableControl.RemoveAll();
                 customListAdapter.notifyDataSetChanged();
 
-                //TODO: remove from main collection appState.ScannedProductsToSend
+                appState.ScannedProductsToSend.CleanListOfProducts();
             }
         });
 
