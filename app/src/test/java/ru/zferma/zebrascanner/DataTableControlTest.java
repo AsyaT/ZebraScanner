@@ -3,6 +3,7 @@ package ru.zferma.zebrascanner;
 import android.view.View;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -116,6 +117,23 @@ public class DataTableControlTest {
     public void IsProductDoesNotExistsTest()
     {
         assertFalse(Table.IsProductExists("024-556-224"));
+    }
+
+    @Test
+    public void GetItemByIndexTest()
+    {
+        ProductListViewModel result1 = Table.GetItemByIndex(0);
+        Assert.assertEquals("1", result1.getStringNumber());
+
+        ProductListViewModel result2 = Table.GetItemByIndex(2);
+        Assert.assertEquals("3", result2.getStringNumber());
+
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void GetItemByIndexExceptionTest()
+    {
+            Table.GetItemByIndex(100);
     }
 
     @Test

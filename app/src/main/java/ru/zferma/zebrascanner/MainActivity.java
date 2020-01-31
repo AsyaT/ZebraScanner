@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import ScanningCommand.BarcodeExecutor;
+import businesslogic.ApplicationException;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
@@ -101,7 +102,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 dataTableControl.ItemClicked(view,position-1);
-                appState.ScannedProductsToSend.ItemIsClicked(dataTableControl.GetItemByIndex(position-1).getProductGuid());
+
+                try {
+                    appState.ScannedProductsToSend.ItemIsClicked(dataTableControl.GetItemByIndex(position - 1).getProductGuid());
+                }
+                catch (IndexOutOfBoundsException e)
+                {
+                    AlarmAndNotify(e.getMessage());
+                }
             }
         });
 
