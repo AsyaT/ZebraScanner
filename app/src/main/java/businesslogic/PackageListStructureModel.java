@@ -19,4 +19,14 @@ public class PackageListStructureModel
     {
         return this.Products;
     }
+
+    public String GetPackageListGuid()
+    {
+        return this.PackageListGuid;
+    }
+
+    public String GetSSCCCode()
+    {
+        return this.SSCCCode;
+    }
 }

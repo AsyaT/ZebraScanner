@@ -12,6 +12,7 @@ import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import businesslogic.BaseDocumentStructureModel;
 import businesslogic.NomenclatureStructureModel;
+import businesslogic.PackageListDataTable;
 import businesslogic.ScannerStateHelper;
 import businesslogic.ServerConnection;
 
@@ -38,6 +39,7 @@ public class ScannerApplication extends Application {
     public BaseDocumentStructureModel baseDocumentStructureModel = null;
     public String BadgeGuid = null;
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
+    public PackageListDataTable packageListDataTable = new PackageListDataTable();
 
     public void CleanContextEntities()
     {

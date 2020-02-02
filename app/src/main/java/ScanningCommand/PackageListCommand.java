@@ -39,31 +39,35 @@ public class PackageListCommand implements Command {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         // TODO: ALARM if this client need to compile order only by Package Lists!!! - will be passed with Base document
-
-        // TODO: DO Not scan each list twice
-
-        // GO to DB and get list of products
-
-        PackageListStructureModel packageListStructureModel = new PackageListStructureModel(); //TODO : create helper
-
-        // Add all products to tables
-
-        Boolean areAllProductsContainsInOrder = null;
-
-        for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts())
+        
+        if(appState.packageListDataTable.IsContains(data.getData()))
         {
-            try {
-                this.baseDocumentLogic.IsExistsInOrder(product);
-                areAllProductsContainsInOrder = true;
-            }
-            catch (ApplicationException ex)
-            {
-                ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-                areAllProductsContainsInOrder = false;
-            }
+            ((MainActivity)Activity).AlarmAndNotify("Этот Упаковочный лист уже сканировался");
         }
+        else
+        {
+            // GO to DB and get list of products
 
-        //TODO: show full info about Package List
+            PackageListStructureModel packageListStructureModel = new PackageListStructureModel(); //TODO : create helper
+
+            // Add all products to tables
+
+            Boolean areAllProductsContainsInOrder = null;
+
+            for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts())
+            {
+                try {
+                    this.baseDocumentLogic.IsExistsInOrder(product);
+                    areAllProductsContainsInOrder = true;
+                }
+                catch (ApplicationException ex)
+                {
+                    ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
+                    areAllProductsContainsInOrder = false;
+                }
+            }
+
+            //TODO: show full info about Package List
         /*
         if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
         {
@@ -73,14 +77,19 @@ public class PackageListCommand implements Command {
 
          */
 
-        if(areAllProductsContainsInOrder == true) {
-            for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
+            if(areAllProductsContainsInOrder == true)
+            {
+                appState.packageListDataTable.Add(packageListStructureModel);
 
-                for(int i=1;  i<= product.GetItems() ; i++) {
-                    SuccessSaveData(product);
+                for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
+
+                    for(int i=1;  i<= product.GetItems() ; i++) {
+                        SuccessSaveData(product);
+                    }
                 }
             }
         }
+
     }
 
     protected void SuccessSaveData( ProductModel product)
