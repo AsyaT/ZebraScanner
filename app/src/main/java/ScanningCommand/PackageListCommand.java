@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.symbol.emdk.barcode.ScanDataCollection;
 
 import businesslogic.ApplicationException;
+import businesslogic.BarcodeScanningLogic;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
@@ -22,6 +23,7 @@ public class PackageListCommand implements Command {
 
     businesslogic.ProductLogic ProductLogic;
     BaseDocumentLogic baseDocumentLogic;
+    BarcodeScanningLogic barcodeScanningLogic;
 
     @Override
     public void Action(Activity activity) {
@@ -33,13 +35,21 @@ public class PackageListCommand implements Command {
                 appState.manufacturerStructureModel);
 
         this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
+        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext, appState.baseDocumentStructureModel);
     }
 
     @Override
     public void ParseData(ScanDataCollection.ScanData data)
     {
-        // TODO: ALARM if this client need to compile order only by Package Lists!!! - will be passed with Base document
-        
+        try
+        {
+            this.barcodeScanningLogic.IsPackageListAllowedToScan(appState.scannerState.GetCurrent());
+        }
+        catch (ApplicationException ex)
+        {
+            ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
+        }
+
         if(appState.packageListDataTable.IsContains(data.getData()))
         {
             ((MainActivity)Activity).AlarmAndNotify("Этот Упаковочный лист уже сканировался");

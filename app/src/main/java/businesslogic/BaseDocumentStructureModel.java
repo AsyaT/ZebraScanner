@@ -8,6 +8,7 @@ public class BaseDocumentStructureModel implements Serializable {
 
     private String Name;
     private String BaseDocumentGuid;
+    private Boolean CompileByPackageListOnly;
     private List<ProductOrderStructureModel> ProductList;
 
     public BaseDocumentStructureModel(String name)
@@ -41,6 +42,11 @@ public class BaseDocumentStructureModel implements Serializable {
             }
         }
         return false;
+    }
+
+    public Boolean IsCompileByPackageListOnly ()
+    {
+        return this.CompileByPackageListOnly;
     }
 
     public static class ProductOrderStructureModel implements Serializable

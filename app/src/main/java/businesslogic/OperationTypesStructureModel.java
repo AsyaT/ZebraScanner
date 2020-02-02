@@ -5,14 +5,14 @@ import java.util.HashMap;
 
 public class OperationTypesStructureModel implements Serializable {
 
-    HashMap<BarcodeTypes, Boolean> Rules = new HashMap<>();
+    protected  HashMap<BarcodeTypes, Boolean> Rules = new HashMap<>();
 
-    Boolean PackedListScanning;
+    protected Boolean PackedListScanning;
 
-    String Operation;
-    String OperationGUID;
-    String AccountingArea;
-    String AccountingAreaGUID;
+    protected String Operation;
+    protected String OperationGUID;
+    protected String AccountingArea;
+    protected String AccountingAreaGUID;
 
     public OperationTypesStructureModel(
             String operationName,
@@ -47,4 +47,5 @@ public class OperationTypesStructureModel implements Serializable {
         return this.AccountingAreaGUID;
     }
 
+    public Boolean IsPackageListAllowed() { return  this.PackedListScanning;}
 }

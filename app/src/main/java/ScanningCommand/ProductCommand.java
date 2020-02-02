@@ -57,7 +57,7 @@ public class ProductCommand implements Command {
                 appState.manufacturerStructureModel
                 );
 
-        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext);
+        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext, appState.baseDocumentStructureModel);
         this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
 
         mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
@@ -154,7 +154,8 @@ public class ProductCommand implements Command {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         try {
-            this.barcodeScanningLogic.IsAllowedToScan(BarcodeTypes.GetType(data.getLabelType()));
+            this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(BarcodeTypes.GetType(data.getLabelType()));
+            this.barcodeScanningLogic.IsProductAllowedToScan(appState.scannerState.GetCurrent());
         }
         catch (ApplicationException ex)
         {
