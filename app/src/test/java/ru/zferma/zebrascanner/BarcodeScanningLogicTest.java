@@ -116,14 +116,25 @@ public class BarcodeScanningLogicTest
     }
 
     @Test(expected = ApplicationException.class)
-    public void IsExceptionTest() throws ApplicationException
+    public void IsExceptionTest_1_1() throws ApplicationException
     {
         barcodeScanningLogicPLOnly.IsBarcodeAllowedToScan(ScannerState.PRODUCT);
+    }
+    @Test(expected = ApplicationException.class)
+    public void IsExceptionTest_1_2() throws ApplicationException
+    {
         barcodeScanningLogicStopLogic.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
-        barcodeScanningLogicStopLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT);
-        barcodeScanningLogicPrOnly.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
     }
 
+    @Test(expected = ApplicationException.class)
+    public void IsExceptionTest_2_1() throws ApplicationException
+    {
+        barcodeScanningLogicStopLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT);
+    }
 
-
+    @Test(expected = ApplicationException.class)
+    public void IsExceptionTest_2_2() throws ApplicationException
+    {
+        barcodeScanningLogicPrOnly.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
+    }
 }
