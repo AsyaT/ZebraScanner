@@ -43,7 +43,7 @@ public class PackageListCommand implements Command {
     {
         try
         {
-            this.barcodeScanningLogic.IsPackageListAllowedToScan(appState.scannerState.GetCurrent());
+            this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
         }
         catch (ApplicationException ex)
         {

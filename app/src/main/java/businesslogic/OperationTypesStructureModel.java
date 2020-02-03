@@ -20,14 +20,14 @@ public class OperationTypesStructureModel implements Serializable {
             String accountingAreaName,
             String accountingAreaGuid,
             HashMap<BarcodeTypes, Boolean> scanningRules,
-            Boolean packageListRule )
+            Boolean packageListAllowed )
     {
         this.Operation = operationName;
         this.OperationGUID = operationGuid;
         this.AccountingArea = accountingAreaName;
         this.AccountingAreaGUID = accountingAreaGuid;
         this.Rules = scanningRules;
-        this.PackedListScanning = packageListRule;
+        this.PackedListScanning = packageListAllowed;
     }
 
     public Boolean IsAllowed(BarcodeTypes labelType)

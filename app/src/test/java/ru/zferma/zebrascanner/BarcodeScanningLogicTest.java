@@ -9,11 +9,16 @@ import java.util.HashMap;
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BarcodeTypes;
+import businesslogic.BaseDocumentStructureModel;
 import businesslogic.OperationTypesStructureModel;
+import businesslogic.ScannerState;
 
 public class BarcodeScanningLogicTest
 {
-    BarcodeScanningLogic barcodeScanningLogic = null;
+    BarcodeScanningLogic barcodeScanningLogicPLOnly = null;
+    BarcodeScanningLogic barcodeScanningLogicPrAndPL = null;
+    BarcodeScanningLogic barcodeScanningLogicStopLogic = null;
+    BarcodeScanningLogic barcodeScanningLogicPrOnly = null;
 
     @Before
     public void Init()
@@ -22,22 +27,40 @@ public class BarcodeScanningLogicTest
         permissions.put(BarcodeTypes.LocalEAN13, true);
         permissions.put(BarcodeTypes.LocalGS1_EXP, false);
 
-        OperationTypesStructureModel model = new OperationTypesStructureModel(
+        OperationTypesStructureModel modelPackageListAllowed = new OperationTypesStructureModel(
                 "Ротация",
                 "Ротация",
                 "Ротация",
                 "97e2d02c-ad73-11e7-80c4-a4bf011ce3c3",
                 permissions,
-                Boolean.TRUE);
+                true);
 
-       barcodeScanningLogic = new BarcodeScanningLogic(model);
+        OperationTypesStructureModel modelPackageListDenied = new OperationTypesStructureModel(
+                "Ротация",
+                "Ротация",
+                "Ротация",
+                "97e2d02c-ad73-11e7-80c4-a4bf011ce3c3",
+                permissions,
+                false);
+
+        BaseDocumentStructureModel baseDocumentByPackageList = new BaseDocumentStructureModel(
+                "The order to compile by package lists",
+                true);
+        BaseDocumentStructureModel baseDocumentByProductsAndPL = new BaseDocumentStructureModel(
+                "The order to compile by products",
+                false);
+
+       barcodeScanningLogicPLOnly = new BarcodeScanningLogic(modelPackageListAllowed,baseDocumentByPackageList);
+       barcodeScanningLogicPrAndPL = new BarcodeScanningLogic(modelPackageListAllowed,baseDocumentByProductsAndPL);
+       barcodeScanningLogicStopLogic = new BarcodeScanningLogic(modelPackageListDenied,baseDocumentByPackageList);
+       barcodeScanningLogicPrOnly = new BarcodeScanningLogic(modelPackageListDenied,baseDocumentByProductsAndPL);
     }
 
     @Test
     public void BarcodeAllowed()
     {
         try{
-            Assert.assertTrue(barcodeScanningLogic.IsAllowedToScan( BarcodeTypes.LocalEAN13));
+            Assert.assertTrue(barcodeScanningLogicPrAndPL.IsBarcodeTypeAllowedToScan( BarcodeTypes.LocalEAN13));
         }
         catch (ApplicationException ex)
         {
@@ -49,7 +72,7 @@ public class BarcodeScanningLogicTest
     public void BarcodeDisallowed()
     {
         try{
-            Assert.assertFalse(barcodeScanningLogic.IsAllowedToScan( BarcodeTypes.LocalGS1_EXP ));
+            Assert.assertFalse(barcodeScanningLogicPrAndPL.IsBarcodeTypeAllowedToScan( BarcodeTypes.LocalGS1_EXP ));
         }
         catch (ApplicationException ex)
         {
@@ -72,4 +95,35 @@ public class BarcodeScanningLogicTest
     }
 
      */
+
+    @Test
+    public void IsGoodTest() throws ApplicationException
+    {
+         Assert.assertTrue(
+                 barcodeScanningLogicPLOnly.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST)
+         );
+
+        Assert.assertTrue(
+                barcodeScanningLogicPrAndPL.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST)
+        );
+
+        Assert.assertTrue(
+                barcodeScanningLogicPrAndPL.IsBarcodeAllowedToScan(ScannerState.PRODUCT)
+        );
+        Assert.assertTrue(
+                barcodeScanningLogicPrOnly.IsBarcodeAllowedToScan(ScannerState.PRODUCT)
+        );
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void IsExceptionTest() throws ApplicationException
+    {
+        barcodeScanningLogicPLOnly.IsBarcodeAllowedToScan(ScannerState.PRODUCT);
+        barcodeScanningLogicStopLogic.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
+        barcodeScanningLogicStopLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT);
+        barcodeScanningLogicPrOnly.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
+    }
+
+
+
 }

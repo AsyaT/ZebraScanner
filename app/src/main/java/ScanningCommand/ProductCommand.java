@@ -155,7 +155,7 @@ public class ProductCommand implements Command {
     {
         try {
             this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(BarcodeTypes.GetType(data.getLabelType()));
-            this.barcodeScanningLogic.IsProductAllowedToScan(appState.scannerState.GetCurrent());
+            this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
         }
         catch (ApplicationException ex)
         {

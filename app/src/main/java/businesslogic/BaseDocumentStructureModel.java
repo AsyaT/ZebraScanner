@@ -16,6 +16,12 @@ public class BaseDocumentStructureModel implements Serializable {
         this.Name = name;
         this.ProductList = new ArrayList<>();
     }
+    public BaseDocumentStructureModel(String name, Boolean compileByPackageListOnly)
+    {
+        this.Name = name;
+        this.ProductList = new ArrayList<>();
+        this.CompileByPackageListOnly = compileByPackageListOnly;
+    }
 
     public String GetOrderId()
     {

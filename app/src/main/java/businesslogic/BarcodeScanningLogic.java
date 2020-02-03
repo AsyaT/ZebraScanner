@@ -24,8 +24,12 @@ public class BarcodeScanningLogic
         }
     }
 
-    //TODO: to test equals()
-    public Boolean IsPackageListAllowedToScan(ScannerState currentScannerState) throws ApplicationException
+    public Boolean IsBarcodeAllowedToScan(ScannerState currentScannerState) throws ApplicationException
+    {
+        return IsPackageListAllowedToScan(currentScannerState) && IsProductAllowedToScan(currentScannerState);
+    }
+
+    protected Boolean IsPackageListAllowedToScan(ScannerState currentScannerState) throws ApplicationException
     {
         if(currentScannerState.equals(ScannerState.PACKAGELIST) && OperationTypesStructureModel.IsPackageListAllowed() == false)
         {
@@ -35,8 +39,7 @@ public class BarcodeScanningLogic
         return true;
     }
 
-    //TODO: to test equals()
-    public Boolean IsProductAllowedToScan(ScannerState currentScannerState) throws ApplicationException
+    protected Boolean IsProductAllowedToScan(ScannerState currentScannerState) throws ApplicationException
     {
         if(currentScannerState.equals(ScannerState.PRODUCT) && baseDocumentStructureModel.IsCompileByPackageListOnly() == true)
         {
