@@ -156,46 +156,35 @@ public class ProductCommand implements Command {
         try {
             this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(BarcodeTypes.GetType(data.getLabelType()));
             this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
+
+            ArrayList<ProductStructureModel> products = this.BarcodeProductLogic.FindProductByBarcode(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+
+            if( products.size() > 1 )
+            {
+                SelectionDialog(products);
+            }
+            else
+            {
+                try
+                {
+                    this.baseDocumentLogic.IsExistsInOrder(products.get(0));
+                    SuccessSaveData(products.get(0));
+                }
+                catch (ApplicationException ex)
+                {
+                    ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
+                }
+
+            }
         }
         catch (ApplicationException ex)
         {
             ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
         }
-        finally
+        catch (ParseException e)
         {
-            ArrayList<ProductStructureModel> products = null;
-            try
-            {
-                products = this.BarcodeProductLogic.FindProductByBarcode(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
-            }
-            catch (ApplicationException ex)
-            {
-                ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-            } catch (ParseException e) {
-                ((MainActivity)Activity).AlarmAndNotify(e.getMessage());
-            }
-            finally
-            {
-                if(products!=null && products.size()>1)
-                {
-                    SelectionDialog(products);
-                }
-                else
-                {
-                    try
-                    {
-                        this.baseDocumentLogic.IsExistsInOrder(products.get(0));
-                        SuccessSaveData(products.get(0));
-                    }
-                    catch (ApplicationException ex)
-                    {
-                        ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-                    }
-
-                }
-            }
+            ((MainActivity)Activity).AlarmAndNotify(e.getMessage());
         }
-
     }
 
 
