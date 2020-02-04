@@ -74,10 +74,4 @@ public class DocumentBaseCommand implements Command {
         }
     }
 
-    @Override
-    public void PostAction( ) {
-
-
-
-    }
 }

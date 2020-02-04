@@ -109,8 +109,4 @@ public class PackageListCommand implements Command {
         }
     }
 
-    @Override
-    public void PostAction() {
-
-    }
 }

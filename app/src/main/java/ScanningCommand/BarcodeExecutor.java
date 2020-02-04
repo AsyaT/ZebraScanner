@@ -13,7 +13,5 @@ public class BarcodeExecutor {
         Command command = (Command) classCommand.newInstance();
         command.Action(activity);
         command.ParseData(data);
-        command.PostAction();
-
     }
 }

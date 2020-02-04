@@ -38,14 +38,8 @@ public class BadgeCommand implements Command  {
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
         appState.BadgeGuid = data.getData();
 
-    }
-
-    @Override
-    public void PostAction()
-    {
         // 3. Отправить POST
 
-        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
         String url = appState.serverConnection.getResponseUrl();
 
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
