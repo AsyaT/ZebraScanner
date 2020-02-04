@@ -13,6 +13,15 @@ public class PackageListStructureModel
 
     private String SSCCCode;
 
+    public PackageListStructureModel(String guid, Date dateCreated, String baseDocumentGuid, String sscc)
+    {
+        this.PackageListGuid = guid;
+        this.DateCreated = dateCreated;
+        this.BaseDocumentGuid = baseDocumentGuid;
+        this.SSCCCode = sscc;
+
+    }
+
     private ArrayList<Product_PackageListStructureModel> Products;
 
     public ArrayList<Product_PackageListStructureModel> GetProducts()

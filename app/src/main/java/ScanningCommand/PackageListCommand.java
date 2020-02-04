@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
+import java.util.Date;
+
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BaseDocumentLogic;
@@ -58,7 +60,7 @@ public class PackageListCommand implements Command {
         {
             // GO to DB and get list of products
 
-            PackageListStructureModel packageListStructureModel = new PackageListStructureModel(); //TODO : create helper
+            PackageListStructureModel packageListStructureModel = new PackageListStructureModel("", new Date(),"",""); //TODO : create helper
 
             // Add all products to tables
 
