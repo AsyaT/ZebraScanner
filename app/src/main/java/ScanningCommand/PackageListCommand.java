@@ -46,18 +46,8 @@ public class PackageListCommand implements Command {
         try
         {
             this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
-        }
-        catch (ApplicationException ex)
-        {
-            ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-        }
+            appState.packageListDataTable.IsActionAllowedWithPackageList(data.getData());
 
-        if(appState.packageListDataTable.IsContains(data.getData()))
-        {
-            ((MainActivity)Activity).AlarmAndNotify("Этот Упаковочный лист уже сканировался");
-        }
-        else
-        {
             // GO to DB and get list of products
 
             PackageListStructureModel packageListStructureModel = new PackageListStructureModel("", new Date(),"",""); //TODO : create helper
@@ -101,7 +91,10 @@ public class PackageListCommand implements Command {
                 }
             }
         }
-
+        catch (ApplicationException ex)
+        {
+            ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
+        }
     }
 
     protected void SuccessSaveData( ProductModel product)

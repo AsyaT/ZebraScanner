@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import businesslogic.ApplicationException;
 import businesslogic.PackageListDataTable;
 import businesslogic.PackageListStructureModel;
 
@@ -26,10 +27,16 @@ public class PackageListDataTableTest
         packageListDataTable.Add(packageListModel);
     }
 
-    @Test
-    public void IsContainsTest()
+    @Test(expected = ApplicationException.class)
+    public void IsContainsTest() throws ApplicationException
     {
-        Assert.assertTrue(packageListDataTable.IsContains("111-222-333"));
-        Assert.assertTrue(packageListDataTable.IsContains("1234567890"));
+        Assert.assertTrue(packageListDataTable.IsActionAllowedWithPackageList("111-222-333"));
+        Assert.assertTrue(packageListDataTable.IsActionAllowedWithPackageList("1234567890"));
+    }
+
+    @Test
+    public void DoesNotContainsTest() throws ApplicationException
+    {
+        packageListDataTable.IsActionAllowedWithPackageList("5555555");
     }
 }

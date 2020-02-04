@@ -15,16 +15,16 @@ public class PackageListDataTable {
         DataTable.add(model);
     }
 
-    public Boolean IsContains(String barcode)
+    public Boolean IsActionAllowedWithPackageList(String barcode) throws ApplicationException
     {
         for(PackageListStructureModel packageList : DataTable)
         {
             if(packageList.GetPackageListGuid().equalsIgnoreCase(barcode) || packageList.GetSSCCCode().equalsIgnoreCase(barcode))
             {
-                return true;
+                throw new ApplicationException("Этот Упаковочный лист уже сканировался");
             }
         }
 
-        return false;
+        return true;
     }
 }
