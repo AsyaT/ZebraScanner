@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import ScanningCommand.BarcodeExecutor;
+import businesslogic.ApplicationException;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
@@ -101,6 +102,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 dataTableControl.ItemClicked(view,position-1);
+
+                try {
+                    appState.ScannedProductsToSend.ItemIsClicked(dataTableControl.GetItemByIndex(position - 1).getProductGuid());
+                }
+                catch (IndexOutOfBoundsException e)
+                {
+                    AlarmAndNotify(e.getMessage());
+                }
             }
         });
 
@@ -111,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
                 dataTableControl.RemoveSelected();
                 customListAdapter.notifyDataSetChanged();
+
+                appState.ScannedProductsToSend.RemoveSelected();
             }
         });
 
@@ -120,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
                 dataTableControl.RemoveAll();
                 customListAdapter.notifyDataSetChanged();
+
+                appState.ScannedProductsToSend.CleanListOfProducts();
             }
         });
 
@@ -186,6 +199,26 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         ScannerApplication appState = ((ScannerApplication) getApplication());
         appState.scannerState.Set(ScannerState.DOCUMENTBASE);
+    }
+
+    public void AlarmAndNotify(String message)
+    {
+        try {
+            scanner.disable();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
+        mediaPlayer.start();
+
+        if (this.IsBarcodeInfoFragmentShowed)
+        {
+            new AsyncBarcodeInfoUpdate().execute(message);
+        }
+        else {
+            new MessageDialog().execute(message);
+        }
     }
 
     // Method to initialize and enable Scanner and its listeners
@@ -300,9 +333,17 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     // Iterate through scanned data and prepare the statusStr
                     for (ScanDataCollection.ScanData data : scanData)
                     {
+                        ScannerApplication appState = ((ScannerApplication) getApplication());
+                        ScannerState state = appState.scannerState.GetCurrent();
+                        
+                        //TODO : set proper LabelType
+                        if(state == ScannerState.PRODUCT && data.getLabelType() == ScanDataCollection.LabelType.GS1_DATABAR) // TODO: also might be scanned GUID of PAckegeList
+                        {
+                            appState.scannerState.Set(ScannerState.PACKAGELIST);
+                        }
 
                         BarcodeExecutor executor = new BarcodeExecutor();
-                        ScannerApplication appState = ((ScannerApplication) getApplication());
+
                         executor.Execute(appState.scannerState.GetCurrent(), data,this);
 
                     }
@@ -346,7 +387,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
         try {
             if (scanner != null) {
@@ -393,7 +433,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                     try {
                     scanner.read();
                     } catch (ScannerException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     break;

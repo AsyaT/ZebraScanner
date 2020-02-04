@@ -31,13 +31,7 @@ public class DataTableControl {
         return DataTable;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public ProductListViewModel GetExitingProduct(String uniqueBarcode, String productGuid )
-    {
-        return DataTable.stream().filter(x-> uniqueBarcode.equalsIgnoreCase(x.getBarCode()) && productGuid.equalsIgnoreCase(x.getProductGuid())).findAny().orElse(null);
-    }
-
-    public ProductListViewModel GetExitingProduct(String productGuid )
+    public ProductListViewModel FindProduct(String productGuid )
     {
         for(ProductListViewModel product : DataTable)
         {
@@ -82,7 +76,7 @@ public class DataTableControl {
     {
         ProductListViewModel result = null;
 
-        ProductListViewModel existingTableModel =  this.GetExitingProduct(model.UniqueCode, model.ProductGuid);
+        ProductListViewModel existingTableModel =  this.FindProduct( model.ProductGuid);
         if(existingTableModel == null)
         {
             Integer newStringNumber = this.GetSizeOfList()+1;
@@ -91,7 +85,6 @@ public class DataTableControl {
                     newStringNumber.toString(),
                     model.Characteristic,
                     model.Nomenclature,
-                    model.UniqueCode,
                     "1",
                     model.Weight.toString());
         }
@@ -107,7 +100,6 @@ public class DataTableControl {
                     existingTableModel.getStringNumber(),
                     model.Characteristic,
                     model.Nomenclature,
-                    model.UniqueCode,
                     newCoefficient.toString(),
                     newWeight.toString()
             );
@@ -120,6 +112,11 @@ public class DataTableControl {
                 return product1.getStringNumber().compareTo(product2.getStringNumber());
             }
         });
+    }
+
+    public ProductListViewModel GetItemByIndex(Integer index)
+    {
+        return DataTable.get(index);
     }
 
     public void RemoveSelected()
@@ -140,6 +137,8 @@ public class DataTableControl {
 
     public void RemoveAll()
     {
+
         DataTable.clear();
+        ItemsToDelete.clear();
     }
 }

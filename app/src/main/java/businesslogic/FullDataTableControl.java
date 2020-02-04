@@ -5,7 +5,9 @@ import java.util.Date;
 
 public class FullDataTableControl
 {
-   ArrayList<Details> ListOfProducts;
+   private ArrayList<Details> ListOfProducts;
+
+   private ArrayList<String> ProductsToRemove = new ArrayList<>();
 
    public FullDataTableControl()
    {
@@ -41,6 +43,19 @@ public class FullDataTableControl
            return null;
    }
 
+   private ArrayList<Details> FindProductsByGuid(String productGuid)
+   {
+       ArrayList<Details> result = new ArrayList<>();
+       for(Details existsProduct : ListOfProducts)
+       {
+           if(  existsProduct.ProductGuid.equalsIgnoreCase(productGuid) )
+           {
+               result.add( existsProduct );
+           }
+       }
+       return result;
+   }
+
    public void Add(Details product)
    {
            Details newProduct = IsProductExists(product);
@@ -56,6 +71,24 @@ public class FullDataTableControl
                   product.ScannedQuantity = 1;
                   this.ListOfProducts.add(product);
            }
+   }
+
+   public void ItemIsClicked(String productGuid)
+   {
+       this.ProductsToRemove.add(productGuid);
+   }
+
+   public void RemoveSelected()
+   {
+       for(String productGuid : this.ProductsToRemove)
+       {
+           ArrayList<Details> products = this.FindProductsByGuid(productGuid);
+
+           for(Details product : products)
+           {
+               this.ListOfProducts.remove(product);
+           }
+       }
    }
 
    public static class Details

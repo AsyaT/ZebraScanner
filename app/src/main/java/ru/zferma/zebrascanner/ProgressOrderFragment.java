@@ -42,8 +42,8 @@ public class ProgressOrderFragment extends Fragment {
 
                 if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
                 {
-                    doneKilos = Double.parseDouble(activity.dataTableControl.GetExitingProduct(product.GetProductGuid()).getWeight());
-                    doneItems = Integer.parseInt(activity.dataTableControl.GetExitingProduct(product.GetProductGuid()).getCoefficient());
+                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getWeight());
+                    doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
                 }
 
                 TextView txtView = new TextView(getActivity());

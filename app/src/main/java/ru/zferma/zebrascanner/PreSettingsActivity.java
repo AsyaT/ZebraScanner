@@ -83,6 +83,8 @@ public class PreSettingsActivity extends AppCompatActivity {
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //TODO: If auth password is not set - button does not work
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 

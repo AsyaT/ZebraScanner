@@ -1,38 +1,36 @@
 package businesslogic;
 
-import com.symbol.emdk.barcode.ScanDataCollection;
-
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class OperationTypesStructureModel implements Serializable {
 
-    HashMap<ScanDataCollection.LabelType, Boolean> Rules = new HashMap<>();
+    protected  HashMap<BarcodeTypes, Boolean> Rules = new HashMap<>();
 
-    Boolean PackedListScanning;
+    protected Boolean PackedListScanning;
 
-    String Operation;
-    String OperationGUID;
-    String AccountingArea;
-    String AccountingAreaGUID;
+    protected String Operation;
+    protected String OperationGUID;
+    protected String AccountingArea;
+    protected String AccountingAreaGUID;
 
     public OperationTypesStructureModel(
             String operationName,
             String operationGuid,
             String accountingAreaName,
             String accountingAreaGuid,
-            HashMap<ScanDataCollection.LabelType, Boolean> scanningRules,
-            Boolean packageListRule )
+            HashMap<BarcodeTypes, Boolean> scanningRules,
+            Boolean packageListAllowed )
     {
         this.Operation = operationName;
         this.OperationGUID = operationGuid;
         this.AccountingArea = accountingAreaName;
         this.AccountingAreaGUID = accountingAreaGuid;
         this.Rules = scanningRules;
-        this.PackedListScanning = packageListRule;
+        this.PackedListScanning = packageListAllowed;
     }
 
-    public Boolean IsAllowed(ScanDataCollection.LabelType labelType)
+    public Boolean IsAllowed(BarcodeTypes labelType)
     {
         return Rules.get(labelType);
     }
@@ -49,4 +47,5 @@ public class OperationTypesStructureModel implements Serializable {
         return this.AccountingAreaGUID;
     }
 
+    public Boolean IsPackageListAllowed() { return  this.PackedListScanning;}
 }

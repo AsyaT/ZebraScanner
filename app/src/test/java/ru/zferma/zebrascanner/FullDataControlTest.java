@@ -1,10 +1,13 @@
 package ru.zferma.zebrascanner;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import businesslogic.BarcodeTypes;
@@ -162,4 +165,28 @@ public class FullDataControlTest {
 
         Assert.assertEquals(2, fullDataTableControl.GetListOfProducts().size());
     }
+
+    @Test
+    public void FindProductByGuidTest()
+    {
+        try{
+            ArrayList<FullDataTableControl.Details> result =  Whitebox.invokeMethod(
+                    fullDataTableControl,"FindProductsByGuid","ddc4578e-e49f-11e7-80c5-a4bf011ce3c3");
+            Assert.assertEquals(1,result.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    @After
+    public void ItemClickedAndRemoved()
+    {
+        fullDataTableControl.ItemIsClicked("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3");
+        fullDataTableControl.RemoveSelected();
+
+        Assert.assertEquals(0,fullDataTableControl.GetListOfProducts().size());
+    }
+
 }

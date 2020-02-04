@@ -1,7 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import com.symbol.emdk.barcode.ScanDataCollection;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import businesslogic.ApplicationException;
+import businesslogic.BarcodeTypes;
+import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
 import serverDatabaseInteraction.OperationTypesHelper;
 
@@ -128,9 +127,9 @@ class OperationTypesHelperTest {
     @Test
     public void Test_Permissions()
     {
-        HashMap<ScanDataCollection.LabelType, Boolean> permissions = new HashMap<>();
-        permissions.put(ScanDataCollection.LabelType.EAN13, Boolean.FALSE);
-        permissions.put(ScanDataCollection.LabelType.GS1_DATABAR_EXP, Boolean.TRUE);
+        HashMap<BarcodeTypes, Boolean> permissions = new HashMap<>();
+        permissions.put(BarcodeTypes.LocalEAN13, Boolean.FALSE);
+        permissions.put(BarcodeTypes.LocalGS1_EXP, Boolean.TRUE);
 
         OperationsTypesAccountingAreaStructureModel.AccountingArea aa_Rotation = operationsTypesAccountingAreaStructureModel
                 .GetAccountingAreas("Ротация")
@@ -152,7 +151,7 @@ class OperationTypesHelperTest {
     }
 
     @Test
-    public void Test_GetoperationSet()
+    public void Test_GetOperationSet()
     {
         Assert.assertEquals(2,operationsTypesAccountingAreaStructureModel.GetOperationKeys().size());
     }
