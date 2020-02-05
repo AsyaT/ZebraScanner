@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import businesslogic.BarcodeStructureModel;
+import businesslogic.BaseDocumentStructureModel;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.FullDataTableControl;
 import businesslogic.ManufacturerStructureModel;
+import businesslogic.NomenclatureStructureModel;
 import businesslogic.OperationTypesStructureModel;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
-import businesslogic.BaseDocumentStructureModel;
-import businesslogic.NomenclatureStructureModel;
 import businesslogic.PackageListDataTable;
 import businesslogic.ScannerStateHelper;
 import businesslogic.ServerConnection;

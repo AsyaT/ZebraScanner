@@ -21,7 +21,7 @@ import businesslogic.ProductLogic;
 import businesslogic.ProductStructureModel;
 import businesslogic.Product_PackageListStructureModel;
 
-public class ProductLogicTest {
+public class BarcodeProductLogic_And_ProductLogic_Test {
 
     BarcodeProductLogic barcodeProductLogic;
     ProductLogic productLogic;

@@ -9,7 +9,7 @@ import businesslogic.BaseDocumentLogic;
 import businesslogic.BaseDocumentStructureModel;
 import businesslogic.ProductStructureModel;
 
-public class BaseDocumentLogicTets {
+public class BaseDocumentLogicTest {
 
     BaseDocumentLogic baseDocumentLogic;
 
@@ -27,30 +27,17 @@ public class BaseDocumentLogicTets {
     }
 
     @Test
-    public void ExistsInOrder()
+    public void ExistsInOrder() throws ApplicationException
     {
         ProductStructureModel product = new ProductStructureModel("345-333-444","475-222-22",2.0);
-        try
-        {
-            Assert.assertTrue(baseDocumentLogic.IsExistsInOrder(product));
-        }
-        catch (ApplicationException e)
-        {
-            Assert.fail();
-        }
+        Assert.assertTrue(baseDocumentLogic.IsExistsInOrder(product));
+
     }
 
-    @Test
-    public void DoesNotExistsInOrder()
+    @Test(expected = ApplicationException.class)
+    public void DoesNotExistsInOrder() throws ApplicationException
     {
-        ProductStructureModel product = new ProductStructureModel("5830-444-333","475-222-22",2.0);
-        try
-        {
-            Assert.assertTrue(baseDocumentLogic.IsExistsInOrder(product));
-        }
-        catch (ApplicationException e)
-        {
-            Assert.assertEquals("Этот продукт не содержится в документе-основании", e.getMessage());
-        }
+        ProductStructureModel product = new ProductStructureModel("5830-444-333", "475-222-22", 2.0);
+        baseDocumentLogic.IsExistsInOrder(product);
     }
 }

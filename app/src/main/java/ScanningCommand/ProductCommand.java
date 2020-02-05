@@ -22,6 +22,7 @@ import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductLogic;
 import businesslogic.ProductStructureModel;
+import businesslogic.ScannerState;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
@@ -126,14 +127,17 @@ public class ProductCommand implements Command {
     }
 
     protected void SuccessSaveData(ProductStructureModel product) {
-        if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == false) {
+        if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == false)
+        {
             ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
 
             ((MainActivity) this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
 
             FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
             appState.ScannedProductsToSend.Add(detailsModel);
-        } else if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == true) {
+        }
+        else if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == true)
+        {
             String result = this.BarcodeProductLogic.CreateStringResponse(product);
             ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
         }
@@ -147,9 +151,12 @@ public class ProductCommand implements Command {
 
             ArrayList<ProductStructureModel> products = this.BarcodeProductLogic.FindProductByBarcode(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-            if (products.size() > 1) {
+            if (products.size() > 1)
+            {
                 SelectionDialog(products);
-            } else {
+            }
+            else
+            {
                 try {
                     this.baseDocumentLogic.IsExistsInOrder(products.get(0));
                     SuccessSaveData(products.get(0));
@@ -163,6 +170,37 @@ public class ProductCommand implements Command {
         } catch (ParseException e) {
             ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
         }
+    }
+
+    public ProductStructureModel ParseAction(String barcodeData, BarcodeTypes barcodeType)
+    {
+        try {
+            this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(barcodeType);
+            this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT); // We are in Product command, so State = Product scanning
+
+            ArrayList<ProductStructureModel> products =
+                    this.BarcodeProductLogic.FindProductByBarcode(barcodeData, barcodeType);
+
+            if (products.size() > 1)
+            {
+                SelectionDialog(products);
+            }
+            else
+            {
+                try {
+                    this.baseDocumentLogic.IsExistsInOrder(products.get(0));
+                    return products.get(0);
+                } catch (ApplicationException ex) {
+                    ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+                }
+
+            }
+        } catch (ApplicationException ex) {
+            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+        } catch (ParseException e) {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
+        }
+        return null;
     }
 
 }
