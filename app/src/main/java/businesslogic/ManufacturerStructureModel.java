@@ -20,13 +20,15 @@ public class ManufacturerStructureModel
 
     protected ManufacturerStructureModel.ManufacturerDetails GetManufacturer(Byte id) throws ApplicationException
     {
-        try {
+        if(this.Manufacturers.containsKey(id))
+        {
             return this.Manufacturers.get(id);
         }
-        catch (NullPointerException e)
+        else
         {
             throw new ApplicationException("Производитель с номером" + id + " не найден");
         }
+
     }
 
     public void Add(Byte id, String name, String guid)
