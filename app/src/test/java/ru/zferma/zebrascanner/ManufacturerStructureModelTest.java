@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import businesslogic.ApplicationException;
 import businesslogic.ManufacturerStructureModel;
 
 public class ManufacturerStructureModelTest
@@ -19,14 +20,15 @@ public class ManufacturerStructureModelTest
     }
 
     @Test
-    public void FindTest()
+    public void FindTest() throws ApplicationException
     {
         Assert.assertEquals("23504297-7ee1-11e6-80d7-e4115bea65d2", model.GetManufacturerGuid((byte)1) );
         Assert.assertEquals("Уральская мясная компания ООО ИНН 7438028838", model.GetManufacturerName((byte)2) );
     }
 
     @Test(expected = NullPointerException.class)
-    public void OutOfRangeTest()
+    public void OutOfRangeTest() throws ApplicationException
+
     {
         model.GetManufacturerGuid((byte)5);
     }

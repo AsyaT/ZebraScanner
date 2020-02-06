@@ -114,8 +114,8 @@ public class ProductCommandTest
         Assert.assertEquals(expected.GetWeight(),actual.GetWeight());
     }
 
-    @Test
-    public void ParseTestEX()
+    @Test  (expected = NullPointerException.class)
+    public void ParseTestManufacturerNotFound()
     {
         ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel expected = new ProductStructureModel(

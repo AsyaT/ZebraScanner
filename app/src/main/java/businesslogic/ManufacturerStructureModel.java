@@ -9,18 +9,24 @@ public class ManufacturerStructureModel
         Manufacturers = new HashMap<>();
     }
 
-    public String GetManufacturerGuid(Byte id) throws NullPointerException
+    public String GetManufacturerGuid(Byte id) throws ApplicationException
     {
         return GetManufacturer(id).Guid;
     }
-    public String GetManufacturerName(Byte id) throws NullPointerException
+    public String GetManufacturerName(Byte id) throws ApplicationException
     {
         return GetManufacturer(id).Name;
     }
 
-    protected ManufacturerStructureModel.ManufacturerDetails GetManufacturer(Byte id) throws NullPointerException
+    protected ManufacturerStructureModel.ManufacturerDetails GetManufacturer(Byte id) throws ApplicationException
     {
-        return this.Manufacturers.get(id);
+        try {
+            return this.Manufacturers.get(id);
+        }
+        catch (NullPointerException e)
+        {
+            throw new ApplicationException("Производитель с номером" + id + " не найден");
+        }
     }
 
     public void Add(Byte id, String name, String guid)
