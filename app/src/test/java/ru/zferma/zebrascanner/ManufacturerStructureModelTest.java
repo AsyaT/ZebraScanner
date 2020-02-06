@@ -33,4 +33,11 @@ public class ManufacturerStructureModelTest
 
     }
 
+    @Test(expected = ApplicationException.class)
+    public void OutOfRangeTestBig() throws ApplicationException
+    {
+        model.GetManufacturerGuid((byte)100);
+
+    }
+
 }

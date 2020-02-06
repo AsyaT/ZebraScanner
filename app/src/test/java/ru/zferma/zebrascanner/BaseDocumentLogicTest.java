@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import businesslogic.ApplicationException;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.BaseDocumentStructureModel;
+import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.ProductStructureModel;
 
 public class BaseDocumentLogicTest {
@@ -27,15 +27,15 @@ public class BaseDocumentLogicTest {
     }
 
     @Test
-    public void ExistsInOrder() throws ApplicationException
+    public void ExistsInOrder() throws DoesNotExistsInOrderException
     {
         ProductStructureModel product = new ProductStructureModel("345-333-444","475-222-22",2.0);
         Assert.assertTrue(baseDocumentLogic.IsExistsInOrder(product));
 
     }
 
-    @Test(expected = ApplicationException.class)
-    public void DoesNotExistsInOrder() throws ApplicationException
+    @Test(expected = DoesNotExistsInOrderException.class)
+    public void DoesNotExistsInOrder() throws DoesNotExistsInOrderException
     {
         ProductStructureModel product = new ProductStructureModel("5830-444-333", "475-222-22", 2.0);
         baseDocumentLogic.IsExistsInOrder(product);

@@ -18,6 +18,7 @@ import businesslogic.BarcodeProductLogic;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
+import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductLogic;
@@ -92,7 +93,7 @@ public class ProductCommand implements Command {
                                 try {
                                     baseDocumentLogic.IsExistsInOrder(result[0]);
                                     SuccessSaveData(result[0]);
-                                } catch (ApplicationException ex) {
+                                } catch (DoesNotExistsInOrderException ex) {
                                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
                                 } finally {
 
@@ -160,7 +161,7 @@ public class ProductCommand implements Command {
                 try {
                     this.baseDocumentLogic.IsExistsInOrder(products.get(0));
                     SuccessSaveData(products.get(0));
-                } catch (ApplicationException ex) {
+                } catch (DoesNotExistsInOrderException ex) {
                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
                 }
 
@@ -190,7 +191,7 @@ public class ProductCommand implements Command {
                 try {
                     this.baseDocumentLogic.IsExistsInOrder(products.get(0));
                     return products.get(0);
-                } catch (ApplicationException ex) {
+                } catch (DoesNotExistsInOrderException ex) {
                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
                 }
 

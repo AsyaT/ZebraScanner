@@ -9,6 +9,7 @@ import java.util.Date;
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BaseDocumentLogic;
+import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.PackageListStructureModel;
@@ -62,7 +63,7 @@ public class PackageListCommand implements Command {
                     this.baseDocumentLogic.IsExistsInOrder(product);
                     areAllProductsContainsInOrder = true;
                 }
-                catch (ApplicationException ex)
+                catch (DoesNotExistsInOrderException ex)
                 {
                     ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
                     areAllProductsContainsInOrder = false;

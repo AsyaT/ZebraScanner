@@ -17,6 +17,7 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.BaseDocumentStructureModel;
 import businesslogic.CharacterisiticStructureModel;
+import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.ManufacturerStructureModel;
 import businesslogic.NomenclatureStructureModel;
 import businesslogic.OperationTypesStructureModel;
@@ -127,8 +128,8 @@ public class ProductCommandTest
         Assert.assertEquals(expected.GetWeight(),actual.GetWeight());
     }
 
-    @Test(expected = ApplicationException.class)
-    public void ParseTestNotInOrder()
+    @Test(expected = DoesNotExistsInOrderException.class)
+    public void ParseTestNotInOrder() throws DoesNotExistsInOrderException
     {
         ProductStructureModel actual = productCommand.ParseAction("0104660017707116310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel expected = new ProductStructureModel(
@@ -140,7 +141,7 @@ public class ProductCommandTest
     }
 
 
-    @Test
+    @Test(expected = ApplicationException.class)
     public void ParseTestManufacturerNotFound()
     {
         ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
@@ -150,5 +151,11 @@ public class ProductCommandTest
         Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
         Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());
         Assert.assertEquals(expected.GetWeight(),actual.GetWeight());
+    }
+
+    @Test
+    public void NoOrderTest()
+    {
+        // TODO implement when order not scanned. It should not be exception
     }
 }
