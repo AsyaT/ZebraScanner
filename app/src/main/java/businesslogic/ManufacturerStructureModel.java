@@ -9,13 +9,18 @@ public class ManufacturerStructureModel
         Manufacturers = new HashMap<>();
     }
 
-    public String GetManufacturerGuid(Byte id)
+    public String GetManufacturerGuid(Byte id) throws NullPointerException
     {
-        return this.Manufacturers.get(id).Guid;
+        return GetManufacturer(id).Guid;
     }
-    public String GetManufacturerName(Byte id)
+    public String GetManufacturerName(Byte id) throws NullPointerException
     {
-        return this.Manufacturers.get(id).Name;
+        return GetManufacturer(id).Name;
+    }
+
+    protected ManufacturerStructureModel.ManufacturerDetails GetManufacturer(Byte id) throws NullPointerException
+    {
+        return this.Manufacturers.get(id);
     }
 
     public void Add(Byte id, String name, String guid)
@@ -28,7 +33,7 @@ public class ManufacturerStructureModel
 
     HashMap<Byte,ManufacturerDetails> Manufacturers;
 
-    public class ManufacturerDetails
+    protected class ManufacturerDetails
     {
         String Name;
         String Guid;

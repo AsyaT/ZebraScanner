@@ -61,7 +61,7 @@ public class ScanningBarcodeStructureModel {
         }
     }
 
-    private void Cycle(String fullBarcode) throws ParseException {
+    private void Cycle(String fullBarcode) throws ParseException, ApplicationException {
         String gtin = "01";
         String newWeight = "3103";
         String lotNumber="10";
@@ -70,7 +70,9 @@ public class ScanningBarcodeStructureModel {
         String serialNumber = "21";
         String internalCompanyCodes = "92";
 
-        while (fullBarcode.length()>0)
+        Integer maxCycleNumber = 100;
+
+        while (fullBarcode.length()>0 && maxCycleNumber > 0)
         {
             if(fullBarcode.startsWith(gtin))
             {
@@ -117,10 +119,17 @@ public class ScanningBarcodeStructureModel {
                 InternalEquipment= Short.parseShort(fullBarcode.substring(internalCompanyCodes.length()+1, internalCompanyCodes.length()+ 1 + 3));
                 fullBarcode = fullBarcode.substring(internalCompanyCodes.length() + 4);
             }
+
+            maxCycleNumber--;
+        }
+
+        if(maxCycleNumber == 0)
+        {
+            throw new ApplicationException("Штрих-код не корректен. Невозможно распознать " + fullBarcode);
         }
     }
 
-    public ScanningBarcodeStructureModel(String fullBarcode, BarcodeTypes labelType) throws ParseException {
+    public ScanningBarcodeStructureModel(String fullBarcode, BarcodeTypes labelType) throws ParseException, ApplicationException {
         FullBarcode = fullBarcode;
         LabelType = labelType;
 

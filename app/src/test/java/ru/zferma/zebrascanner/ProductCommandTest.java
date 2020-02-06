@@ -117,7 +117,7 @@ public class ProductCommandTest
     @Test
     public void ParseTestEX()
     {
-        ProductStructureModel actual = productCommand.ParseAction("01466001770824331030074561008201119082017190825210001922000", BarcodeTypes.LocalGS1_EXP);
+        ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel expected = new ProductStructureModel(
                 "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
 

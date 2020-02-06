@@ -29,11 +29,11 @@ import ru.zferma.zebrascanner.ScannerApplication;
 
 public class ProductCommand implements Command {
 
-    Activity Activity;
-    Scanner CurrentScanner;
-    ScannerApplication appState;
+    Activity Activity = null;
+    Scanner CurrentScanner = null;
+    ScannerApplication appState = null;
 
-    MediaPlayer mediaPlayer;
+    MediaPlayer mediaPlayer = null;
 
     businesslogic.BarcodeProductLogic BarcodeProductLogic;
     businesslogic.ProductLogic ProductLogic;
