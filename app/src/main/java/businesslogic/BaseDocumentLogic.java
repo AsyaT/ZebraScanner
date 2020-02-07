@@ -25,10 +25,10 @@ public class BaseDocumentLogic {
         }
     }
 
-    public Boolean IsBaseDocumentScanned() throws DoesNotExistsInOrderException {
+    public Boolean IsBaseDocumentScanned()  {
         if(this.BaseDocumentStructureModel == null)
         {
-            throw new DoesNotExistsInOrderException("Документ-основание не отсканирован.");
+            return false;
         }
         else
         {

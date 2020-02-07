@@ -43,9 +43,9 @@ public class BaseDocumentLogicTest {
         baseDocumentLogic.IsExistsInOrder(product);
     }
 
-    @Test(expected = DoesNotExistsInOrderException.class)
+    @Test
     public void BaseDocumentNotScanned() throws DoesNotExistsInOrderException {
         baseDocumentLogic = new BaseDocumentLogic(null);
-        baseDocumentLogic.IsBaseDocumentScanned();
+        Assert.assertFalse(baseDocumentLogic.IsBaseDocumentScanned());
     }
 }
