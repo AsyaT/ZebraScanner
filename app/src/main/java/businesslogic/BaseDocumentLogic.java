@@ -24,4 +24,15 @@ public class BaseDocumentLogic {
             throw new DoesNotExistsInOrderException("Этот продукт не содержится в документе-основании");
         }
     }
+
+    public Boolean IsBaseDocumentScanned() throws DoesNotExistsInOrderException {
+        if(this.BaseDocumentStructureModel == null)
+        {
+            throw new DoesNotExistsInOrderException("Документ-основание не отсканирован.");
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

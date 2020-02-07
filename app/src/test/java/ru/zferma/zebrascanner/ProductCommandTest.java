@@ -141,8 +141,18 @@ public class ProductCommandTest
     }
 
     @Test
-    public void NoOrderTest()
+    public void NoOrderTest() throws ApplicationException, DoesNotExistsInOrderException, ParseException
     {
-        // TODO implement when order not scanned. It should not be exception
+        BaseDocumentLogic baseDocumentLogic = new BaseDocumentLogic(null);
+
+        Whitebox.setInternalState(productCommand,"baseDocumentLogic", baseDocumentLogic);
+
+        ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        ProductStructureModel expected = new ProductStructureModel(
+                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
+
+        Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
+        Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());
+        Assert.assertEquals(expected.GetWeight(),actual.GetWeight());
     }
 }

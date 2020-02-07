@@ -170,7 +170,10 @@ public class ProductCommand implements Command {
             }
             else
             {
-                this.baseDocumentLogic.IsExistsInOrder(products.get(0));
+                if (this.baseDocumentLogic.IsBaseDocumentScanned())
+                {
+                    this.baseDocumentLogic.IsExistsInOrder(products.get(0));
+                }
                 return products.get(0);
 
             }

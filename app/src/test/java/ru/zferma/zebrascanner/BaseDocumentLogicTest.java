@@ -30,6 +30,7 @@ public class BaseDocumentLogicTest {
     public void ExistsInOrder() throws DoesNotExistsInOrderException
     {
         ProductStructureModel product = new ProductStructureModel("345-333-444","475-222-22",2.0);
+        Assert.assertTrue(baseDocumentLogic.IsBaseDocumentScanned());
         Assert.assertTrue(baseDocumentLogic.IsExistsInOrder(product));
 
     }
@@ -38,6 +39,13 @@ public class BaseDocumentLogicTest {
     public void DoesNotExistsInOrder() throws DoesNotExistsInOrderException
     {
         ProductStructureModel product = new ProductStructureModel("5830-444-333", "475-222-22", 2.0);
+        Assert.assertTrue(baseDocumentLogic.IsBaseDocumentScanned());
         baseDocumentLogic.IsExistsInOrder(product);
+    }
+
+    @Test(expected = DoesNotExistsInOrderException.class)
+    public void BaseDocumentNotScanned() throws DoesNotExistsInOrderException {
+        baseDocumentLogic = new BaseDocumentLogic(null);
+        baseDocumentLogic.IsBaseDocumentScanned();
     }
 }
