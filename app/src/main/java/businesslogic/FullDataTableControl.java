@@ -19,10 +19,6 @@ public class FullDataTableControl
        return ListOfProducts;
    }
 
-   public void CleanListOfProducts()
-   {
-       ListOfProducts = new ArrayList<>();
-   }
 
    private Details IsProductExists(Details product)
    {

@@ -9,7 +9,6 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.FullDataTableControl;
-import businesslogic.PackageListDataTable;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
@@ -42,15 +41,54 @@ public class BadgeCommand implements Command  {
 
         String url = appState.serverConnection.getResponseUrl();
 
-        ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = appState.LocationContext.GetAccountingAreaGUID();
-        responseStructureModel.UserID = appState.BadgeGuid;
-        if(appState.baseDocumentStructureModel != null)
-        {
-            responseStructureModel.DocumentID = appState.baseDocumentStructureModel.GetOrderId();
+        ResponseStructureModel responseStructureModel = AnswerToServer(appState);
+        String jsonResponse = ConvertModelToJson(responseStructureModel);
+
+        try {
+            Integer resultCode = (new WebServiceResponse())
+                    .execute(
+                        url,
+                        appState.serverConnection.GetUsernameAndPassword(),
+                        jsonResponse)
+                    .get();
+
+            //TODO: notification for user if Success or not
+            ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
+
+            if(resultCode == 200)
+            {
+                // TODO: 5. переходить на выбор операции
+               appState.CleanContextEntities();
+            }
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        for(FullDataTableControl.Details product : appState.ScannedProductsToSend.GetListOfProducts())
+
+        // TODO: 4. GET для печатной формы
+
+    }
+
+    protected String ConvertModelToJson(ResponseStructureModel model)
+    {
+        Gson gson = new Gson();
+        return gson.toJson(model);
+    }
+
+    protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication)
+    {
+        ResponseStructureModel responseStructureModel = new ResponseStructureModel();
+        responseStructureModel.AccountingAreaGUID = scannerApplication.LocationContext.GetAccountingAreaGUID();
+        responseStructureModel.UserID = scannerApplication.BadgeGuid;
+        if(scannerApplication.baseDocumentStructureModel != null)
+        {
+            responseStructureModel.DocumentID = scannerApplication.baseDocumentStructureModel.GetOrderId();
+        }
+
+        for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())
         {
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.ProductGUID = product.getProductGuid();
@@ -63,33 +101,6 @@ public class BadgeCommand implements Command  {
             responseStructureModel.ProductList.add(rpsm);
         }
 
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(responseStructureModel);
-
-        try {
-            Integer resultCode = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
-
-            //TODO: notification for user if Success or not
-            ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
-
-            if(resultCode == 200)
-            {
-                // TODO: 5. очищать таблицы или переходить на выбор операции
-                appState.ScannedProductsToSend.CleanListOfProducts();
-                appState.LocationContext = null;
-                appState.baseDocumentStructureModel = null;
-                appState.BadgeGuid = null;
-                appState.packageListDataTable = new PackageListDataTable();
-            }
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-        // TODO: 4. GET для печатной формы
-
+        return responseStructureModel;
     }
 }

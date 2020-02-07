@@ -47,6 +47,7 @@ public class ScannerApplication extends Application {
         baseDocumentStructureModel = null;
         BadgeGuid = null;
         ScannedProductsToSend = new FullDataTableControl();
+        packageListDataTable = new PackageListDataTable();
     }
 
     public void onCreate() {
