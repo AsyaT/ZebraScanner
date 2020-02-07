@@ -140,6 +140,12 @@ public class ProductCommandTest
 
     }
 
+    @Test(expected = ApplicationException.class)
+    public void BarcodeNotFoundTest() throws ApplicationException, DoesNotExistsInOrderException,ParseException
+    {
+        productCommand.ParseAction("0199999999999999310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
+    }
+
     @Test
     public void NoOrderTest() throws ApplicationException, DoesNotExistsInOrderException, ParseException
     {
@@ -155,4 +161,6 @@ public class ProductCommandTest
         Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());
         Assert.assertEquals(expected.GetWeight(),actual.GetWeight());
     }
+
+
 }

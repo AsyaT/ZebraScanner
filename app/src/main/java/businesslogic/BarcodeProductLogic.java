@@ -31,6 +31,11 @@ public class BarcodeProductLogic {
         ArrayList<ProductStructureModel> listOfProducts =
                 BarcodeStructureModel.FindProductByBarcode(parsedBarcode.getUniqueIdentifier());
 
+        if(listOfProducts == null)
+        {
+            throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
+        }
+
         for(ProductStructureModel product : listOfProducts)
         {
             product.SetWeight(parsedBarcode.getWeight());
@@ -48,14 +53,8 @@ public class BarcodeProductLogic {
             }
         }
 
-        if(listOfProducts == null)
-        {
-            throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
-        }
-        else
-        {
-            return listOfProducts;
-        }
+        return listOfProducts;
+
     }
 
     public String CreateStringResponse(ProductModel product)
