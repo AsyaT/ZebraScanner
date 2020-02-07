@@ -91,8 +91,9 @@ public class ProductCommand implements Command {
                                 result[0] = listNomenclature.get(i);
 
                                 try {
-                                    baseDocumentLogic.IsExistsInOrder(result[0]);
-                                    SuccessSaveData(result[0]);
+
+                                    SuccessSaveData(CheckInOrder(result[0]));
+
                                 } catch (DoesNotExistsInOrderException ex) {
                                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
                                 } finally {
@@ -170,15 +171,19 @@ public class ProductCommand implements Command {
             }
             else
             {
-                if (this.baseDocumentLogic.IsBaseDocumentScanned())
-                {
-                    this.baseDocumentLogic.IsExistsInOrder(products.get(0));
-                }
-                return products.get(0);
+                return CheckInOrder(products.get(0));
 
             }
 
         return null;
+    }
+
+    private ProductStructureModel CheckInOrder(ProductStructureModel product) throws DoesNotExistsInOrderException {
+        if (this.baseDocumentLogic.IsBaseDocumentScanned())
+        {
+            this.baseDocumentLogic.IsExistsInOrder(product);
+        }
+        return product;
     }
 
 }
