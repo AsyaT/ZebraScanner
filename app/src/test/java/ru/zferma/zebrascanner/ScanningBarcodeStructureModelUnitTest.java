@@ -97,7 +97,7 @@ public class ScanningBarcodeStructureModelUnitTest {
     @Test
     public void test_GS1_Egg_Spoil() throws ParseException
     {
-        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getFullBarcode(), GS1_EXP_EGG_BARCODE_SPOIL);
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getFullBarcode(), GS1_EXP_EGG_BARCODE);
         assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getUniqueIdentifier(), "4630049294670");
         assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getWeight(), null);
         assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getProductionDate(), new SimpleDateFormat("dd/MM/yyyy").parse("20/08/2019"));

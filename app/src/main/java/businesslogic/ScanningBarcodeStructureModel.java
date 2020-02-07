@@ -129,24 +129,29 @@ public class ScanningBarcodeStructureModel {
         }
     }
 
+    protected String CleanBarcodeFromWrongSymbols(String inputBarcode)
+    {
+        return inputBarcode.replaceAll("[^\\d]", "");
+    }
+
     public ScanningBarcodeStructureModel(String fullBarcode, BarcodeTypes labelType) throws ParseException, ApplicationException {
-        FullBarcode = fullBarcode;
+        FullBarcode = CleanBarcodeFromWrongSymbols(fullBarcode);
         LabelType = labelType;
 
         if(LabelType == BarcodeTypes.LocalGS1_EXP)
         {
-            Cycle(fullBarcode);
+            Cycle(FullBarcode);
         }
         else if( LabelType == BarcodeTypes.LocalEAN13)
         {
-            if (fullBarcode.startsWith("2")) {
-                String stringWeight = fullBarcode.substring(7, 12);
+            if (FullBarcode.startsWith("2")) {
+                String stringWeight = FullBarcode.substring(7, 12);
                 Weight = Double.parseDouble( stringWeight.substring(0,2) + "." + stringWeight.substring(2) );
-                UniqueIdentifier = fullBarcode.substring(0, 7);
+                UniqueIdentifier = FullBarcode.substring(0, 7);
             }
             else
             {
-                UniqueIdentifier = fullBarcode;
+                UniqueIdentifier = FullBarcode;
                 Weight = null;
             }
         }
