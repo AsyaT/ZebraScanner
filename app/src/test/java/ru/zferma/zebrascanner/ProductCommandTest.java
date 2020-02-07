@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -106,8 +107,7 @@ public class ProductCommandTest
     }
 
     @Test
-    public void ParseTestEAN13()
-    {
+    public void ParseTestEAN13() throws ParseException, DoesNotExistsInOrderException, ApplicationException {
         ProductStructureModel actual = productCommand.ParseAction("4660017708243", BarcodeTypes.LocalEAN13);
         ProductStructureModel expected = new ProductStructureModel(
                 "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0);
@@ -117,8 +117,7 @@ public class ProductCommandTest
     }
 
     @Test
-    public void ParseTestGS1EXP()
-    {
+    public void ParseTestGS1EXP() throws ParseException, DoesNotExistsInOrderException, ApplicationException {
         ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel expected = new ProductStructureModel(
                 "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
@@ -129,28 +128,16 @@ public class ProductCommandTest
     }
 
     @Test(expected = DoesNotExistsInOrderException.class)
-    public void ParseTestNotInOrder() throws DoesNotExistsInOrderException
-    {
-        ProductStructureModel actual = productCommand.ParseAction("0104660017707116310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
-        ProductStructureModel expected = new ProductStructureModel(
-                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
+    public void ParseTestNotInOrder() throws DoesNotExistsInOrderException, ParseException, ApplicationException {
+        productCommand.ParseAction("0104660017707116310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
 
-        Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
-        Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());
-        Assert.assertEquals(expected.GetWeight(),actual.GetWeight());
     }
 
 
     @Test(expected = ApplicationException.class)
-    public void ParseTestManufacturerNotFound()
-    {
-        ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
-        ProductStructureModel expected = new ProductStructureModel(
-                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
+    public void ParseTestManufacturerNotFound() throws ApplicationException, DoesNotExistsInOrderException, ParseException {
+        productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
 
-        Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
-        Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());
-        Assert.assertEquals(expected.GetWeight(),actual.GetWeight());
     }
 
     @Test

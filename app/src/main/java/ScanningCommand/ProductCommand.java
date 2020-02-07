@@ -147,35 +147,17 @@ public class ProductCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
         try {
-            this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(BarcodeTypes.GetType(data.getLabelType()));
-            this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
-
-            ArrayList<ProductStructureModel> products = this.BarcodeProductLogic.FindProductByBarcode(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
-
-            if (products.size() > 1)
-            {
-                SelectionDialog(products);
-            }
-            else
-            {
-                try {
-                    this.baseDocumentLogic.IsExistsInOrder(products.get(0));
-                    SuccessSaveData(products.get(0));
-                } catch (DoesNotExistsInOrderException ex) {
-                    ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
-                }
-
-            }
+            ParseAction(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
         } catch (ApplicationException ex) {
             ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
         } catch (ParseException e) {
             ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
+        } catch (DoesNotExistsInOrderException e) {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
         }
     }
 
-    public ProductStructureModel ParseAction(String barcodeData, BarcodeTypes barcodeType)
-    {
-        try {
+    public ProductStructureModel ParseAction(String barcodeData, BarcodeTypes barcodeType) throws ApplicationException, ParseException, DoesNotExistsInOrderException {
             this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(barcodeType);
             this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT); // We are in Product command, so State = Product scanning
 
@@ -188,19 +170,11 @@ public class ProductCommand implements Command {
             }
             else
             {
-                try {
-                    this.baseDocumentLogic.IsExistsInOrder(products.get(0));
-                    return products.get(0);
-                } catch (DoesNotExistsInOrderException ex) {
-                    ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
-                }
+                this.baseDocumentLogic.IsExistsInOrder(products.get(0));
+                return products.get(0);
 
             }
-        } catch (ApplicationException ex) {
-            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
-        } catch (ParseException e) {
-            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
-        }
+
         return null;
     }
 
