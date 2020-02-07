@@ -18,11 +18,13 @@ public class ScanningBarcodeStructureModelUnitTest {
     private final String WEIGHT_EAN13_BARCODE ="2209983009489";
     private final String GS1_EXP_BARCODE="0104630037036817310302530010082011190820171908252100001923000";
     private final String GS1_EXP_EGG_BARCODE="010463004929467011190820171909091008202100001926000";
+    private final String GS1_EXP_EGG_BARCODE_SPOIL="01046300492946701119082017190909100820a2100001926000";
 
     private ScanningBarcodeStructureModel underTest_EAN13_Scanning_BarcodeStructureModel;
     private ScanningBarcodeStructureModel underTest_WEIGHTEAN13_Scanning_BarcodeStructureModel;
     private ScanningBarcodeStructureModel underTest_GS1_Scanning_BarcodeStructureModel;
     private ScanningBarcodeStructureModel underTest_GS1_EGG_Scanning_BarcodeStructureModel;
+    private ScanningBarcodeStructureModel underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel;
 
     @Before
     public void InitBarcodeStructure() throws ParseException, ApplicationException {
@@ -30,6 +32,7 @@ public class ScanningBarcodeStructureModelUnitTest {
         underTest_WEIGHTEAN13_Scanning_BarcodeStructureModel = new ScanningBarcodeStructureModel(WEIGHT_EAN13_BARCODE, BarcodeTypes.LocalEAN13);
         underTest_GS1_Scanning_BarcodeStructureModel = new ScanningBarcodeStructureModel(GS1_EXP_BARCODE, BarcodeTypes.LocalGS1_EXP);
         underTest_GS1_EGG_Scanning_BarcodeStructureModel = new ScanningBarcodeStructureModel(GS1_EXP_EGG_BARCODE, BarcodeTypes.LocalGS1_EXP);
+        underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel = new ScanningBarcodeStructureModel(GS1_EXP_EGG_BARCODE_SPOIL, BarcodeTypes.LocalGS1_EXP);
     }
 
     @Test
@@ -89,5 +92,21 @@ public class ScanningBarcodeStructureModelUnitTest {
         assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getInternalEquipment(), expectedEquipment);
         Byte expectedProducer = 6;
         assertEquals(underTest_GS1_EGG_Scanning_BarcodeStructureModel.getInternalProducer(), expectedProducer);
+    }
+
+    @Test
+    public void test_GS1_Egg_Spoil() throws ParseException
+    {
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getFullBarcode(), GS1_EXP_EGG_BARCODE_SPOIL);
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getUniqueIdentifier(), "4630049294670");
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getWeight(), null);
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getProductionDate(), new SimpleDateFormat("dd/MM/yyyy").parse("20/08/2019"));
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getExpirationDate(), new SimpleDateFormat("dd/MM/yyyy").parse("09/09/2019"));
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getLotNumber(),"0820");
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getSerialNumber(),"00001");
+        Short expectedEquipment = 0;
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getInternalEquipment(), expectedEquipment);
+        Byte expectedProducer = 6;
+        assertEquals(underTest_GS1_EGG_Scanning_Spoil_BarcodeStructureModel.getInternalProducer(), expectedProducer);
     }
 }
