@@ -16,6 +16,7 @@ import businesslogic.PackageListStructureModel;
 import businesslogic.ProductLogic;
 import businesslogic.ProductModel;
 import businesslogic.Product_PackageListStructureModel;
+import businesslogic.ScannerState;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
@@ -46,7 +47,7 @@ public class PackageListCommand implements Command {
     {
         try
         {
-            this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
+            this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
             appState.packageListDataTable.IsActionAllowedWithPackageList(data.getData());
 
             // GO to DB and get list of products
