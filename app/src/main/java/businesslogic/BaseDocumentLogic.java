@@ -9,10 +9,10 @@ public class BaseDocumentLogic {
         this.BaseDocumentStructureModel = baseDocumentStructureModel;
     }
 
-    public Boolean IsExistsInOrder(ProductModel product) throws ApplicationException {
+    public Boolean IsExistsInOrder(ProductModel product) throws DoesNotExistsInOrderException {
         if(this.BaseDocumentStructureModel == null)
         {
-            throw new ApplicationException("Документ-основание не отсканирован.");
+            throw new DoesNotExistsInOrderException("Документ-основание не отсканирован.");
         }
 
         if( this.BaseDocumentStructureModel.IfProductExists(product.GetProductGuid()) )
@@ -21,7 +21,18 @@ public class BaseDocumentLogic {
         }
         else
         {
-            throw new ApplicationException("Этот продукт не содержится в документе-основании");
+            throw new DoesNotExistsInOrderException("Этот продукт не содержится в документе-основании");
+        }
+    }
+
+    public Boolean IsBaseDocumentScanned()  {
+        if(this.BaseDocumentStructureModel == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 }

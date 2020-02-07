@@ -18,21 +18,23 @@ import businesslogic.BarcodeProductLogic;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
+import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ProductLogic;
 import businesslogic.ProductStructureModel;
+import businesslogic.ScannerState;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
 
 public class ProductCommand implements Command {
 
-    Activity Activity;
-    Scanner CurrentScanner;
-    ScannerApplication appState;
+    Activity Activity = null;
+    Scanner CurrentScanner = null;
+    ScannerApplication appState = null;
 
-    MediaPlayer mediaPlayer;
+    MediaPlayer mediaPlayer = null;
 
     businesslogic.BarcodeProductLogic BarcodeProductLogic;
     businesslogic.ProductLogic ProductLogic;
@@ -42,7 +44,7 @@ public class ProductCommand implements Command {
     @Override
     public void Action(Activity activity) {
         this.Activity = activity;
-        this.CurrentScanner = ((MainActivity)activity).getScanner();
+        this.CurrentScanner = ((MainActivity) activity).getScanner();
 
         appState = ((ScannerApplication) Activity.getApplication());
 
@@ -55,7 +57,7 @@ public class ProductCommand implements Command {
                 appState.nomenclatureStructureModel,
                 appState.characterisiticStructureModel,
                 appState.manufacturerStructureModel
-                );
+        );
 
         this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext, appState.baseDocumentStructureModel);
         this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
@@ -63,17 +65,15 @@ public class ProductCommand implements Command {
         mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
     }
 
-    protected void SelectionDialog(List<ProductStructureModel> listNomenclature)
-    {
+    protected void SelectionDialog(List<ProductStructureModel> listNomenclature) {
         List<CharSequence> nomenclatures = new ArrayList<CharSequence>();
         final ProductStructureModel[] result = {null};
 
-        for(ProductStructureModel nomenclature : listNomenclature)
-        {
+        for (ProductStructureModel nomenclature : listNomenclature) {
             nomenclatures.add(
-                    appState.nomenclatureStructureModel.FindProductByGuid( nomenclature.GetProductGuid())+
-                            "\n Характеристика: "+ appState.characterisiticStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID())+
-                            "\n Вес: "+nomenclature.GetWeight().toString()+"\n\n");
+                    appState.nomenclatureStructureModel.FindProductByGuid(nomenclature.GetProductGuid()) +
+                            "\n Характеристика: " + appState.characterisiticStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID()) +
+                            "\n Вес: " + nomenclature.GetWeight().toString() + "\n\n");
         }
 
         CharSequence[] showedNomenclatures = nomenclatures.toArray(new CharSequence[nomenclatures.size()]);
@@ -90,18 +90,13 @@ public class ProductCommand implements Command {
 
                                 result[0] = listNomenclature.get(i);
 
-                                try
-                                {
-                                    baseDocumentLogic.IsExistsInOrder(result[0]);
-                                    SuccessSaveData(result[0]);
-                                }
-                                catch (ApplicationException ex)
-                                {
-                                    ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-                                }
-                                finally
-                                {
-                                    PostAction();
+                                try {
+
+                                    SuccessSaveData(CheckInOrder(result[0]));
+
+                                } catch (DoesNotExistsInOrderException ex) {
+                                    ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+                                } finally {
 
                                     try {
                                         CurrentScanner.enable();
@@ -128,67 +123,74 @@ public class ProductCommand implements Command {
 
                 mediaPlayer.start();
 
-            }});
+            }
+        });
 
     }
 
-    protected void SuccessSaveData( ProductStructureModel product)
-    {
-        if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
+    protected void SuccessSaveData(ProductStructureModel product) {
+        if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
             ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
 
-            ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
+            ((MainActivity) this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
 
             FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
             appState.ScannedProductsToSend.Add(detailsModel);
         }
-        else if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
+        else if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == true)
         {
             String result = this.BarcodeProductLogic.CreateStringResponse(product);
-            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
+            ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
         }
     }
 
     @Override
-    public void ParseData(ScanDataCollection.ScanData data)
-    {
+    public void ParseData(ScanDataCollection.ScanData data) {
         try {
-            this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(BarcodeTypes.GetType(data.getLabelType()));
-            this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
 
-            ArrayList<ProductStructureModel> products = this.BarcodeProductLogic.FindProductByBarcode(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+            ProductStructureModel product = ParseAction(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-            if( products.size() > 1 )
+            if(product!=null)
+            {
+                SuccessSaveData(product);
+            }
+
+        } catch (ApplicationException ex) {
+            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+        } catch (ParseException e) {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
+        } catch (DoesNotExistsInOrderException e) {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
+        }
+    }
+
+    public ProductStructureModel ParseAction(String barcodeData, BarcodeTypes barcodeType) throws ApplicationException, ParseException, DoesNotExistsInOrderException {
+            this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(barcodeType);
+            this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT); // We are in Product command, so State = Product scanning
+
+            ArrayList<ProductStructureModel> products =
+                    this.BarcodeProductLogic.FindProductByBarcode(barcodeData, barcodeType);
+
+            if (products.size() > 1)
             {
                 SelectionDialog(products);
             }
             else
             {
-                try
-                {
-                    this.baseDocumentLogic.IsExistsInOrder(products.get(0));
-                    SuccessSaveData(products.get(0));
-                }
-                catch (ApplicationException ex)
-                {
-                    ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-                }
+                return CheckInOrder(products.get(0));
 
             }
-        }
-        catch (ApplicationException ex)
-        {
-            ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-        }
-        catch (ParseException e)
-        {
-            ((MainActivity)Activity).AlarmAndNotify(e.getMessage());
-        }
+
+        return null;
     }
 
-
-    @Override
-    public void PostAction() {
+    private ProductStructureModel CheckInOrder(ProductStructureModel product) throws DoesNotExistsInOrderException {
+        if (this.baseDocumentLogic.IsBaseDocumentScanned())
+        {
+            this.baseDocumentLogic.IsExistsInOrder(product);
+        }
+        return product;
     }
+
 }

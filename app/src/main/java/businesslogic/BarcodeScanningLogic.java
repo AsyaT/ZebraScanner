@@ -41,7 +41,10 @@ public class BarcodeScanningLogic
 
     protected Boolean IsProductAllowedToScan(ScannerState currentScannerState) throws ApplicationException
     {
-        if(currentScannerState.equals(ScannerState.PRODUCT) && baseDocumentStructureModel.IsCompileByPackageListOnly() == true)
+        if(
+                currentScannerState.equals(ScannerState.PRODUCT) &&
+                        baseDocumentStructureModel != null &&
+                        baseDocumentStructureModel.IsCompileByPackageListOnly() == true)
         {
             throw new ApplicationException("Этот заказ собирается только по упаковочным листам!");
         }

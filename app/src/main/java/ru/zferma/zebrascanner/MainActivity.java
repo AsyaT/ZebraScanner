@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import ScanningCommand.BarcodeExecutor;
-import businesslogic.ApplicationException;
+import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 dataTableControl.RemoveAll();
                 customListAdapter.notifyDataSetChanged();
 
-                appState.ScannedProductsToSend.CleanListOfProducts();
+                appState.ScannedProductsToSend = new FullDataTableControl();
             }
         });
 

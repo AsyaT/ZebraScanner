@@ -31,6 +31,11 @@ public class BarcodeProductLogic {
         ArrayList<ProductStructureModel> listOfProducts =
                 BarcodeStructureModel.FindProductByBarcode(parsedBarcode.getUniqueIdentifier());
 
+        if(listOfProducts == null)
+        {
+            throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
+        }
+
         for(ProductStructureModel product : listOfProducts)
         {
             product.SetWeight(parsedBarcode.getWeight());
@@ -38,18 +43,18 @@ public class BarcodeProductLogic {
             product.SetExpirationDate(parsedBarcode.getExpirationDate());
             if(parsedBarcode.getInternalProducer() !=null)
             {
-                product.SetManufacturerGuid(ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer()));
+                try {
+                    product.SetManufacturerGuid(ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer()));
+                }
+                catch (ApplicationException ex)
+                {
+                    throw new ApplicationException(ex.getMessage());
+                }
             }
         }
 
-        if(listOfProducts == null)
-        {
-            throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
-        }
-        else
-        {
-            return listOfProducts;
-        }
+        return listOfProducts;
+
     }
 
     public String CreateStringResponse(ProductModel product)
@@ -62,7 +67,17 @@ public class BarcodeProductLogic {
                     +"\nХарактеристика: "+ CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
                     +"\nВес: "+ WeightCalculator(parsedBarcode, product) + " кг";
         }
-        else if(parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP){
+        else if(parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
+        {
+            String manufacturerName = "";
+            try{
+                manufacturerName = ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer());
+            }
+            catch (ApplicationException ex)
+            {
+                manufacturerName = ex.getMessage();
+            }
+
             resultText=
                     "Штрих-код: "+parsedBarcode.getUniqueIdentifier()
                             +"\nНоменклатура: "+ NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid())
@@ -72,7 +87,7 @@ public class BarcodeProductLogic {
                             + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
                             + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
                             + "\nСерийный номер: " + parsedBarcode.getSerialNumber()
-                            + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() +" - "+ ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer())
+                            + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() +" - "+ manufacturerName
                             + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
         }
         return resultText;

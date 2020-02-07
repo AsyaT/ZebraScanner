@@ -19,47 +19,35 @@ import serverDatabaseInteraction.BaseDocumentHelper;
 
 public class DocumentBaseCommand implements Command {
 
-    String OrderGuid;
     Activity Activity;
+    ScannerApplication appState = null;
+    FragmentHelper fragmentHelper;
+
+    ScanOrderFragment orderInfoFragment;
 
     @Override
     public void Action(Activity activity) {
         this.Activity = activity;
+        appState = ((ScannerApplication)this.Activity.getApplication());
+        fragmentHelper = new FragmentHelper(Activity);
 
+        orderInfoFragment = (ScanOrderFragment) ((AppCompatActivity)Activity).getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
 
     }
 
     @Override
     public void ParseData(ScanDataCollection.ScanData data)
     {
+        String OrderGuid = data.getData();
 
-        ScanOrderFragment orderInfoFragment = (ScanOrderFragment) ((AppCompatActivity)Activity).getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
-
-        OrderGuid = data.getData();
-
-        ScannerApplication appState = ((ScannerApplication)this.Activity.getApplication());
-        String userpass =  appState.serverConnection.GetUsernameAndPassword();
-        String url= appState.serverConnection.GetOrderProductURL(appState.LocationContext.GetAccountingAreaGUID(),OrderGuid);
-
-        BaseDocumentHelper baseDocumentHelper = null;
         try {
-            baseDocumentHelper = new BaseDocumentHelper(url, userpass);
 
-            BaseDocumentStructureModel serverResult = baseDocumentHelper.GetModel();
+            appState.baseDocumentStructureModel = GetBaseDocumentFromServer(OrderGuid);
+            appState.baseDocumentStructureModel.SetOrderGuid(OrderGuid);
 
-            appState.baseDocumentStructureModel = serverResult;
-            appState.baseDocumentStructureModel.SetOrderGuid(data.getData());
+            CloseCurrentFragment();
 
-            FragmentHelper fragmentHelper = new FragmentHelper(Activity);
-            fragmentHelper.closeFragment(orderInfoFragment);
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("order", appState.baseDocumentStructureModel);
-
-            Fragment orderNameInfoFragment = new OrderInfoFragment();
-            orderNameInfoFragment.setArguments(bundle);
-           // FragmentHelper fragmentHelper = new FragmentHelper(this.Activity);
-            fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
+            ShowBottomInfoFragment();
 
             appState.scannerState.Set(ScannerState.PRODUCT);
         }
@@ -67,17 +55,41 @@ public class DocumentBaseCommand implements Command {
         {
             this.Activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    orderInfoFragment.UpdateText(e.getMessage());
+                    ShowErrorMessageOnFragment(e.getMessage());
                     return;
                 }
             });
         }
     }
 
-    @Override
-    public void PostAction( ) {
+    protected BaseDocumentStructureModel GetBaseDocumentFromServer(String guid) throws ApplicationException {
+        String userpass =  appState.serverConnection.GetUsernameAndPassword();
+        String url= appState.serverConnection.GetOrderProductURL(appState.LocationContext.GetAccountingAreaGUID(), guid);
 
+        BaseDocumentHelper baseDocumentHelper = new BaseDocumentHelper(url, userpass);
 
+        return baseDocumentHelper.GetModel();
 
     }
+
+    protected void CloseCurrentFragment()
+    {
+        fragmentHelper.closeFragment(orderInfoFragment);
+    }
+
+    protected void ShowErrorMessageOnFragment(String message)
+    {
+        orderInfoFragment.UpdateText(message);
+    }
+
+    protected void ShowBottomInfoFragment()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("order", appState.baseDocumentStructureModel);
+
+        Fragment orderNameInfoFragment = new OrderInfoFragment();
+        orderNameInfoFragment.setArguments(bundle);
+        fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
+    }
+
 }

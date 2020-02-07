@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import businesslogic.ApplicationException;
 import businesslogic.ScanningBarcodeStructureModel;
 import businesslogic.BarcodeTypes;
 
@@ -24,7 +25,7 @@ public class ScanningBarcodeStructureModelUnitTest {
     private ScanningBarcodeStructureModel underTest_GS1_EGG_Scanning_BarcodeStructureModel;
 
     @Before
-    public void InitBarcodeStructure() throws ParseException {
+    public void InitBarcodeStructure() throws ParseException, ApplicationException {
         underTest_EAN13_Scanning_BarcodeStructureModel = new ScanningBarcodeStructureModel(EAN13_BARCODE, BarcodeTypes.LocalEAN13);
         underTest_WEIGHTEAN13_Scanning_BarcodeStructureModel = new ScanningBarcodeStructureModel(WEIGHT_EAN13_BARCODE, BarcodeTypes.LocalEAN13);
         underTest_GS1_Scanning_BarcodeStructureModel = new ScanningBarcodeStructureModel(GS1_EXP_BARCODE, BarcodeTypes.LocalGS1_EXP);

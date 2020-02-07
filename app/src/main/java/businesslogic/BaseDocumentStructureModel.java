@@ -8,7 +8,7 @@ public class BaseDocumentStructureModel implements Serializable {
 
     private String Name;
     private String BaseDocumentGuid;
-    private Boolean CompileByPackageListOnly;
+    private Boolean CompileByPackageListOnly = false; //TODO : get from 1C database
     private List<ProductOrderStructureModel> ProductList;
 
     public BaseDocumentStructureModel(String name)

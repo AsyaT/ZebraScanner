@@ -9,12 +9,14 @@ import java.util.Date;
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BaseDocumentLogic;
+import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.PackageListStructureModel;
 import businesslogic.ProductLogic;
 import businesslogic.ProductModel;
 import businesslogic.Product_PackageListStructureModel;
+import businesslogic.ScannerState;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
@@ -45,7 +47,7 @@ public class PackageListCommand implements Command {
     {
         try
         {
-            this.barcodeScanningLogic.IsBarcodeAllowedToScan(appState.scannerState.GetCurrent());
+            this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
             appState.packageListDataTable.IsActionAllowedWithPackageList(data.getData());
 
             // GO to DB and get list of products
@@ -62,7 +64,7 @@ public class PackageListCommand implements Command {
                     this.baseDocumentLogic.IsExistsInOrder(product);
                     areAllProductsContainsInOrder = true;
                 }
-                catch (ApplicationException ex)
+                catch (DoesNotExistsInOrderException ex)
                 {
                     ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
                     areAllProductsContainsInOrder = false;
@@ -109,8 +111,4 @@ public class PackageListCommand implements Command {
         }
     }
 
-    @Override
-    public void PostAction() {
-
-    }
 }

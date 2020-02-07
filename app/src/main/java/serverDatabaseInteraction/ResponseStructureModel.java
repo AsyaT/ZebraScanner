@@ -24,4 +24,5 @@ public class ResponseStructureModel {
         public String DataOfExpiration;
         public String ManufacturerGUID;
     }
+
 }

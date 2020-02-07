@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
 import businesslogic.ScanningBarcodeStructureModel;
@@ -27,6 +28,10 @@ public class FullDataControlTest {
         try {
             scannedBarcode = new ScanningBarcodeStructureModel("0104660017707529310300490010082011190820171908252100001923000", BarcodeTypes.LocalGS1_EXP);
         } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        catch (ApplicationException e)
+        {
             e.printStackTrace();
         }
 
@@ -47,6 +52,8 @@ public class FullDataControlTest {
         try {
             scannedBarcode = new ScanningBarcodeStructureModel("0104660017707529310300490010082011190820171908252100001923000", BarcodeTypes.LocalGS1_EXP);
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (ApplicationException e) {
             e.printStackTrace();
         }
 
@@ -76,6 +83,8 @@ public class FullDataControlTest {
             scannedBarcode = new ScanningBarcodeStructureModel("0104660088807529310300490010082011190820171908252100001923000", BarcodeTypes.LocalGS1_EXP);
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (ApplicationException e) {
+            e.printStackTrace();
         }
 
         fullDataTableControl.Add(new FullDataTableControl.Details(
@@ -95,6 +104,8 @@ public class FullDataControlTest {
             scannedBarcode = new ScanningBarcodeStructureModel("0104660088807529310302560010082011190820171908252100001923000", BarcodeTypes.LocalGS1_EXP);
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (ApplicationException e) {
+            e.printStackTrace();
         }
 
         fullDataTableControl.Add(new FullDataTableControl.Details(
@@ -113,6 +124,8 @@ public class FullDataControlTest {
             scannedBarcode = new ScanningBarcodeStructureModel("0104660088807529310302560010082011190120171912252100001923000", BarcodeTypes.LocalGS1_EXP);
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (ApplicationException e) {
+            e.printStackTrace();
         }
 
         fullDataTableControl.Add(new FullDataTableControl.Details(
@@ -130,6 +143,8 @@ public class FullDataControlTest {
         try {
             scannedBarcode = new ScanningBarcodeStructureModel("0104660088807529310302560010082011190120171912252100001921000", BarcodeTypes.LocalGS1_EXP);
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (ApplicationException e) {
             e.printStackTrace();
         }
 
@@ -152,6 +167,8 @@ public class FullDataControlTest {
         try {
             scannedBarcode = new ScanningBarcodeStructureModel("04660088807529", BarcodeTypes.LocalEAN13);
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (ApplicationException e) {
             e.printStackTrace();
         }
 
