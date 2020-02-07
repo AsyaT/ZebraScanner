@@ -148,7 +148,14 @@ public class ProductCommand implements Command {
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
         try {
-            ParseAction(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+
+            ProductStructureModel product = ParseAction(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+
+            if(product!=null)
+            {
+                SuccessSaveData(product);
+            }
+
         } catch (ApplicationException ex) {
             ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
         } catch (ParseException e) {
