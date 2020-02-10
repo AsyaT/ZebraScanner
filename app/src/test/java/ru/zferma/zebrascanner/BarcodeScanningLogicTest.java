@@ -45,9 +45,11 @@ public class BarcodeScanningLogicTest
 
         BaseDocumentStructureModel baseDocumentByPackageList = new BaseDocumentStructureModel(
                 "The order to compile by package lists only",
+                true,
                 true);
         BaseDocumentStructureModel baseDocumentByProductsAndPL = new BaseDocumentStructureModel(
                 "The order to compile by products and package lists",
+                true,
                 false);
 
        barcodeScanningLogicPLOnly = new BarcodeScanningLogic(modelPackageListAllowed,baseDocumentByPackageList);

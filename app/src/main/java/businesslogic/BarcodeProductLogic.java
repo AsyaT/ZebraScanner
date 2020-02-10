@@ -36,6 +36,8 @@ public class BarcodeProductLogic {
             throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
         }
 
+        listOfProducts = RemoveDuplicateProducts(listOfProducts);
+
         for(ProductStructureModel product : listOfProducts)
         {
             product.SetWeight(parsedBarcode.getWeight());
@@ -55,6 +57,36 @@ public class BarcodeProductLogic {
 
         return listOfProducts;
 
+    }
+
+    protected ArrayList<ProductStructureModel> RemoveDuplicateProducts(ArrayList<ProductStructureModel> products)
+    {
+        ArrayList<ProductStructureModel> result = new ArrayList<>();
+
+        for(ProductStructureModel product : products)
+        {
+            if(IsProductDuplicated(result,product) == false)
+            {
+                result.add(product);
+            }
+        }
+
+        return result;
+    }
+
+    private Boolean IsProductDuplicated(ArrayList<ProductStructureModel> collection, ProductStructureModel product)
+    {
+        for(ProductStructureModel collectionItem : collection)
+        {
+            if(
+                    collectionItem.ProductGUID.equalsIgnoreCase(product.ProductGUID) &&
+                    collectionItem.CharacteristicGUID.equalsIgnoreCase(product.CharacteristicGUID))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String CreateStringResponse(ProductModel product)

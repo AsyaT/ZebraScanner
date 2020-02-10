@@ -46,6 +46,15 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
         BarcodeStructureModel.Add("4660017707116", productList);
 
+        productList = new ArrayList<>();
+        productList.add(new ProductStructureModel(
+                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0));
+        productList.add(new ProductStructureModel(
+                "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
+        productList.add(new ProductStructureModel(
+                "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
+        BarcodeStructureModel.Add("4660017707529", productList);
+
         NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
         nomenclatureStructureModel.Add("f50d315d-7ca8-11e6-80d7-e4115bea65d2", "Бедрышко куриное \"Здоровая Ферма\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)");
         nomenclatureStructureModel.Add("6130fe3f-93ba-11e8-80cc-a4bf011ce3c3", "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)");
@@ -78,6 +87,7 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
         try {
             ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
             actual = productLogic.CreateListView(products);
+
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (ApplicationException e) {
@@ -193,5 +203,12 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
         Assert.assertEquals(expected.Nomenclature,actual.Nomenclature);
         Assert.assertEquals(expected.Characteristic,actual.Characteristic);
         Assert.assertEquals(expected.Weight,actual.Weight);
+    }
+
+    @Test
+    public void TestDuplicate() throws ParseException, ApplicationException {
+        ArrayList<ProductStructureModel> actual = barcodeProductLogic.FindProductByBarcode("04660017707529", BarcodeTypes.LocalEAN13);
+
+        Assert.assertEquals(2,actual.size());
     }
 }

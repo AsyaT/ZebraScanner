@@ -83,6 +83,7 @@ public class ProductCommandTest
                 true);
         BaseDocumentStructureModel baseDocumentByProductsAndPL = new BaseDocumentStructureModel(
                 "The order to compile by products and package lists",
+                true,
                 false);
 
         BarcodeScanningLogic barcodeScanningLogic = new BarcodeScanningLogic(modelPackageListAllowed,baseDocumentByProductsAndPL);
