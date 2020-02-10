@@ -8,6 +8,7 @@ public class BaseDocumentStructureModel implements Serializable {
 
     private String Name;
     private String BaseDocumentGuid;
+    private Boolean IsShowOrderProgress;
     private Boolean CompileByPackageListOnly = false; //TODO : get from 1C database
     private List<ProductOrderStructureModel> ProductList;
 
@@ -16,10 +17,11 @@ public class BaseDocumentStructureModel implements Serializable {
         this.Name = name;
         this.ProductList = new ArrayList<>();
     }
-    public BaseDocumentStructureModel(String name, Boolean compileByPackageListOnly)
+    public BaseDocumentStructureModel(String name, Boolean isShowOrderProgress, Boolean compileByPackageListOnly)
     {
         this.Name = name;
         this.ProductList = new ArrayList<>();
+        this.IsShowOrderProgress = isShowOrderProgress;
         this.CompileByPackageListOnly = compileByPackageListOnly;
     }
 
@@ -36,6 +38,11 @@ public class BaseDocumentStructureModel implements Serializable {
     public void Add(ProductOrderStructureModel product)
     {
         this.ProductList.add(product);
+    }
+
+    public Boolean IsShowOrderProgressAllowed()
+    {
+        return this.IsShowOrderProgress;
     }
 
     public Boolean IfProductExists(String productGuid)
