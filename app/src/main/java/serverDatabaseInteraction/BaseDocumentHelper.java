@@ -33,7 +33,7 @@ public class BaseDocumentHelper {
             throw new ApplicationException(Model.ErrorMessage);
         }
 
-        this.ReturnModel = new BaseDocumentStructureModel(Model.DocumentData.Name);
+        this.ReturnModel = new BaseDocumentStructureModel(Model.DocumentData.Name, Model.DocumentData.Order, false); // TODO : replace false with data from feed
 
         for(BaseDocumentModel.ProductListModel plm : Model.DocumentData.ProductList)
         {
