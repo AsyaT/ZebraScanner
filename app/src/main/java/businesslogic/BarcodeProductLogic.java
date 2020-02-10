@@ -65,13 +65,28 @@ public class BarcodeProductLogic {
 
         for(ProductStructureModel product : products)
         {
-            if(result.contains(product) == false)
+            if(IsProductDuplicated(result,product) == false)
             {
                 result.add(product);
             }
         }
 
         return result;
+    }
+
+    private Boolean IsProductDuplicated(ArrayList<ProductStructureModel> collection, ProductStructureModel product)
+    {
+        for(ProductStructureModel collectionItem : collection)
+        {
+            if(
+                    collectionItem.ProductGUID.equalsIgnoreCase(product.ProductGUID) &&
+                    collectionItem.CharacteristicGUID.equalsIgnoreCase(product.CharacteristicGUID))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String CreateStringResponse(ProductModel product)
