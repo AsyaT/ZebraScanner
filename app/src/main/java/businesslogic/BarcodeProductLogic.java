@@ -36,6 +36,8 @@ public class BarcodeProductLogic {
             throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
         }
 
+        listOfProducts = RemoveDuplicateProducts(listOfProducts);
+
         for(ProductStructureModel product : listOfProducts)
         {
             product.SetWeight(parsedBarcode.getWeight());
@@ -55,6 +57,21 @@ public class BarcodeProductLogic {
 
         return listOfProducts;
 
+    }
+
+    protected ArrayList<ProductStructureModel> RemoveDuplicateProducts(ArrayList<ProductStructureModel> products)
+    {
+        ArrayList<ProductStructureModel> result = new ArrayList<>();
+
+        for(ProductStructureModel product : products)
+        {
+            if(result.contains(product) == false)
+            {
+                result.add(product);
+            }
+        }
+
+        return result;
     }
 
     public String CreateStringResponse(ProductModel product)
