@@ -1,39 +1,36 @@
 package serverDatabaseInteraction;
 
-import com.google.gson.Gson;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
 import businesslogic.BaseDocumentStructureModel;
 
-public class BaseDocumentHelper {
+public class BaseDocumentHelper extends PullDataHelper
+{
+    public BaseDocumentHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
+        super(url, userpass);
+        this.ClassToCast = BaseDocumentModel.class;
+    }
 
-    private BaseDocumentModel Model;
-    private BaseDocumentStructureModel ReturnModel;
+    @Override
+    public BaseDocumentStructureModel GetData() {
+        return (BaseDocumentStructureModel)this.ResultModel;
+    }
 
-    public BaseDocumentHelper(String url, String userpass) throws ApplicationException {
-        String jsonString = "";
+    @Override
+    protected BaseDocumentStructureModel ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException
+    {
 
-        try {
-            jsonString = (new WebService()).execute(url,userpass).get();
-        }
-        catch (Exception ex)
-        {
-            ex.getMessage();
-        }
-
-        Gson g = new Gson();
-        Model = g.fromJson(jsonString, BaseDocumentModel.class);
-
+        BaseDocumentModel Model = (BaseDocumentModel) inputModel;
         if(Model.Error == true)
         {
             throw new ApplicationException(Model.ErrorMessage);
         }
 
-        this.ReturnModel = new BaseDocumentStructureModel(Model.DocumentData.Name, Model.DocumentData.Order, false); // TODO : replace false with data from feed
+        BaseDocumentStructureModel result = new BaseDocumentStructureModel(Model.DocumentData.Name, Model.DocumentData.Order, false); // TODO : replace false with data from feed
 
         for(BaseDocumentModel.ProductListModel plm : Model.DocumentData.ProductList)
         {
@@ -42,21 +39,17 @@ public class BaseDocumentHelper {
                 Number OrderedNumber = format.parse(plm.Quantity);
                 Number DoneNumber = format.parse(plm.QuantityDone);
 
-            BaseDocumentStructureModel.ProductOrderStructureModel productOrderStructureModel = new BaseDocumentStructureModel.ProductOrderStructureModel(
-                    plm.Product,plm.Charact,
-                    OrderedNumber.doubleValue(), DoneNumber.doubleValue(),
-                    plm.Pieces, plm.PiecesDone
-            );
-            this.ReturnModel.Add(productOrderStructureModel);
+                BaseDocumentStructureModel.ProductOrderStructureModel productOrderStructureModel = new BaseDocumentStructureModel.ProductOrderStructureModel(
+                        plm.Product,plm.Charact,
+                        OrderedNumber.doubleValue(), DoneNumber.doubleValue(),
+                        plm.Pieces, plm.PiecesDone
+                );
+                result.Add(productOrderStructureModel);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public BaseDocumentStructureModel GetModel()
-    {
-        return ReturnModel;
+        return result;
     }
 
 }

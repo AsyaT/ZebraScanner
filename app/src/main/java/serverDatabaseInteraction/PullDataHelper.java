@@ -29,10 +29,7 @@ public abstract class PullDataHelper
         }
     }
 
-    public Object GetData()
-    {
-        return ResultModel;
-    }
+    public abstract Object GetData();
 
     protected String PullStringData(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
 
