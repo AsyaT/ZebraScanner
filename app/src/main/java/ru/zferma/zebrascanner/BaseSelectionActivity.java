@@ -37,7 +37,7 @@ public class BaseSelectionActivity extends AppCompatActivity {
     {
         Fragment noConnectionFragment = new NoConnectionFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.replaceFragment(noConnectionFragment,R.id.frConnectionInfo);
+        fragmentHelper.replaceFragment(noConnectionFragment, R.id.frConnectionInfo, "NoConnection");
     }
 
     class AsyncFragmentInfoUpdate extends AsyncTask<String,Void,String> {
