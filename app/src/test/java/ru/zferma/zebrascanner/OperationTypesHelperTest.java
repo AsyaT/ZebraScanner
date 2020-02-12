@@ -99,9 +99,9 @@ class OperationTypesHelperTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Whitebox.setInternalState(helper,"InputModel",model);
+
         try {
-            Whitebox.invokeMethod(helper,"ParseIncomeData");
+            Whitebox.invokeMethod(helper,"ParseIncomeDataToResultModel", model);
         } catch (Exception e) {
             e.printStackTrace();
         }
