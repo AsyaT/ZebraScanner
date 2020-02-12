@@ -10,7 +10,7 @@ import businesslogic.ApplicationException;
 
 public abstract class PullDataHelper
 {
-    private Object ResultModel;
+    protected Object ResultModel;
     protected  Type ClassToCast;
 
     public PullDataHelper(String url, String userpass ) throws ApplicationException, ExecutionException, InterruptedException
@@ -19,6 +19,13 @@ public abstract class PullDataHelper
         Object InputModel = ParseJsonToModel(jsonString, ClassToCast);
         if(InputModel != null) {
             this.ResultModel = ParseIncomeDataToResultModel(InputModel);
+        }
+    }
+
+    public PullDataHelper(Object inputModel)throws ApplicationException
+    {
+        if(inputModel != null) {
+            this.ResultModel = ParseIncomeDataToResultModel(inputModel);
         }
     }
 

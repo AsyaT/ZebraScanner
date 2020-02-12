@@ -5,11 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
@@ -91,18 +89,8 @@ class OperationTypesHelperTest {
 
 
         try {
-            helper = new OperationTypesHelper("","");
+            helper = new OperationTypesHelper(model);
         } catch (ApplicationException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Whitebox.invokeMethod(helper,"ParseIncomeDataToResultModel", model);
-        } catch (Exception e) {
             e.printStackTrace();
         }
 

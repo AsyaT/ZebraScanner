@@ -15,9 +15,13 @@ public class OperationTypesHelper extends  PullDataHelper
         this.ClassToCast = OperationTypesAndAccountingAreasModel.class;
     }
 
+    public OperationTypesHelper(OperationTypesAndAccountingAreasModel model) throws ApplicationException {
+        super(model);
+    }
+
     public OperationsTypesAccountingAreaStructureModel GetData()
     {
-        return (OperationsTypesAccountingAreaStructureModel)this.GetData();
+        return (OperationsTypesAccountingAreaStructureModel)this.ResultModel;
     }
 
     protected Object ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException {
