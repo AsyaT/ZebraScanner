@@ -94,7 +94,7 @@ class OperationTypesHelperTest {
             e.printStackTrace();
         }
 
-        operationsTypesAccountingAreaStructureModel = helper.GetData();
+        operationsTypesAccountingAreaStructureModel = (OperationsTypesAccountingAreaStructureModel) helper.GetData();
     }
 
     @Test

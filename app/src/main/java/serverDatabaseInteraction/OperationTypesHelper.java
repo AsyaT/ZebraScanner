@@ -13,18 +13,15 @@ public class OperationTypesHelper extends  PullDataHelper
     public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
         this.ClassToCastJson = OperationTypesAndAccountingAreasModel.class;
+        this.ClassToCastResultModel = OperationsTypesAccountingAreaStructureModel.class;
     }
 
     public OperationTypesHelper(OperationTypesAndAccountingAreasModel model) throws ApplicationException {
         super(model);
+        this.ClassToCastResultModel = OperationsTypesAccountingAreaStructureModel.class;
     }
 
-    public OperationsTypesAccountingAreaStructureModel GetData()
-    {
-        return (OperationsTypesAccountingAreaStructureModel)this.ResultModel;
-    }
-
-    protected Object ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException {
+    protected OperationsTypesAccountingAreaStructureModel ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException {
 
         if(((OperationTypesAndAccountingAreasModel) inputModel).Error == false)
         {

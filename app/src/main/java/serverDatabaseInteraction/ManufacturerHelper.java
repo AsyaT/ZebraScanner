@@ -12,12 +12,9 @@ public class ManufacturerHelper extends PullDataHelper
     public ManufacturerHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
         this.ClassToCastJson = ManufacturerModel.class;
+        this.ClassToCastResultModel = ManufacturerStructureModel.class;
     }
 
-    @Override
-    public ManufacturerStructureModel GetData() {
-        return (ManufacturerStructureModel) this.ResultModel;
-    }
 
     @Override
     protected Object ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException

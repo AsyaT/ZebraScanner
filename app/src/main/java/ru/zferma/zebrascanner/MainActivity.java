@@ -45,6 +45,7 @@ import ScanningCommand.BarcodeExecutor;
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
+import businesslogic.ManufacturerStructureModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
@@ -604,7 +605,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             try {
                 ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
-                appState.manufacturerStructureModel = manufacturerHelper.GetData();
+                appState.manufacturerStructureModel = (ManufacturerStructureModel) manufacturerHelper.GetData();
             }
             catch (ApplicationException ex)
             {

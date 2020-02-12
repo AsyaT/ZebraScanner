@@ -10,8 +10,9 @@ import businesslogic.ApplicationException;
 
 public abstract class PullDataHelper
 {
-    protected Object ResultModel;
+    private Object ResultModel;
     protected  Type ClassToCastJson;
+    protected  Type ClassToCastResultModel;
 
     public PullDataHelper(String url, String userpass ) throws ApplicationException, ExecutionException, InterruptedException
     {
@@ -29,7 +30,14 @@ public abstract class PullDataHelper
         }
     }
 
-    public abstract Object GetData();
+    public Object GetData()
+    {
+        if(this.ResultModel.getClass().isInstance(this.ClassToCastResultModel))
+        {
+            this.ResultModel = this.ClassToCastResultModel.getClass().cast(this.ResultModel);
+        }
+        return this.ResultModel;
+    }
 
     protected String PullStringData(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
 
