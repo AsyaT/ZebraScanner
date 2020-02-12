@@ -1,7 +1,5 @@
 package serverDatabaseInteraction;
 
-import com.google.gson.Gson;
-
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -9,28 +7,32 @@ import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 
-public class OperationTypesHelper {
-
-    private OperationTypesAndAccountingAreasModel InputModel;
-    private OperationsTypesAccountingAreaStructureModel ResultModel;
+public class OperationTypesHelper extends  PullDataHelper
+{
 
     public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
-
-        String jsonString = PullJsonData(url,userpass);
-
-        this.InputModel = ParseJson(jsonString);
-
-        if(this.InputModel != null) {
-            ParseIncomeData();
-        }
+        super(url, userpass);
+        this.ClassToCast = OperationTypesAndAccountingAreasModel.class;
     }
 
-    protected void ParseIncomeData() throws ApplicationException {
-        if(InputModel.Error == false)
-        {
-            ResultModel = new OperationsTypesAccountingAreaStructureModel();
+    public OperationTypesHelper(OperationTypesAndAccountingAreasModel model) throws ApplicationException {
+        super(model);
+    }
 
-            for(OperationTypesAndAccountingAreasModel.OperationTypeModel otm : InputModel.AccountingAreasAndTypes)
+    public OperationsTypesAccountingAreaStructureModel GetData()
+    {
+        return (OperationsTypesAccountingAreaStructureModel)this.ResultModel;
+    }
+
+    protected Object ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException {
+
+        inputModel = (OperationTypesAndAccountingAreasModel)inputModel;
+
+        if(((OperationTypesAndAccountingAreasModel) inputModel).Error == false)
+        {
+            OperationsTypesAccountingAreaStructureModel ResultModel = new OperationsTypesAccountingAreaStructureModel();
+
+            for(OperationTypesAndAccountingAreasModel.OperationTypeModel otm : ((OperationTypesAndAccountingAreasModel) inputModel).AccountingAreasAndTypes)
             {
                 OperationsTypesAccountingAreaStructureModel.Operation data = new OperationsTypesAccountingAreaStructureModel.Operation();
                 data.SetName(otm.OperationTypeName);
@@ -49,38 +51,10 @@ public class OperationTypesHelper {
 
                 ResultModel.Add(otm.OperationTypeID,data);
             }
+            return ResultModel;
         }
         else{
             throw new ApplicationException("Сервер ответил с ошибкой.");
         }
-    }
-
-    protected String PullJsonData(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
-
-        if(url.isEmpty())
-        {
-            return null;
-        }
-
-        String result = null;
-        result =  (new WebService()).execute(url,userpass).get();
-        if(result == null || result.isEmpty())
-        {
-            throw new ApplicationException("Сервер не отвечает.");
-        }
-        else {
-            return result;
-        }
-    }
-
-    private OperationTypesAndAccountingAreasModel ParseJson(String jsonString)
-    {
-        Gson g = new Gson();
-        return g.fromJson(jsonString, OperationTypesAndAccountingAreasModel.class);
-    }
-
-    public OperationsTypesAccountingAreaStructureModel GetData()
-    {
-        return ResultModel;
     }
 }

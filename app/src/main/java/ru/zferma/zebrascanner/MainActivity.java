@@ -39,8 +39,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import ScanningCommand.BarcodeExecutor;
+import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
 import businesslogic.ScannerState;
@@ -600,10 +602,18 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             appState.nomenclatureStructureModel =bh.ProductModel;
             appState.characterisiticStructureModel = bh.CharacteristicModel;
 
-
-            ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
-            appState.manufacturerStructureModel = manufacturerHelper.GetData();
-
+            try {
+                ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
+                appState.manufacturerStructureModel = manufacturerHelper.GetData();
+            }
+            catch (ApplicationException ex)
+            {
+                ex.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
     }

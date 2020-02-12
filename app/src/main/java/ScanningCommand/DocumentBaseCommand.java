@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
+import java.util.concurrent.ExecutionException;
+
 import businesslogic.BaseDocumentStructureModel;
 import businesslogic.ScannerState;
 import presentation.FragmentHelper;
@@ -60,15 +62,33 @@ public class DocumentBaseCommand implements Command {
                 }
             });
         }
+        catch (ExecutionException e)
+        {
+            this.Activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowErrorMessageOnFragment(e.getMessage());
+                    return;
+                }
+            });
+        }
+        catch (InterruptedException e)
+        {
+            this.Activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowErrorMessageOnFragment(e.getMessage());
+                    return;
+                }
+            });
+        }
     }
 
-    protected BaseDocumentStructureModel GetBaseDocumentFromServer(String guid) throws ApplicationException {
+    protected BaseDocumentStructureModel GetBaseDocumentFromServer(String guid) throws ApplicationException, ExecutionException, InterruptedException {
         String userpass =  appState.serverConnection.GetUsernameAndPassword();
         String url= appState.serverConnection.GetOrderProductURL(appState.LocationContext.GetAccountingAreaGUID(), guid);
 
         BaseDocumentHelper baseDocumentHelper = new BaseDocumentHelper(url, userpass);
 
-        return baseDocumentHelper.GetModel();
+        return baseDocumentHelper.GetData();
 
     }
 
