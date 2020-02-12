@@ -1,8 +1,6 @@
 package ru.zferma.zebrascanner;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -78,22 +76,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
-            case RESULT_ENABLE :
-                if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(SettingsActivity.this, "You have enabled the Admin Device features", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(SettingsActivity.this, "Problem to enable the Admin Device features. Result code "+ resultCode, Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }
