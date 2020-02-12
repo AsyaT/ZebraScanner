@@ -11,7 +11,7 @@ public class ManufacturerHelper extends PullDataHelper
 
     public ManufacturerHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
-        this.ClassToCast = ManufacturerModel.class;
+        this.ClassToCastJson = ManufacturerModel.class;
     }
 
     @Override

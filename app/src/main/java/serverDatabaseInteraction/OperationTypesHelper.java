@@ -12,7 +12,7 @@ public class OperationTypesHelper extends  PullDataHelper
 
     public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
-        this.ClassToCast = OperationTypesAndAccountingAreasModel.class;
+        this.ClassToCastJson = OperationTypesAndAccountingAreasModel.class;
     }
 
     public OperationTypesHelper(OperationTypesAndAccountingAreasModel model) throws ApplicationException {
@@ -25,8 +25,6 @@ public class OperationTypesHelper extends  PullDataHelper
     }
 
     protected Object ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException {
-
-        inputModel = (OperationTypesAndAccountingAreasModel)inputModel;
 
         if(((OperationTypesAndAccountingAreasModel) inputModel).Error == false)
         {
