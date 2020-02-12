@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,9 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         listView = (ListView)findViewById(R.id.OperationListView);
         okButton = (Button) findViewById(R.id.OKButton);
         cancelButton = (Button) findViewById(R.id.CancelButton);
+        progressBar = findViewById(R.id.progressBar);
 
+        progressBar.setVisibility(ProgressBar.VISIBLE);
         ScannerApplication appState = ((ScannerApplication) this.getApplication());
 
         try {
@@ -70,6 +73,8 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
         final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem);
         listView.setAdapter(adapter);
+
+        progressBar.setVisibility(ProgressBar.VISIBLE);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
