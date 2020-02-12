@@ -11,11 +11,12 @@ import businesslogic.ApplicationException;
 public abstract class PullDataHelper
 {
     private Object ResultModel;
-    protected  Type ClassToCastJson;
-    protected  Type ClassToCastResultModel;
+    protected Type ClassToCastJson;
+    protected Type ClassToCastResultModel;
 
     public PullDataHelper(String url, String userpass ) throws ApplicationException, ExecutionException, InterruptedException
     {
+        SetClassesToCast();
         String jsonString = PullStringData(url,userpass);
         Object InputModel = ParseJsonToModel(jsonString, this.ClassToCastJson);
         if(InputModel != null) {
@@ -25,10 +26,13 @@ public abstract class PullDataHelper
 
     public PullDataHelper(Object inputModel)throws ApplicationException
     {
+        SetClassesToCast();
         if(inputModel != null) {
             this.ResultModel = ParseIncomeDataToResultModel(inputModel);
         }
     }
+
+    protected abstract void SetClassesToCast();
 
     public Object GetData()
     {

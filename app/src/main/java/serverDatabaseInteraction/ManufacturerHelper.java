@@ -7,10 +7,14 @@ import businesslogic.ManufacturerStructureModel;
 
 public class ManufacturerHelper extends PullDataHelper
 {
-
-
     public ManufacturerHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
+
+    }
+
+    @Override
+    protected void SetClassesToCast()
+    {
         this.ClassToCastJson = ManufacturerModel.class;
         this.ClassToCastResultModel = ManufacturerStructureModel.class;
     }

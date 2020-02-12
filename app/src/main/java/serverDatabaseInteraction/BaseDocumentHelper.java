@@ -12,6 +12,11 @@ public class BaseDocumentHelper extends PullDataHelper
 {
     public BaseDocumentHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
+    }
+
+    @Override
+    protected void SetClassesToCast()
+    {
         this.ClassToCastJson = BaseDocumentModel.class;
         this.ClassToCastResultModel = BaseDocumentStructureModel.class;
     }

@@ -12,6 +12,10 @@ public class OperationTypesHelper extends  PullDataHelper
 
     public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
+    }
+
+    @Override
+    protected void SetClassesToCast() {
         this.ClassToCastJson = OperationTypesAndAccountingAreasModel.class;
         this.ClassToCastResultModel = OperationsTypesAccountingAreaStructureModel.class;
     }
