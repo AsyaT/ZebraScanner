@@ -571,6 +571,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         protected void onPostExecute(Void aVoid) {
 
 
+//-----------------------------------------
+//      Read product table from file from TSD
+//-----------------------------------------
+
             String result = "";
             try {
                 File file = new File("/storage/emulated/0/Download/barcodes.txt");
@@ -592,16 +596,27 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             ScannerApplication appState = ((ScannerApplication) getApplication());
 
-            BarcodeHelper bh = null;
-            try {
-                bh = new BarcodeHelper(result);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            try
+            {
+                /*
+                BarcodeHelper bh = new BarcodeHelper(
+                        appState.serverConnection.GetBarcodeListURL(appState.LocationContext.GetAccountingAreaGUID()),
+                        appState.serverConnection.GetUsernameAndPassword());
 
-            appState.barcodeStructureModel = bh.GetBarcodeModel();
-            appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
-            appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+                 */
+                BarcodeHelper bh = new BarcodeHelper(result);
+                appState.barcodeStructureModel = bh.GetBarcodeModel();
+                appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
+                appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+            }
+            catch (ParseException  e)
+            {
+                AlarmAndNotify(e.getMessage());
+            }
+            catch (Exception ex)
+            {
+                AlarmAndNotify(ex.getMessage());
+            }
 
             try {
                 ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
@@ -609,11 +624,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
             catch (ApplicationException ex)
             {
-                ex.printStackTrace();
+                AlarmAndNotify(ex.getMessage());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                AlarmAndNotify(e.getMessage());
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                AlarmAndNotify(e.getMessage());
             }
         }
 

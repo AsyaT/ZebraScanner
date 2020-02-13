@@ -98,6 +98,7 @@ public class BarcodeHelper {
         return data;
     }
 
+
     private List<BarcodeModel.ProductListModel> PullResult(String url, String userpass) throws ApplicationException
     {
         try {
