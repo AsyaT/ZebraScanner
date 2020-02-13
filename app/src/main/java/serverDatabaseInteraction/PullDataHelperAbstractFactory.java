@@ -50,8 +50,8 @@ public abstract class PullDataHelperAbstractFactory
             return null;
         }
 
-        String result = null;
-        result =  (new WebService()).execute(url,userpass).get();
+        String result =  (new WebService()).execute(url,userpass).get();
+
         if(result == null || result.isEmpty())
         {
             throw new ApplicationException("Сервер не отвечает.");

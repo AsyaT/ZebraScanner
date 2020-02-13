@@ -599,9 +599,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 e.printStackTrace();
             }
 
-            appState.barcodeStructureModel = bh.BarcodeModel;
-            appState.nomenclatureStructureModel =bh.ProductModel;
-            appState.characterisiticStructureModel = bh.CharacteristicModel;
+            appState.barcodeStructureModel = bh.GetBarcodeModel();
+            appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
+            appState.characterisiticStructureModel = bh.GetCharacteristicModel();
 
             try {
                 ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import businesslogic.ApplicationException;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.NomenclatureStructureModel;
@@ -21,20 +22,47 @@ import businesslogic.ProductStructureModel;
 public class BarcodeHelper {
 
     private BarcodeModel Model;
-    public BarcodeStructureModel BarcodeModel;
-    public NomenclatureStructureModel ProductModel;
-    public CharacterisiticStructureModel CharacteristicModel;
+    private BarcodeStructureModel BarcodeModel;
+    private NomenclatureStructureModel ProductModel;
+    private CharacterisiticStructureModel CharacteristicModel;
 
+    public BarcodeHelper(String url, String userpass) throws ApplicationException, ParseException
+    {
+        this.Model = new BarcodeModel();
+        this.Model.BarCodeList = PullResult(url,userpass);
 
-    public BarcodeHelper(String result) throws ParseException {
+        ParseIncomeDataToResultModel(this.Model);
+    }
 
-        Gson g = new Gson();
-        this.Model = g.fromJson(result, BarcodeModel.class);
+    public BarcodeHelper(String result) throws ParseException
+    {
+        this.Model = ParseJsonToModel(result);
+
+        ParseIncomeDataToResultModel(this.Model);
+    }
+
+    public BarcodeStructureModel GetBarcodeModel()
+    {
+        return this.BarcodeModel;
+    }
+
+    public NomenclatureStructureModel GetNomenclatureModel()
+    {
+        return this.ProductModel;
+    }
+
+    public CharacterisiticStructureModel GetCharacteristicModel()
+    {
+        return this.CharacteristicModel;
+    }
+
+    protected void ParseIncomeDataToResultModel(BarcodeModel model) throws ParseException
+    {
         this.BarcodeModel = new BarcodeStructureModel();
         this.ProductModel = new NomenclatureStructureModel();
         this.CharacteristicModel = new CharacterisiticStructureModel();
 
-        for(serverDatabaseInteraction.BarcodeModel.ProductListModel barcode : Model.BarCodeList)
+        for(serverDatabaseInteraction.BarcodeModel.ProductListModel barcode : model.BarCodeList)
         {
             ArrayList<ProductStructureModel> listModel = new ArrayList<>();
 
@@ -55,11 +83,12 @@ public class BarcodeHelper {
         }
     }
 
-    public BarcodeHelper(String url, String userpass) {
-        List<BarcodeModel.ProductListModel> result = PullResult(url,userpass);
-        this.Model = new BarcodeModel();
-        this.Model.BarCodeList = result;
+    protected BarcodeModel ParseJsonToModel(String jsonString)
+    {
+        Gson g = new Gson();
+        return g.fromJson(jsonString, BarcodeModel.class);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static String readFileAsString(String fileName)throws Exception
@@ -69,7 +98,8 @@ public class BarcodeHelper {
         return data;
     }
 
-    private List<BarcodeModel.ProductListModel> PullResult(String url, String userpass)  {
+    private List<BarcodeModel.ProductListModel> PullResult(String url, String userpass) throws ApplicationException
+    {
         try {
             if(url.isEmpty())
             {
@@ -82,8 +112,7 @@ public class BarcodeHelper {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            throw new ApplicationException("Сервер не отвечает.");
         }
-        return null;
     }
 }
