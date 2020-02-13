@@ -73,7 +73,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem);
         listView.setAdapter(adapter);
 
-        progressBar.setVisibility(ProgressBar.VISIBLE);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
