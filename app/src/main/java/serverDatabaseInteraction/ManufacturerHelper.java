@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.ApplicationException;
 import businesslogic.ManufacturerStructureModel;
 
-public class ManufacturerHelper extends PullDataHelper
+public class ManufacturerHelper extends PullDataHelperAbstractFactory
 {
     public ManufacturerHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);

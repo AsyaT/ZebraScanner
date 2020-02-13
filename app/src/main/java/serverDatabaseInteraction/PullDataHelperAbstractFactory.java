@@ -8,13 +8,13 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.ApplicationException;
 
 
-public abstract class PullDataHelper
+public abstract class PullDataHelperAbstractFactory
 {
     private Object ResultModel;
     protected Type ClassToCastJson;
     protected Type ClassToCastResultModel;
 
-    public PullDataHelper(String url, String userpass ) throws ApplicationException, ExecutionException, InterruptedException
+    public PullDataHelperAbstractFactory(String url, String userpass ) throws ApplicationException, ExecutionException, InterruptedException
     {
         SetClassesToCast();
         String jsonString = PullStringData(url,userpass);
@@ -24,7 +24,7 @@ public abstract class PullDataHelper
         }
     }
 
-    public PullDataHelper(Object inputModel)throws ApplicationException
+    public PullDataHelperAbstractFactory(Object inputModel)throws ApplicationException
     {
         SetClassesToCast();
         if(inputModel != null) {

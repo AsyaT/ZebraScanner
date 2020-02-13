@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.ApplicationException;
 import businesslogic.BaseDocumentStructureModel;
 
-public class BaseDocumentHelper extends PullDataHelper
+public class BaseDocumentHelper extends PullDataHelperAbstractFactory
 {
     public BaseDocumentHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);

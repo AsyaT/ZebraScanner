@@ -7,7 +7,7 @@ import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 
-public class OperationTypesHelper extends  PullDataHelper
+public class OperationTypesHelper extends  PullDataHelperAbstractFactory
 {
 
     public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
