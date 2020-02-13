@@ -17,14 +17,14 @@ import serverDatabaseInteraction.BarcodeHelper;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BarcodeHelper.class })
-public class BarcodeHelperTest {
+public class BarcodeStructureModelTest {
 
     BarcodeStructureModel barcodeStructureModel = new BarcodeStructureModel();
     NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
     CharacterisiticStructureModel characterisiticStructureModel = new CharacterisiticStructureModel();
 
 
-    public BarcodeHelperTest()
+    public BarcodeStructureModelTest()
     {
         nomenclatureStructureModel.Add("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3","Филе бедра \\\"Здоровая Ферма\\\", охл.~0,80 кг*6/~4,8 кг/ (подложка, стрейч)");
 

@@ -5,19 +5,20 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.ApplicationException;
 import businesslogic.ManufacturerStructureModel;
 
-public class ManufacturerHelper extends PullDataHelper
+public class ManufacturerHelper extends PullDataHelperAbstractFactory
 {
-
-
     public ManufacturerHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
-        this.ClassToCast = ManufacturerModel.class;
+
     }
 
     @Override
-    public ManufacturerStructureModel GetData() {
-        return (ManufacturerStructureModel) this.ResultModel;
+    protected void SetClassesToCast()
+    {
+        this.ClassToCastJson = ManufacturerModel.class;
+        this.ClassToCastResultModel = ManufacturerStructureModel.class;
     }
+
 
     @Override
     protected Object ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException

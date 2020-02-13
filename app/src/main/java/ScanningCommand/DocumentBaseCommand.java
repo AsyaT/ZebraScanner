@@ -88,7 +88,7 @@ public class DocumentBaseCommand implements Command {
 
         BaseDocumentHelper baseDocumentHelper = new BaseDocumentHelper(url, userpass);
 
-        return baseDocumentHelper.GetData();
+        return (BaseDocumentStructureModel) baseDocumentHelper.GetData();
 
     }
 

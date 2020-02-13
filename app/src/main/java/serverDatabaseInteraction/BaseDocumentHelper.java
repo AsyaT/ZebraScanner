@@ -8,16 +8,17 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.ApplicationException;
 import businesslogic.BaseDocumentStructureModel;
 
-public class BaseDocumentHelper extends PullDataHelper
+public class BaseDocumentHelper extends PullDataHelperAbstractFactory
 {
     public BaseDocumentHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
-        this.ClassToCast = BaseDocumentModel.class;
     }
 
     @Override
-    public BaseDocumentStructureModel GetData() {
-        return (BaseDocumentStructureModel)this.ResultModel;
+    protected void SetClassesToCast()
+    {
+        this.ClassToCastJson = BaseDocumentModel.class;
+        this.ClassToCastResultModel = BaseDocumentStructureModel.class;
     }
 
     @Override

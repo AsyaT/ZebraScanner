@@ -7,26 +7,25 @@ import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.OperationsTypesAccountingAreaStructureModel;
 
-public class OperationTypesHelper extends  PullDataHelper
+public class OperationTypesHelper extends  PullDataHelperAbstractFactory
 {
 
     public OperationTypesHelper(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
         super(url, userpass);
-        this.ClassToCast = OperationTypesAndAccountingAreasModel.class;
+    }
+
+    @Override
+    protected void SetClassesToCast() {
+        this.ClassToCastJson = OperationTypesAndAccountingAreasModel.class;
+        this.ClassToCastResultModel = OperationsTypesAccountingAreaStructureModel.class;
     }
 
     public OperationTypesHelper(OperationTypesAndAccountingAreasModel model) throws ApplicationException {
         super(model);
+        this.ClassToCastResultModel = OperationsTypesAccountingAreaStructureModel.class;
     }
 
-    public OperationsTypesAccountingAreaStructureModel GetData()
-    {
-        return (OperationsTypesAccountingAreaStructureModel)this.ResultModel;
-    }
-
-    protected Object ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException {
-
-        inputModel = (OperationTypesAndAccountingAreasModel)inputModel;
+    protected OperationsTypesAccountingAreaStructureModel ParseIncomeDataToResultModel(Object inputModel) throws ApplicationException {
 
         if(((OperationTypesAndAccountingAreasModel) inputModel).Error == false)
         {

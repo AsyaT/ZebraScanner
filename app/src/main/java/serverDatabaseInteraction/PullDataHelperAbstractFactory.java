@@ -8,28 +8,40 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.ApplicationException;
 
 
-public abstract class PullDataHelper
+public abstract class PullDataHelperAbstractFactory
 {
-    protected Object ResultModel;
-    protected  Type ClassToCast;
+    private Object ResultModel;
+    protected Type ClassToCastJson;
+    protected Type ClassToCastResultModel;
 
-    public PullDataHelper(String url, String userpass ) throws ApplicationException, ExecutionException, InterruptedException
+    public PullDataHelperAbstractFactory(String url, String userpass ) throws ApplicationException, ExecutionException, InterruptedException
     {
+        SetClassesToCast();
         String jsonString = PullStringData(url,userpass);
-        Object InputModel = ParseJsonToModel(jsonString, ClassToCast);
+        Object InputModel = ParseJsonToModel(jsonString, this.ClassToCastJson);
         if(InputModel != null) {
             this.ResultModel = ParseIncomeDataToResultModel(InputModel);
         }
     }
 
-    public PullDataHelper(Object inputModel)throws ApplicationException
+    public PullDataHelperAbstractFactory(Object inputModel)throws ApplicationException
     {
+        SetClassesToCast();
         if(inputModel != null) {
             this.ResultModel = ParseIncomeDataToResultModel(inputModel);
         }
     }
 
-    public abstract Object GetData();
+    protected abstract void SetClassesToCast();
+
+    public Object GetData()
+    {
+        if(this.ResultModel.getClass().isInstance(this.ClassToCastResultModel))
+        {
+            this.ResultModel = this.ClassToCastResultModel.getClass().cast(this.ResultModel);
+        }
+        return this.ResultModel;
+    }
 
     protected String PullStringData(String url, String userpass) throws ApplicationException, ExecutionException, InterruptedException {
 
@@ -38,8 +50,8 @@ public abstract class PullDataHelper
             return null;
         }
 
-        String result = null;
-        result =  (new WebService()).execute(url,userpass).get();
+        String result =  (new WebService()).execute(url,userpass).get();
+
         if(result == null || result.isEmpty())
         {
             throw new ApplicationException("Сервер не отвечает.");

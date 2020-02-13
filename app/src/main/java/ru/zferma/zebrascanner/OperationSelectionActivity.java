@@ -46,7 +46,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             OperationTypesHelper operationTypesHelper = new OperationTypesHelper(
                     appState.serverConnection.GetOperationTypesURL(),
                     appState.serverConnection.GetUsernameAndPassword());
-            appState.operationsTypesAccountingAreaStructureModel = operationTypesHelper.GetData();
+            appState.operationsTypesAccountingAreaStructureModel = (OperationsTypesAccountingAreaStructureModel) operationTypesHelper.GetData();
             data = appState.operationsTypesAccountingAreaStructureModel;
         }
         catch (ApplicationException | ExecutionException | InterruptedException  exception)

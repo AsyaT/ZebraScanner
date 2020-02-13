@@ -45,6 +45,7 @@ import ScanningCommand.BarcodeExecutor;
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
+import businesslogic.ManufacturerStructureModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
@@ -598,13 +599,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 e.printStackTrace();
             }
 
-            appState.barcodeStructureModel = bh.BarcodeModel;
-            appState.nomenclatureStructureModel =bh.ProductModel;
-            appState.characterisiticStructureModel = bh.CharacteristicModel;
+            appState.barcodeStructureModel = bh.GetBarcodeModel();
+            appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
+            appState.characterisiticStructureModel = bh.GetCharacteristicModel();
 
             try {
                 ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
-                appState.manufacturerStructureModel = manufacturerHelper.GetData();
+                appState.manufacturerStructureModel = (ManufacturerStructureModel) manufacturerHelper.GetData();
             }
             catch (ApplicationException ex)
             {
