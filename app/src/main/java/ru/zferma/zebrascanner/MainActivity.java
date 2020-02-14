@@ -185,6 +185,25 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         });
     }
 
+    protected void DisableScanner()
+    {
+        try {
+            scanner.disable();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void EnableScanner()
+    {
+        try {
+            scanner.enable();
+            scanner.read();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected void ShowFragmentScanBadge()
     {
         Fragment scanBadgeFragment = new ScanBadgeFragment();
