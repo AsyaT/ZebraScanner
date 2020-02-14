@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -45,7 +46,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             OperationTypesHelper operationTypesHelper = new OperationTypesHelper(
                     appState.serverConnection.GetOperationTypesURL(),
                     appState.serverConnection.GetUsernameAndPassword());
-            appState.operationsTypesAccountingAreaStructureModel = operationTypesHelper.GetData();
+            appState.operationsTypesAccountingAreaStructureModel = (OperationsTypesAccountingAreaStructureModel) operationTypesHelper.GetData();
             data = appState.operationsTypesAccountingAreaStructureModel;
         }
         catch (ApplicationException | ExecutionException | InterruptedException  exception)
@@ -146,6 +147,25 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                 startActivity(preSettings);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        {
+            Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
+            FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+            if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("NoConnection") )
+            {
+                Intent preSettingsIntent = new Intent(getBaseContext(), PreSettingsActivity.class);
+                startActivity(preSettingsIntent);
+            }
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     public void RefreshActivity()

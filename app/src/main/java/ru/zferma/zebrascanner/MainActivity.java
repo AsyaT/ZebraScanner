@@ -39,10 +39,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import ScanningCommand.BarcodeExecutor;
+import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
+import businesslogic.ManufacturerStructureModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
@@ -85,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
 
-        new AsyncGetProducts().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
+        //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
+        UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -179,6 +183,25 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 ShowFragmentScanBadge();
             }
         });
+    }
+
+    protected void DisableScanner()
+    {
+        try {
+            scanner.disable();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void EnableScanner()
+    {
+        try {
+            scanner.enable();
+            scanner.read();
+        } catch (ScannerException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void ShowFragmentScanBadge()
@@ -549,7 +572,46 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
-    public class AsyncGetProducts extends AsyncTask<String, Void,Void>
+    public void UpdateProductsFromServer()
+    {
+        ScannerApplication appState = ((ScannerApplication) getApplication());
+
+        try
+        {
+
+            BarcodeHelper bh = new BarcodeHelper(
+                    appState.serverConnection.GetBarcodeListURL(appState.LocationContext.GetAccountingAreaGUID()),
+                    appState.serverConnection.GetUsernameAndPassword());
+
+
+            appState.barcodeStructureModel = bh.GetBarcodeModel();
+            appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
+            appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+        }
+        catch (ParseException  e)
+        {
+            AlarmAndNotify(e.getMessage());
+        }
+        catch (Exception ex)
+        {
+            AlarmAndNotify(ex.getMessage());
+        }
+
+        try {
+            ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
+            appState.manufacturerStructureModel = (ManufacturerStructureModel) manufacturerHelper.GetData();
+        }
+        catch (ApplicationException ex)
+        {
+            AlarmAndNotify(ex.getMessage());
+        } catch (InterruptedException e) {
+            AlarmAndNotify(e.getMessage());
+        } catch (ExecutionException e) {
+            AlarmAndNotify(e.getMessage());
+        }
+    }
+
+    public class AsyncGetProductsFromFile extends AsyncTask<String, Void,Void>
     {
 
         @Override
@@ -567,6 +629,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected void onPostExecute(Void aVoid) {
 
+
+//-----------------------------------------
+//      Read product table from file from TSD
+//-----------------------------------------
 
             String result = "";
             try {
@@ -586,24 +652,37 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             catch (Exception e) {
                 e.printStackTrace();
             }
-
+// ---------------------------------------------
             ScannerApplication appState = ((ScannerApplication) getApplication());
 
-            BarcodeHelper bh = null;
-            try {
-                bh = new BarcodeHelper(result);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            try
+            {
+                BarcodeHelper bh = new BarcodeHelper(result);
+                appState.barcodeStructureModel = bh.GetBarcodeModel();
+                appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
+                appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+            }
+            catch (ParseException  e)
+            {
+                AlarmAndNotify(e.getMessage());
+            }
+            catch (Exception ex)
+            {
+                AlarmAndNotify(ex.getMessage());
             }
 
-            appState.barcodeStructureModel = bh.BarcodeModel;
-            appState.nomenclatureStructureModel =bh.ProductModel;
-            appState.characterisiticStructureModel = bh.CharacteristicModel;
-
-
-            ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
-            appState.manufacturerStructureModel = manufacturerHelper.GetData();
-
+            try {
+                ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
+                appState.manufacturerStructureModel = (ManufacturerStructureModel) manufacturerHelper.GetData();
+            }
+            catch (ApplicationException ex)
+            {
+                AlarmAndNotify(ex.getMessage());
+            } catch (InterruptedException e) {
+                AlarmAndNotify(e.getMessage());
+            } catch (ExecutionException e) {
+                AlarmAndNotify(e.getMessage());
+            }
         }
 
     }

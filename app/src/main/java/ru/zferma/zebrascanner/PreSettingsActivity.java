@@ -90,7 +90,12 @@ public class PreSettingsActivity extends AppCompatActivity {
 
                     if (km.isKeyguardSecure()) {
                         Intent authIntent = km.createConfirmDeviceCredentialIntent("Пожалуйста, авторизуйтесь", "Введите пароль администратора");
+
                         startActivityForResult(authIntent, INTENT_AUTHENTICATE);
+                    }
+                    else
+                    {
+                        StartSettingsActivity();
                     }
                 }
             }
@@ -104,10 +109,15 @@ public class PreSettingsActivity extends AppCompatActivity {
         {
             if (resultCode == RESULT_OK)
             {
-                Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
+                StartSettingsActivity();
             }
         }
+    }
+
+    protected void StartSettingsActivity()
+    {
+        Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+        startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
     }
 
     @Override
