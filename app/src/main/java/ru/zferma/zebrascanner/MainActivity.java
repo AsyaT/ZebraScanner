@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.symbol.emdk.EMDKManager;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     DataTableControl dataTableControl;
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
+    private ProgressBar ProgressBarMainActivity;
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
 
@@ -88,8 +90,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
 
+        ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
+
+        ProgressBarMainActivity.setVisibility(View.VISIBLE);
+
         //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
         UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
+
+        ProgressBarMainActivity.setVisibility(View.INVISIBLE);
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
