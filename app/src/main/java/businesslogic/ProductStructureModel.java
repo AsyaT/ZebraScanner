@@ -1,6 +1,6 @@
 package businesslogic;
 
-public class ProductStructureModel extends ProductModel
+public class ProductStructureModel extends ProductModel implements ObjectForSaving
 {
 public ProductStructureModel(String productGuid, String characteristicGuid, Double weight)
 {

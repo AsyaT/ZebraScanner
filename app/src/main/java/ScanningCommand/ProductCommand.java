@@ -21,14 +21,17 @@ import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
+import businesslogic.ObjectForSaving;
 import businesslogic.ProductLogic;
+import businesslogic.ProductModel;
 import businesslogic.ProductStructureModel;
 import businesslogic.ScannerState;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
 
-public class ProductCommand implements Command {
+public class ProductCommand extends ResponseFormat implements Command
+{
 
     Activity Activity = null;
     Scanner CurrentScanner = null;
@@ -92,7 +95,7 @@ public class ProductCommand implements Command {
 
                                 try {
 
-                                    SuccessSaveData(CheckInOrder(result[0]));
+                                    SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, CheckInOrder(result[0]));
 
                                 } catch (DoesNotExistsInOrderException ex) {
                                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
@@ -128,23 +131,6 @@ public class ProductCommand implements Command {
 
     }
 
-    protected void SuccessSaveData(ProductStructureModel product) {
-        if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == false)
-        {
-            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-
-            ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
-
-            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
-            appState.ScannedProductsToSend.Add(detailsModel);
-        }
-        else if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == true)
-        {
-            String result = this.BarcodeProductLogic.CreateStringResponse(product);
-            ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
-        }
-    }
-
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
         try {
@@ -153,7 +139,7 @@ public class ProductCommand implements Command {
 
             if(product!=null)
             {
-                SuccessSaveData(product);
+                SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, product);
             }
 
         } catch (ApplicationException ex) {
@@ -193,4 +179,21 @@ public class ProductCommand implements Command {
         return product;
     }
 
+    @Override
+    protected void SaveInfoForProductList(ObjectForSaving product)
+    {
+        String result = this.BarcodeProductLogic.CreateStringResponse((ProductModel)product);
+        ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
+    }
+
+    @Override
+    protected void ShowInfoForFragment(ObjectForSaving product)
+    {
+        ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView((ProductModel)product);
+
+        ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
+
+        FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails((ProductModel)product);
+        appState.ScannedProductsToSend.Add(detailsModel);
+    }
 }

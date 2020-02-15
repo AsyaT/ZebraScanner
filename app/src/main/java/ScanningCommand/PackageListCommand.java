@@ -12,15 +12,15 @@ import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
+import businesslogic.ObjectForSaving;
 import businesslogic.PackageListStructureModel;
 import businesslogic.ProductLogic;
-import businesslogic.ProductModel;
 import businesslogic.Product_PackageListStructureModel;
 import businesslogic.ScannerState;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
-public class PackageListCommand implements Command {
+public class PackageListCommand extends ResponseFormat implements Command {
 
     Activity Activity;
     ScannerApplication appState;
@@ -56,42 +56,20 @@ public class PackageListCommand implements Command {
 
             // Add all products to tables
 
-            Boolean areAllProductsContainsInOrder = null;
-
             for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts())
             {
-                try {
+                try
+                {
                     this.baseDocumentLogic.IsExistsInOrder(product);
-                    areAllProductsContainsInOrder = true;
                 }
                 catch (DoesNotExistsInOrderException ex)
                 {
                     ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-                    areAllProductsContainsInOrder = false;
                 }
             }
 
-            //TODO: show full info about Package List
-        /*
-        if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
-        {
-            String result = this.ProductLogic.CreatePcageListInfo(packageList); // TODO: implement method
-            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
-        }
+            SuccessSaveData(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed,packageListStructureModel );
 
-         */
-
-            if(areAllProductsContainsInOrder == true)
-            {
-                appState.packageListDataTable.Add(packageListStructureModel);
-
-                for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
-
-                    for(int i=1;  i<= product.GetItems() ; i++) {
-                        SuccessSaveData(product);
-                    }
-                }
-            }
         }
         catch (ApplicationException ex)
         {
@@ -99,16 +77,31 @@ public class PackageListCommand implements Command {
         }
     }
 
-    protected void SuccessSaveData( ProductModel product)
-    {
-        if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
-        {
-            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-            ((MainActivity)this.Activity).new AsyncListViewDataUpdate( viewUpdateModel).execute();
 
-            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
-            appState.ScannedProductsToSend.Add(detailsModel);
+    @Override
+    protected void SaveInfoForProductList(ObjectForSaving packageList)
+    {
+        PackageListStructureModel input = (PackageListStructureModel) packageList;
+
+        appState.packageListDataTable.Add(input);
+
+        for( Product_PackageListStructureModel product : input.GetProducts()) {
+
+            for (int i = 1; i <= product.GetItems(); i++) {
+                ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
+                ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
+
+                FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
+                appState.ScannedProductsToSend.Add(detailsModel);
+            }
         }
     }
 
+    @Override
+    protected void ShowInfoForFragment(ObjectForSaving packageList)
+    {
+            //TODO: show full info about Package List
+    }
+
 }
+
