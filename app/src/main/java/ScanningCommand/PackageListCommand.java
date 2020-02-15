@@ -104,7 +104,7 @@ public class PackageListCommand implements Command {
         if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
         {
             ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-            ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
+            ((MainActivity)this.Activity).new AsyncListViewDataUpdate( viewUpdateModel).execute();
 
             FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
             appState.ScannedProductsToSend.Add(detailsModel);

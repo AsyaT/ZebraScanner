@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             new AsyncBarcodeInfoUpdate().execute(message);
         }
         else {
-            new MessageDialog().execute(message);
+            new AsyncMessageDialog().execute(message);
         }
     }
 
@@ -383,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
             mediaPlayer.start();
-            new MessageDialog().execute(ex.getMessage());
+            new AsyncMessageDialog().execute(ex.getMessage());
 
         }
     }
@@ -499,11 +499,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     // AsyncTask that configures the scanned data on background
 // thread and updated the result on UI thread with scanned data and type of
 // label
-    public class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
+    public class AsyncListViewDataUpdate extends AsyncTask<Object, Void, Void> {
 
         ListViewPresentationModel Model = null;
 
-        public BaseAsyncDataUpdate(ListViewPresentationModel model)
+        public AsyncListViewDataUpdate(ListViewPresentationModel model)
         {
             this.Model = model;
         }
@@ -531,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     }
 
-    public class MessageDialog extends AsyncTask<String, Void, String>
+    public class AsyncMessageDialog extends AsyncTask<String, Void, String>
     {
 
         AlertDialog.Builder alertDialog;

@@ -53,7 +53,7 @@ public class BadgeCommand implements Command  {
                     .get();
 
             //TODO: notification for user if Success or not
-            ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
+            ((MainActivity)this.Activity).new AsyncMessageDialog().execute(String.valueOf(resultCode));
 
             if(resultCode == 200)
             {

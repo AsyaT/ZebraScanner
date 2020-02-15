@@ -133,7 +133,7 @@ public class ProductCommand implements Command {
         {
             ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
 
-            ((MainActivity) this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
+            ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
             FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
             appState.ScannedProductsToSend.Add(detailsModel);
