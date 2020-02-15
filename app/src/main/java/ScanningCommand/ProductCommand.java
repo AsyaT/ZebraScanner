@@ -182,18 +182,18 @@ public class ProductCommand extends ResponseFormat implements Command
     @Override
     protected void SaveInfoForProductList(ObjectForSaving product)
     {
-        String result = this.BarcodeProductLogic.CreateStringResponse((ProductModel)product);
-        ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
-    }
-
-    @Override
-    protected void ShowInfoForFragment(ObjectForSaving product)
-    {
         ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView((ProductModel)product);
 
         ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
         FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails((ProductModel)product);
         appState.ScannedProductsToSend.Add(detailsModel);
+    }
+
+    @Override
+    protected void ShowInfoForFragment(ObjectForSaving product)
+    {
+        String result = this.BarcodeProductLogic.CreateStringResponse((ProductModel)product);
+        ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
     }
 }

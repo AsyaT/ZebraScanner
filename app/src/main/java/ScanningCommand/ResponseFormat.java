@@ -18,5 +18,4 @@ public abstract class ResponseFormat
 
     protected abstract void SaveInfoForProductList(ObjectForSaving product);
     protected abstract void ShowInfoForFragment(ObjectForSaving product);
-
 }
