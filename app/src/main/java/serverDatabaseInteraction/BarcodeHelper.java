@@ -107,7 +107,7 @@ public class BarcodeHelper {
                  return null;
             }
             else {
-                return (new WebServiceProductRead()).execute(url, userpass).get();
+                return (new AsyncWebServiceProductRead()).execute(url, userpass).get();
             }
 
         }

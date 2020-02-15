@@ -14,8 +14,8 @@ import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanBadgeFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
+import serverDatabaseInteraction.AsyncWebServiceResponse;
 import serverDatabaseInteraction.ResponseStructureModel;
-import serverDatabaseInteraction.WebServiceResponse;
 
 public class BadgeCommand implements Command  {
 
@@ -45,7 +45,7 @@ public class BadgeCommand implements Command  {
         String jsonResponse = ConvertModelToJson(responseStructureModel);
 
         try {
-            Integer resultCode = (new WebServiceResponse())
+            Integer resultCode = (new AsyncWebServiceResponse())
                     .execute(
                         url,
                         appState.serverConnection.GetUsernameAndPassword(),
@@ -53,7 +53,7 @@ public class BadgeCommand implements Command  {
                     .get();
 
             //TODO: notification for user if Success or not
-            ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
+            ((MainActivity)this.Activity).new AsyncMessageDialog().execute(String.valueOf(resultCode));
 
             if(resultCode == 200)
             {
