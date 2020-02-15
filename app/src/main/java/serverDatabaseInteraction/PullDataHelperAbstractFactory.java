@@ -50,7 +50,7 @@ public abstract class PullDataHelperAbstractFactory
             return null;
         }
 
-        String result =  (new WebService()).execute(url,userpass).get();
+        String result =  (new AsyncWebService()).execute(url,userpass).get();
 
         if(result == null || result.isEmpty())
         {

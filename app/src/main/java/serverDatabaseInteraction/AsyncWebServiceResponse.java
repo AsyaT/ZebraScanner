@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class WebServiceResponse extends AsyncTask<String, Void, Integer>
+public class AsyncWebServiceResponse extends AsyncTask<String, Void, Integer>
 {
     @Override
     protected Integer doInBackground(String... urlString) {

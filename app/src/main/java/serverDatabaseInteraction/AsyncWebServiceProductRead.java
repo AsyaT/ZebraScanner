@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebServiceProductRead extends AsyncTask<String, Void, List<BarcodeModel.ProductListModel>> {
+public class AsyncWebServiceProductRead extends AsyncTask<String, Void, List<BarcodeModel.ProductListModel>> {
 
     @Override
     protected List<BarcodeModel.ProductListModel> doInBackground(String... urlString) {
