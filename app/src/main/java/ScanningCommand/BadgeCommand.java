@@ -81,7 +81,7 @@ public class BadgeCommand implements Command  {
     protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication)
     {
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = scannerApplication.LocationContext.GetAccountingAreaGUID();
+        responseStructureModel.AccountingAreaGUID = scannerApplication.LocationContext.GetAccountingAreaGUID(); //TODO : error here. LocationContext == null
         responseStructureModel.UserID = scannerApplication.BadgeGuid;
         if(scannerApplication.baseDocumentStructureModel != null)
         {

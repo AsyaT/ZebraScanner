@@ -104,6 +104,9 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             public void onClick(View view) {
                 if (SelectedOperation != null)
                 {
+                    progressBar = findViewById(R.id.progressBar);
+                    progressBar.setVisibility(ProgressBar.VISIBLE);
+
                     Class NextActivityClass ;
 
                     if (data.HasSeveralAccountingAreas(SelectedOperation.OperationGuid))
@@ -126,7 +129,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                         NextActivityClass =  getOperationsEnum(SelectedOperation.OperationName).getActivityClass();
                         appState.LocationContext = new OperationTypesStructureModel(
                                 SelectedOperation.OperationName,
-                                SelectedOperation.OperationGuid,
+                                 SelectedOperation.OperationGuid,
                                 accountingArea.GetName(),
                                 accountingAreaGuid,
                                 accountingArea.GetScanningPermissions(),
