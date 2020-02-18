@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.BaseDocumentStructureModel;
 import businesslogic.ScannerState;
 import presentation.FragmentHelper;
+import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
@@ -44,8 +45,8 @@ public class DocumentBaseCommand implements Command {
 
         try {
 
-            appState.baseDocumentStructureModel = GetBaseDocumentFromServer(OrderGuid);
-            appState.baseDocumentStructureModel.SetOrderGuid(OrderGuid);
+            appState.SetBaseDocument(GetBaseDocumentFromServer(OrderGuid));
+            //appState.GetBaseDocument().SetOrderGuid(OrderGuid);
 
             CloseCurrentFragment();
 
@@ -84,12 +85,14 @@ public class DocumentBaseCommand implements Command {
 
     protected BaseDocumentStructureModel GetBaseDocumentFromServer(String guid) throws ApplicationException, ExecutionException, InterruptedException {
         String userpass =  appState.serverConnection.GetUsernameAndPassword();
-        String url= appState.serverConnection.GetOrderProductURL(appState.LocationContext.GetAccountingAreaGUID(), guid);
+        String url= appState.serverConnection.GetOrderProductURL(appState.GetLocationContext().GetAccountingAreaGUID(), guid);
 
         BaseDocumentHelper baseDocumentHelper = new BaseDocumentHelper(url, userpass);
 
-        return (BaseDocumentStructureModel) baseDocumentHelper.GetData();
+        BaseDocumentStructureModel resultModel =  (BaseDocumentStructureModel) baseDocumentHelper.GetData();
 
+        resultModel.SetOrderGuid(guid);
+        return resultModel;
     }
 
     protected void CloseCurrentFragment()
@@ -104,12 +107,18 @@ public class DocumentBaseCommand implements Command {
 
     protected void ShowBottomInfoFragment()
     {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("order", appState.baseDocumentStructureModel);
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("order", appState.GetBaseDocument());
 
-        Fragment orderNameInfoFragment = new OrderInfoFragment();
-        orderNameInfoFragment.setArguments(bundle);
-        fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
+            Fragment orderNameInfoFragment = new OrderInfoFragment();
+            orderNameInfoFragment.setArguments(bundle);
+            fragmentHelper.replaceFragment(orderNameInfoFragment, R.id.frOrderInfo);
+        }
+        catch (ApplicationException ex)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+        }
     }
 
 }

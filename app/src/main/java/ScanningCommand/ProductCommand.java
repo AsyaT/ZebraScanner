@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -62,9 +62,14 @@ public class ProductCommand extends ResponseFormat implements Command
                 appState.manufacturerStructureModel
         );
 
-        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext, appState.baseDocumentStructureModel);
-        this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
-
+        try {
+            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.GetBaseDocument());
+            this.baseDocumentLogic = new BaseDocumentLogic(appState.GetBaseDocument());
+        }
+        catch (ApplicationException ex)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+        }
         mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
     }
 

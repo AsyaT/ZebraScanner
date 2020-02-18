@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 

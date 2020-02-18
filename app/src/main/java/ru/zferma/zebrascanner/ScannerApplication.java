@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import businesslogic.ApplicationException;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.BaseDocumentStructureModel;
 import businesslogic.CharacterisiticStructureModel;
@@ -35,9 +36,55 @@ public class ScannerApplication extends Application {
 
     //Context entities
     public ScannerStateHelper scannerState = new ScannerStateHelper();
-    public OperationTypesStructureModel LocationContext = null;
-    public BaseDocumentStructureModel baseDocumentStructureModel = null;
-    public String BadgeGuid = null;
+
+    protected OperationTypesStructureModel LocationContext = null;
+    public void SetCurrentLocationContext(OperationTypesStructureModel model)
+    {
+        LocationContext = model;
+    }
+    public OperationTypesStructureModel GetLocationContext() throws ApplicationException {
+        if(LocationContext != null)
+        {
+            return LocationContext;
+        }
+        else
+            {
+                throw new ApplicationException("Не выбран участок учёта!");
+            }
+    }
+
+    protected BaseDocumentStructureModel baseDocumentStructureModel = null;
+
+    public void SetBaseDocument(BaseDocumentStructureModel model)
+    {
+        baseDocumentStructureModel = model;
+    }
+    public BaseDocumentStructureModel GetBaseDocument() throws ApplicationException {
+        if(baseDocumentStructureModel != null)
+        {
+            return baseDocumentStructureModel;
+        }
+        else
+        {
+            throw new ApplicationException("Документ-основание не задан.");
+        }
+    }
+
+    protected String BadgeGuid = null;
+    public void SetBadge(String guid)
+    {
+        BadgeGuid = guid;
+    }
+
+    public String GetBadgeGuid() throws ApplicationException {
+        if(BadgeGuid != null) {
+            return BadgeGuid;
+        }
+        else {
+            throw new ApplicationException("Бейдж не был сканирован");
+        }
+    }
+
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
     public PackageListDataTable packageListDataTable = new PackageListDataTable();
 

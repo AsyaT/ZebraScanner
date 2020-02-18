@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import ScanningCommand.BarcodeExecutor;
+import scanningcommand.BarcodeExecutor;
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
+
+        appState.scannerState.Set(ScannerState.PRODUCT);
 
         //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
         UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
@@ -162,6 +164,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         btnBackToOperationsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                DisableScanner();
+
                 if (emdkManager != null) {
 
                     emdkManager.release();
@@ -315,6 +320,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
             FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+
+            ScannerApplication appState = ((ScannerApplication) getApplication());
+
             if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("OrderProgress") )
             {
                 getSupportFragmentManager().popBackStack();
@@ -329,10 +337,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
                 startActivity(operationSelectionIntent);
+                appState.scannerState.Set(ScannerState.PRODUCT);
             }
             else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("ScanBadge") )
             {
                 getSupportFragmentManager().popBackStack();
+                appState.scannerState.Set(ScannerState.PRODUCT);
             }
             else
             {

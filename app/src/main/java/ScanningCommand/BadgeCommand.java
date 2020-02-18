@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.concurrent.ExecutionException;
 
+import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
@@ -17,7 +18,7 @@ import ru.zferma.zebrascanner.ScannerApplication;
 import serverDatabaseInteraction.AsyncWebServiceResponse;
 import serverDatabaseInteraction.ResponseStructureModel;
 
-public class BadgeCommand implements Command  {
+public class BadgeCommand implements Command {
 
     Activity Activity;
 
@@ -35,16 +36,15 @@ public class BadgeCommand implements Command  {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-        appState.BadgeGuid = data.getData();
+        appState.SetBadge(data.getData());
 
         // 3. Отправить POST
 
-        String url = appState.serverConnection.getResponseUrl();
-
-        ResponseStructureModel responseStructureModel = AnswerToServer(appState);
-        String jsonResponse = ConvertModelToJson(responseStructureModel);
-
         try {
+            String url = appState.serverConnection.getResponseUrl();
+            ResponseStructureModel responseStructureModel = AnswerToServer(appState);
+            String jsonResponse = ConvertModelToJson(responseStructureModel);
+
             Integer resultCode = (new AsyncWebServiceResponse())
                     .execute(
                         url,
@@ -65,6 +65,8 @@ public class BadgeCommand implements Command  {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (ApplicationException e) {
+            ((MainActivity)this.Activity).AlarmAndNotify(e.getMessage());
         }
 
 
@@ -78,15 +80,11 @@ public class BadgeCommand implements Command  {
         return gson.toJson(model);
     }
 
-    protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication)
-    {
+    protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication) throws ApplicationException {
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = scannerApplication.LocationContext.GetAccountingAreaGUID();
-        responseStructureModel.UserID = scannerApplication.BadgeGuid;
-        if(scannerApplication.baseDocumentStructureModel != null)
-        {
-            responseStructureModel.DocumentID = scannerApplication.baseDocumentStructureModel.GetOrderId();
-        }
+        responseStructureModel.AccountingAreaGUID = scannerApplication.GetLocationContext().GetAccountingAreaGUID();
+        responseStructureModel.UserID = scannerApplication.GetBadgeGuid();
+        responseStructureModel.DocumentID = scannerApplication.GetBaseDocument().GetOrderId();
 
         for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())
         {
