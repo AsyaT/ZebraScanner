@@ -36,7 +36,7 @@ public class BadgeCommand implements Command {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-        appState.BadgeGuid = data.getData();
+        appState.SetBadge(data.getData());
 
         // 3. Отправить POST
 
@@ -83,7 +83,7 @@ public class BadgeCommand implements Command {
     protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication) throws ApplicationException {
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
         responseStructureModel.AccountingAreaGUID = scannerApplication.GetLocationContext().GetAccountingAreaGUID();
-        responseStructureModel.UserID = scannerApplication.BadgeGuid;
+        responseStructureModel.UserID = scannerApplication.GetBadgeGuid();
         responseStructureModel.DocumentID = scannerApplication.GetBaseDocument().GetOrderId();
 
         for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())

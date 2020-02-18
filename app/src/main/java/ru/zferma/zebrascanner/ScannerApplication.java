@@ -70,7 +70,21 @@ public class ScannerApplication extends Application {
         }
     }
 
-    public String BadgeGuid = null;
+    protected String BadgeGuid = null;
+    public void SetBadge(String guid)
+    {
+        BadgeGuid = guid;
+    }
+
+    public String GetBadgeGuid() throws ApplicationException {
+        if(BadgeGuid != null) {
+            return BadgeGuid;
+        }
+        else {
+            throw new ApplicationException("Бейдж не был сканирован");
+        }
+    }
+
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
     public PackageListDataTable packageListDataTable = new PackageListDataTable();
 
