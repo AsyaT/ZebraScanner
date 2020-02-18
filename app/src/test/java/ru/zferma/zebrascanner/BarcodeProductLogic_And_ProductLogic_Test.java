@@ -4,12 +4,24 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
+import org.powermock.reflect.Whitebox;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import businesslogic.*;
+import businesslogic.ApplicationException;
+import businesslogic.BarcodeProductLogic;
+import businesslogic.BarcodeStructureModel;
+import businesslogic.BarcodeTypes;
+import businesslogic.CharacteristicStructureModel;
+import businesslogic.ListViewPresentationModel;
+import businesslogic.ManufacturerStructureModel;
+import businesslogic.NomenclatureStructureModel;
+import businesslogic.ProductLogic;
+import businesslogic.ProductStructureModel;
+import businesslogic.Product_PackageListStructureModel;
+import businesslogic.ScanningBarcodeStructureModel;
 
 
 public class BarcodeProductLogic_And_ProductLogic_Test {
@@ -210,5 +222,39 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
         ArrayList<ProductStructureModel> actual = barcodeProductLogic.FindProductByBarcode("04660017707529", BarcodeTypes.LocalEAN13);
 
         Assert.assertEquals(2, actual.size());
+    }
+
+    @Test
+    public void StringResponseEAN13() throws ParseException, ApplicationException
+    {
+        String scannedBarcode = "04660017708243";
+        ProductStructureModel product = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+
+        String expected = "Штрих-код: 04660017708243"
+                + "\nНоменклатура: Бедрышко куриное \"Здоровая Ферма\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)"
+                + "\nХарактеристика: Метро"
+                + "\nВес: 8.0 кг";
+
+        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product));
+    }
+
+
+    @Test
+    public void StringResponseEAN13_Error() throws ParseException, ApplicationException
+    {
+        ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel("000",BarcodeTypes.LocalEAN13);
+
+        Whitebox.setInternalState(barcodeProductLogic,"parsedBarcode", barcode);
+
+        ProductStructureModel product = new ProductStructureModel("000","000",0.0);
+
+        String result = barcodeProductLogic.CreateStringResponse(product);
+
+        String expected = "Штрих-код: 000"
+                + "\nНоменклатура: Продукт с таким GUID 000 не найден"
+                + "\nХарактеристика: Характеристика продкута с GUID 000 не найдена"
+                + "\nВес: 0.0 кг";
+
+        Assert.assertEquals(expected,result);
     }
 }
