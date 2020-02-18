@@ -164,6 +164,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         btnBackToOperationsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                DisableScanner();
+
                 if (emdkManager != null) {
 
                     emdkManager.release();
