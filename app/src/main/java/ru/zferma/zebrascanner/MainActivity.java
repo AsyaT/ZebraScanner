@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
 
+        appState.scannerState.Set(ScannerState.PRODUCT);
+
         //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
         UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
 
