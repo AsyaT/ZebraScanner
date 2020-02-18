@@ -39,8 +39,8 @@ public class PackageListCommand extends ResponseFormat implements Command {
                 appState.manufacturerStructureModel);
 
         try {
-            this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
-            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.baseDocumentStructureModel);
+            this.baseDocumentLogic = new BaseDocumentLogic(appState.GetBaseDocument());
+            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.GetBaseDocument());
         }
         catch (ApplicationException ex)
         {

@@ -53,7 +53,23 @@ public class ScannerApplication extends Application {
             }
     }
 
-    public BaseDocumentStructureModel baseDocumentStructureModel = null;
+    protected BaseDocumentStructureModel baseDocumentStructureModel = null;
+
+    public void SetBaseDocument(BaseDocumentStructureModel model)
+    {
+        baseDocumentStructureModel = model;
+    }
+    public BaseDocumentStructureModel GetBaseDocument() throws ApplicationException {
+        if(baseDocumentStructureModel != null)
+        {
+            return baseDocumentStructureModel;
+        }
+        else
+        {
+            throw new ApplicationException("Документ-основание не задан.");
+        }
+    }
+
     public String BadgeGuid = null;
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
     public PackageListDataTable packageListDataTable = new PackageListDataTable();

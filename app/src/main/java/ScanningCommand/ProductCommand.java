@@ -63,8 +63,8 @@ public class ProductCommand extends ResponseFormat implements Command
         );
 
         try {
-            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.baseDocumentStructureModel);
-            this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
+            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.GetBaseDocument());
+            this.baseDocumentLogic = new BaseDocumentLogic(appState.GetBaseDocument());
         }
         catch (ApplicationException ex)
         {

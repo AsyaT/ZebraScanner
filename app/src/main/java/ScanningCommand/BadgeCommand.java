@@ -84,10 +84,7 @@ public class BadgeCommand implements Command {
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
         responseStructureModel.AccountingAreaGUID = scannerApplication.GetLocationContext().GetAccountingAreaGUID();
         responseStructureModel.UserID = scannerApplication.BadgeGuid;
-        if(scannerApplication.baseDocumentStructureModel != null)
-        {
-            responseStructureModel.DocumentID = scannerApplication.baseDocumentStructureModel.GetOrderId();
-        }
+        responseStructureModel.DocumentID = scannerApplication.GetBaseDocument().GetOrderId();
 
         for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())
         {
