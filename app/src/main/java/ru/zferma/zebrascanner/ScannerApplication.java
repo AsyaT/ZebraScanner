@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import businesslogic.ApplicationException;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.BaseDocumentStructureModel;
 import businesslogic.CharacterisiticStructureModel;
@@ -35,7 +36,23 @@ public class ScannerApplication extends Application {
 
     //Context entities
     public ScannerStateHelper scannerState = new ScannerStateHelper();
-    public OperationTypesStructureModel LocationContext = null;
+
+    protected OperationTypesStructureModel LocationContext = null;
+    public void SetCurrentLocationContext(OperationTypesStructureModel model)
+    {
+        LocationContext = model;
+    }
+    public OperationTypesStructureModel GetLocationContext() throws ApplicationException {
+        if(LocationContext != null)
+        {
+            return LocationContext;
+        }
+        else
+            {
+                throw new ApplicationException("Не выбран участок учёта!");
+            }
+    }
+
     public BaseDocumentStructureModel baseDocumentStructureModel = null;
     public String BadgeGuid = null;
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();

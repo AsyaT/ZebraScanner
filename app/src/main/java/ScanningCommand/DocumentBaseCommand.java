@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -84,7 +84,7 @@ public class DocumentBaseCommand implements Command {
 
     protected BaseDocumentStructureModel GetBaseDocumentFromServer(String guid) throws ApplicationException, ExecutionException, InterruptedException {
         String userpass =  appState.serverConnection.GetUsernameAndPassword();
-        String url= appState.serverConnection.GetOrderProductURL(appState.LocationContext.GetAccountingAreaGUID(), guid);
+        String url= appState.serverConnection.GetOrderProductURL(appState.GetLocationContext().GetAccountingAreaGUID(), guid);
 
         BaseDocumentHelper baseDocumentHelper = new BaseDocumentHelper(url, userpass);
 

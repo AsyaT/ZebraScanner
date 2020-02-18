@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 
@@ -38,8 +38,14 @@ public class PackageListCommand extends ResponseFormat implements Command {
                 appState.characterisiticStructureModel,
                 appState.manufacturerStructureModel);
 
-        this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
-        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext, appState.baseDocumentStructureModel);
+        try {
+            this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
+            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.baseDocumentStructureModel);
+        }
+        catch (ApplicationException ex)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+        }
     }
 
     @Override
