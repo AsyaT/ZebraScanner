@@ -19,7 +19,7 @@ public class ProductLogic {
 
     }
 
-    public ListViewPresentationModel CreateListView(ProductModel product)
+    public ListViewPresentationModel CreateListView(ProductModel product) throws ApplicationException
     {
         return
                 new ListViewPresentationModel(

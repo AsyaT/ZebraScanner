@@ -11,7 +11,7 @@ import java.util.List;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeStructureModel;
-import businesslogic.CharacterisiticStructureModel;
+import businesslogic.CharacteristicStructureModel;
 import businesslogic.NomenclatureStructureModel;
 import businesslogic.ProductStructureModel;
 import serverDatabaseInteraction.BarcodeHelper;
@@ -22,7 +22,7 @@ public class BarcodeStructureModelTest {
 
     BarcodeStructureModel barcodeStructureModel = new BarcodeStructureModel();
     NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
-    CharacterisiticStructureModel characterisiticStructureModel = new CharacterisiticStructureModel();
+    CharacteristicStructureModel characterisiticStructureModel = new CharacteristicStructureModel();
 
 
     public BarcodeStructureModelTest()
@@ -52,14 +52,14 @@ public class BarcodeStructureModelTest {
     }
 
     @Test
-    public void TestFindProductByGuid()
+    public void TestFindProductByGuid() throws ApplicationException
     {
         String productName = nomenclatureStructureModel.FindProductByGuid("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3");
         Assert.assertEquals("Филе бедра \\\"Здоровая Ферма\\\", охл.~0,80 кг*6/~4,8 кг/ (подложка, стрейч)", productName);
     }
 
     @Test
-    public void TestFindCharacteristic()
+    public void TestFindCharacteristic() throws ApplicationException
     {
         String characteristicName = characterisiticStructureModel.FindCharacteristicByGuid("a947f0a5-3c92-11e8-80c7-a4bf011ce3c3");
         Assert.assertEquals("Дикси", characteristicName);
@@ -69,5 +69,17 @@ public class BarcodeStructureModelTest {
     public void TestBarcodeDoesNotExists() throws ApplicationException
     {
         barcodeStructureModel.FindProductByBarcode("000000");
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void TestNomenclatureDoesNotExists() throws ApplicationException
+    {
+        nomenclatureStructureModel.FindProductByGuid("000000");
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void TestCharacteristicDoesNotExists() throws ApplicationException
+    {
+        characterisiticStructureModel.FindCharacteristicByGuid("000000");
     }
 }

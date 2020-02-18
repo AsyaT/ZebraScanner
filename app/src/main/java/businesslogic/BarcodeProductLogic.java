@@ -93,36 +93,48 @@ public class BarcodeProductLogic {
     {
         String resultText="";
 
-        if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
-            resultText="Штрих-код: "+ parsedBarcode.getUniqueIdentifier()
-                    +"\nНоменклатура: "+ NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid())
-                    +"\nХарактеристика: "+ characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
-                    +"\nВес: "+ WeightCalculator(parsedBarcode, product) + " кг";
-        }
-        else if(parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
-        {
-            String manufacturerName = "";
-            try{
-                manufacturerName = ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer());
-            }
-            catch (ApplicationException ex)
-            {
-                manufacturerName = ex.getMessage();
-            }
+        String productNomenclature = "";
+        String productCharacteristic= "";
 
-            resultText=
-                    "Штрих-код: "+parsedBarcode.getUniqueIdentifier()
-                            +"\nНоменклатура: "+ NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid())
-                            +"\nХарактеристика: "+ characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
-                            +"\nВес: "+ WeightCalculator(parsedBarcode, product)+" кг"
-                            + "\nНомер партии: "+parsedBarcode.getLotNumber()
-                            + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
-                            + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
-                            + "\nСерийный номер: " + parsedBarcode.getSerialNumber()
-                            + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() +" - "+ manufacturerName
-                            + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
+        try {
+            productNomenclature = NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid());
+            productCharacteristic = characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID());
         }
-        return resultText;
+        catch (ApplicationException e)
+        {
+            productNomenclature = e.getMessage();
+            productCharacteristic = e.getMessage();
+        }
+        finally {
+
+
+            if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
+                resultText = "Штрих-код: " + parsedBarcode.getUniqueIdentifier()
+                        + "\nНоменклатура: " + productNomenclature
+                        + "\nХарактеристика: " + productCharacteristic
+                        + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг";
+            } else if (parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP) {
+                String manufacturerName = "";
+                try {
+                    manufacturerName = ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer());
+                } catch (ApplicationException ex) {
+                    manufacturerName = ex.getMessage();
+                }
+
+                resultText =
+                        "Штрих-код: " + parsedBarcode.getUniqueIdentifier()
+                                + "\nНоменклатура: " + productNomenclature
+                                + "\nХарактеристика: " + productCharacteristic
+                                + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг"
+                                + "\nНомер партии: " + parsedBarcode.getLotNumber()
+                                + "\nДата производства: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
+                                + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
+                                + "\nСерийный номер: " + parsedBarcode.getSerialNumber()
+                                + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() + " - " + manufacturerName
+                                + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
+            }
+            return resultText;
+        }
     }
 
     private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, ProductModel product)

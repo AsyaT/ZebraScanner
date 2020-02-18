@@ -91,15 +91,21 @@ public class PackageListCommand extends ResponseFormat implements Command {
 
         appState.packageListDataTable.Add(input);
 
-        for( Product_PackageListStructureModel product : input.GetProducts()) {
+        try {
+            for (Product_PackageListStructureModel product : input.GetProducts()) {
 
-            for (int i = 1; i <= product.GetItems(); i++) {
-                ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-                ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
+                for (int i = 1; i <= product.GetItems(); i++) {
+                    ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
+                    ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
-                FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
-                appState.ScannedProductsToSend.Add(detailsModel);
+                    FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
+                    appState.ScannedProductsToSend.Add(detailsModel);
+                }
             }
+        }
+        catch (ApplicationException e)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
         }
     }
 

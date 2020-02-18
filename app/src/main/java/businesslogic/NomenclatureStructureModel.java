@@ -4,11 +4,22 @@ import java.util.HashMap;
 
 public class NomenclatureStructureModel {
 
-    HashMap<String,String> Product = new HashMap<>();
+    HashMap<String,String> Product ;
 
-    public String FindProductByGuid(String productGuid)
+    public NomenclatureStructureModel()
     {
-        return Product.get(productGuid);
+        Product= new HashMap<>();
+    }
+
+    public String FindProductByGuid(String productGuid) throws ApplicationException {
+        if(Product.containsKey(productGuid))
+        {
+            return Product.get(productGuid);
+        }
+        else
+            {
+            throw new ApplicationException("Продукт с таким GUID "+productGuid+" не найден");
+        }
     }
 
     public void Add(String productGuid, String productName)

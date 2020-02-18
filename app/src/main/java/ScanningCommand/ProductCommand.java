@@ -77,11 +77,17 @@ public class ProductCommand extends ResponseFormat implements Command
         List<CharSequence> nomenclatures = new ArrayList<CharSequence>();
         final ProductStructureModel[] result = {null};
 
-        for (ProductStructureModel nomenclature : listNomenclature) {
-            nomenclatures.add(
-                    appState.nomenclatureStructureModel.FindProductByGuid(nomenclature.GetProductGuid()) +
-                            "\n Характеристика: " + appState.characteristicStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID()) +
-                            "\n Вес: " + nomenclature.GetWeight().toString() + "\n\n");
+        try {
+            for (ProductStructureModel nomenclature : listNomenclature) {
+                nomenclatures.add(
+                        appState.nomenclatureStructureModel.FindProductByGuid(nomenclature.GetProductGuid()) +
+                                "\n Характеристика: " + appState.characteristicStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID()) +
+                                "\n Вес: " + nomenclature.GetWeight().toString() + "\n\n");
+            }
+        }
+        catch (ApplicationException e)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
         }
 
         CharSequence[] showedNomenclatures = nomenclatures.toArray(new CharSequence[nomenclatures.size()]);
@@ -187,12 +193,18 @@ public class ProductCommand extends ResponseFormat implements Command
     @Override
     protected void SaveInfoForProductList(ObjectForSaving product)
     {
-        ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView((ProductModel)product);
+        try {
+            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView((ProductModel) product);
 
-        ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
+            ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
-        FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails((ProductModel)product);
-        appState.ScannedProductsToSend.Add(detailsModel);
+            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails((ProductModel) product);
+            appState.ScannedProductsToSend.Add(detailsModel);
+        }
+        catch (ApplicationException e)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
+        }
     }
 
     @Override
