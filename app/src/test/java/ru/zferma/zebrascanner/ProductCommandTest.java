@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ScanningCommand.ProductCommand;
+import scanningcommand.ProductCommand;
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeProductLogic;
 import businesslogic.BarcodeScanningLogic;

@@ -33,7 +33,7 @@ public class BarcodeProductLogic {
 
         if(listOfProducts == null)
         {
-            throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
+            throw new ApplicationException("Не найдено продуктов по штрих-коду "+ scannedBarcode);
         }
 
         listOfProducts = RemoveDuplicateProducts(listOfProducts);

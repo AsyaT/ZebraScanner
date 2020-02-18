@@ -9,6 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import businesslogic.ApplicationException;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.NomenclatureStructureModel;
@@ -41,8 +42,7 @@ public class BarcodeStructureModelTest {
     }
 
     @Test
-    public void Test_FindProductsByBarcode()
-    {
+    public void Test_FindProductsByBarcode() throws ApplicationException {
         List<ProductStructureModel> result =  barcodeStructureModel.FindProductByBarcode("2407394");
         Assert.assertEquals(1, result.size());
 
@@ -63,5 +63,11 @@ public class BarcodeStructureModelTest {
     {
         String characteristicName = characterisiticStructureModel.FindCharacteristicByGuid("a947f0a5-3c92-11e8-80c7-a4bf011ce3c3");
         Assert.assertEquals("Дикси", characteristicName);
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void TestBarcodeDoesNotExists() throws ApplicationException
+    {
+        barcodeStructureModel.FindProductByBarcode("000000");
     }
 }
