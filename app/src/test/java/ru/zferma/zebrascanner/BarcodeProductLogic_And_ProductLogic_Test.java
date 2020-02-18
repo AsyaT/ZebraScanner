@@ -257,4 +257,23 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
 
         Assert.assertEquals(expected,result);
     }
+
+    @Test
+    public void StringResponseGS1EXP() throws ParseException, ApplicationException {
+        String scannedBarcode = "0104660017707116310302560010082011190120171912252100001921000";
+        ProductStructureModel product = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
+
+        String expected = "Штрих-код: 4660017707116"
+                + "\nНоменклатура: Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)"
+                + "\nХарактеристика: Монетка"
+                + "\nВес: 25.6 кг"
+                + "\nНомер партии: 0820"
+                + "\nДата производства: 20-01-2019"
+                + "\nДата истечения срока годност: 25-12-2019"
+                + "\nСерийный номер: 00001"
+                + "\nВнутренний код производителя: 1 - УРАЛБРОЙЛЕР ЗАО (Ишалино)"
+                + "\nВнутренний код оборудования: 0" ;
+
+        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product));
+    }
 }
