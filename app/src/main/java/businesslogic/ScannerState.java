@@ -1,13 +1,11 @@
 package businesslogic;
 
-import ScanningCommand.BadgeCommand;
-import ScanningCommand.OrderCommand;
-import ScanningCommand.ProductCommand;
+import scanningcommand.*;
 
 public enum ScannerState {
-    ORDER(OrderCommand.class),
+    DOCUMENTBASE(DocumentBaseCommand.class),
     BADGE(BadgeCommand.class),
-    DOCUMENT(ProductCommand.class), //TODO: create class
+    PACKAGELIST(PackageListCommand.class),
     PRODUCT(ProductCommand.class);
 
     private Class CurrentClass;

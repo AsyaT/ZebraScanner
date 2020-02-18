@@ -8,39 +8,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import businesslogic.OrderStructureModel;
+import businesslogic.BaseDocumentStructureModel;
 import presentation.FragmentHelper;
 
 
 public class OrderInfoFragment extends Fragment {
 
-    private OrderStructureModel Order;
+    private BaseDocumentStructureModel Order;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Order = (OrderStructureModel) getArguments().getSerializable("order");
+        Order = (BaseDocumentStructureModel) getArguments().getSerializable("order");
 
         View view = inflater.inflate(R.layout.fragment_order_info, container, false);
 
         TextView txtOrderName = (TextView)  view.findViewById(R.id.txtOrderName);
         txtOrderName.setText(Order.GetOrderName());
 
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("order", Order);
+        if(Order.IsShowOrderProgressAllowed()) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("order", Order);
 
-                Fragment progressOrderFragment = new ProgressOrderFragment();
-                progressOrderFragment.setArguments(bundle);
-                FragmentHelper fragmentHelper = new FragmentHelper(getActivity());
-                fragmentHelper.replaceFragment(progressOrderFragment,R.id.frBarcodeInfo,"OrderProgress");
+                    Fragment progressOrderFragment = new ProgressOrderFragment();
+                    progressOrderFragment.setArguments(bundle);
+                    FragmentHelper fragmentHelper = new FragmentHelper(getActivity());
+                    fragmentHelper.replaceFragment(progressOrderFragment, R.id.frBarcodeInfo, "OrderProgress");
 
-                return false;
-            }
-        });
+                    return false;
+                }
+            });
+        }
 
         return view;
     }

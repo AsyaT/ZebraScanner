@@ -83,12 +83,19 @@ public class PreSettingsActivity extends AppCompatActivity {
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //TODO: If auth password is not set - button does not work
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 
                     if (km.isKeyguardSecure()) {
                         Intent authIntent = km.createConfirmDeviceCredentialIntent("Пожалуйста, авторизуйтесь", "Введите пароль администратора");
+
                         startActivityForResult(authIntent, INTENT_AUTHENTICATE);
+                    }
+                    else
+                    {
+                        StartSettingsActivity();
                     }
                 }
             }
@@ -102,10 +109,15 @@ public class PreSettingsActivity extends AppCompatActivity {
         {
             if (resultCode == RESULT_OK)
             {
-                Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
+                StartSettingsActivity();
             }
         }
+    }
+
+    protected void StartSettingsActivity()
+    {
+        Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+        startActivityForResult(settingsActivityIntent, RESULT_ENABLE);
     }
 
     @Override

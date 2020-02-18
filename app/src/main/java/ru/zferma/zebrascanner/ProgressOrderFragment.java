@@ -11,11 +11,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import businesslogic.OrderStructureModel;
+import businesslogic.BaseDocumentStructureModel;
 
 public class ProgressOrderFragment extends Fragment {
 
-   OrderStructureModel Order;
+   BaseDocumentStructureModel Order;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -23,7 +23,7 @@ public class ProgressOrderFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_progress_order, container, false);
 
-        Order = (OrderStructureModel) getArguments().getSerializable("order");
+        Order = (BaseDocumentStructureModel) getArguments().getSerializable("order");
 
         MainActivity activity = (MainActivity) getActivity();
 
@@ -34,7 +34,7 @@ public class ProgressOrderFragment extends Fragment {
 
         ScannerApplication appState = ((ScannerApplication) getActivity().getApplication());
 
-        for(OrderStructureModel.ProductOrderStructureModel product : Order.ProductList())
+        for(BaseDocumentStructureModel.ProductOrderStructureModel product : Order.ProductList())
         {
             try {
                 Double doneKilos = 0.0;
@@ -42,8 +42,8 @@ public class ProgressOrderFragment extends Fragment {
 
                 if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
                 {
-                    doneKilos = Double.parseDouble(activity.dataTableControl.GetExitingProduct(product.GetProductGuid()).getWeight());
-                    doneItems = Integer.parseInt(activity.dataTableControl.GetExitingProduct(product.GetProductGuid()).getCoefficient());
+                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getWeight());
+                    doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
                 }
 
                 TextView txtView = new TextView(getActivity());

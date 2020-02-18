@@ -12,26 +12,27 @@ import java.util.List;
 import businesslogic.BarcodeStructureModel;
 import businesslogic.CharacterisiticStructureModel;
 import businesslogic.NomenclatureStructureModel;
+import businesslogic.ProductStructureModel;
 import serverDatabaseInteraction.BarcodeHelper;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BarcodeHelper.class })
-public class BarcodeHelperTest {
+public class BarcodeStructureModelTest {
 
     BarcodeStructureModel barcodeStructureModel = new BarcodeStructureModel();
     NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
     CharacterisiticStructureModel characterisiticStructureModel = new CharacterisiticStructureModel();
 
 
-    public BarcodeHelperTest()
+    public BarcodeStructureModelTest()
     {
         nomenclatureStructureModel.Add("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3","Филе бедра \\\"Здоровая Ферма\\\", охл.~0,80 кг*6/~4,8 кг/ (подложка, стрейч)");
 
         characterisiticStructureModel.Add("a947f0a5-3c92-11e8-80c7-a4bf011ce3c3", "Дикси");
 
-        ArrayList<BarcodeStructureModel.ProductStructureModel> productList = new ArrayList<>();
+        ArrayList<ProductStructureModel> productList = new ArrayList<>();
 
-        BarcodeStructureModel.ProductStructureModel psm = new BarcodeStructureModel.ProductStructureModel(
+        ProductStructureModel psm = new ProductStructureModel(
                 "ddc4578e-e49f-11e7-80c5-a4bf011ce3c3","a947f0a5-3c92-11e8-80c7-a4bf011ce3c3", 1.0);
         productList.add(psm);
 
@@ -42,7 +43,7 @@ public class BarcodeHelperTest {
     @Test
     public void Test_FindProductsByBarcode()
     {
-        List<BarcodeStructureModel.ProductStructureModel> result =  barcodeStructureModel.FindProductByBarcode("2407394");
+        List<ProductStructureModel> result =  barcodeStructureModel.FindProductByBarcode("2407394");
         Assert.assertEquals(1, result.size());
 
         Assert.assertEquals("ddc4578e-e49f-11e7-80c5-a4bf011ce3c3",result.get(0).GetProductGuid());

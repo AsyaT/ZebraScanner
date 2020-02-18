@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.symbol.emdk.EMDKManager;
+
 public class PackageListActivity extends MainActivity {
 
     @Override
@@ -18,16 +20,29 @@ public class PackageListActivity extends MainActivity {
                         switch (which)
                         {
                             case 0: break;
-                            case 1: ShowFragmentScanOrder(); break;
+                            case 1: ShowFragmentScanBaseDocument(); break;
                             default: break;
                         }
+                        EnableScanner();
                         dialog.dismiss();
                     }
                 });
+
+
+
         AlertDialog alertDialog = builder.create();
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
     }
+
+    @Override
+    public void onOpened(EMDKManager emdkManager)
+    {
+        super.onOpened(emdkManager);
+
+        DisableScanner();
+    }
+
 
 }

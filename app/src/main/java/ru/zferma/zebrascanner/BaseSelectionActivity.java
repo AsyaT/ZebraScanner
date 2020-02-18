@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import presentation.FragmentHelper;
 
@@ -13,6 +14,7 @@ public class BaseSelectionActivity extends AppCompatActivity {
     Button okButton;
     Button cancelButton;
     ListView listView;
+    ProgressBar progressBar;
 
     OperationsEnum getOperationsEnum(String operationName)
     {
@@ -37,7 +39,7 @@ public class BaseSelectionActivity extends AppCompatActivity {
     {
         Fragment noConnectionFragment = new NoConnectionFragment();
         FragmentHelper fragmentHelper = new FragmentHelper(this);
-        fragmentHelper.replaceFragment(noConnectionFragment,R.id.frConnectionInfo);
+        fragmentHelper.replaceFragment(noConnectionFragment, R.id.frConnectionInfo, "NoConnection");
     }
 
     class AsyncFragmentInfoUpdate extends AsyncTask<String,Void,String> {

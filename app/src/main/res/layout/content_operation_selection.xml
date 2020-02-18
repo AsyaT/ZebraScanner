@@ -8,6 +8,17 @@
     tools:context=".OperationSelectionActivity"
     tools:showIn="@layout/activity_operation_selection">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="80dp"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="179dp"
@@ -39,8 +50,8 @@
         android:layout_marginTop="28dp"
         android:background="@drawable/red_button"
         android:text="Отмена"
-        android:textColorLink="#FFFFFF"
         android:textColor="#FFF"
+        android:textColorLink="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/operationTable" />
 
@@ -52,9 +63,9 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/green_button"
-        android:textColorLink="#FFFFFF"
-        android:textColor="#FFF"
         android:text="ОК"
+        android:textColor="#FFF"
+        android:textColorLink="#FFFFFF"
         app:layout_constraintStart_toEndOf="@+id/CancelButton"
         app:layout_constraintTop_toBottomOf="@+id/operationTable" />
 

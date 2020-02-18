@@ -1,20 +1,17 @@
 package ru.zferma.zebrascanner;
 
-import com.symbol.emdk.barcode.ScanDataCollection;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import businesslogic.ApplicationException;
+import businesslogic.BarcodeTypes;
+import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
 import serverDatabaseInteraction.OperationTypesHelper;
 
@@ -92,22 +89,12 @@ class OperationTypesHelperTest {
 
 
         try {
-            helper = new OperationTypesHelper("","");
+            helper = new OperationTypesHelper(model);
         } catch (ApplicationException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Whitebox.setInternalState(helper,"InputModel",model);
-        try {
-            Whitebox.invokeMethod(helper,"ParseIncomeData");
-        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        operationsTypesAccountingAreaStructureModel = helper.GetData();
+        operationsTypesAccountingAreaStructureModel = (OperationsTypesAccountingAreaStructureModel) helper.GetData();
     }
 
     @Test
@@ -128,9 +115,9 @@ class OperationTypesHelperTest {
     @Test
     public void Test_Permissions()
     {
-        HashMap<ScanDataCollection.LabelType, Boolean> permissions = new HashMap<>();
-        permissions.put(ScanDataCollection.LabelType.EAN13, Boolean.FALSE);
-        permissions.put(ScanDataCollection.LabelType.GS1_DATABAR_EXP, Boolean.TRUE);
+        HashMap<BarcodeTypes, Boolean> permissions = new HashMap<>();
+        permissions.put(BarcodeTypes.LocalEAN13, Boolean.FALSE);
+        permissions.put(BarcodeTypes.LocalGS1_EXP, Boolean.TRUE);
 
         OperationsTypesAccountingAreaStructureModel.AccountingArea aa_Rotation = operationsTypesAccountingAreaStructureModel
                 .GetAccountingAreas("Ротация")
@@ -152,7 +139,7 @@ class OperationTypesHelperTest {
     }
 
     @Test
-    public void Test_GetoperationSet()
+    public void Test_GetOperationSet()
     {
         Assert.assertEquals(2,operationsTypesAccountingAreaStructureModel.GetOperationKeys().size());
     }

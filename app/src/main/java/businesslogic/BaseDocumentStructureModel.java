@@ -4,31 +4,45 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderStructureModel implements Serializable {
+public class BaseDocumentStructureModel implements Serializable {
 
     private String Name;
-    private String OrderGuid;
+    private String BaseDocumentGuid;
+    private Boolean IsShowOrderProgress;
+    private Boolean CompileByPackageListOnly = false; //TODO : get from 1C database
     private List<ProductOrderStructureModel> ProductList;
 
-    public OrderStructureModel(String name)
+    public BaseDocumentStructureModel(String name)
     {
         this.Name = name;
         this.ProductList = new ArrayList<>();
     }
+    public BaseDocumentStructureModel(String name, Boolean isShowOrderProgress, Boolean compileByPackageListOnly)
+    {
+        this.Name = name;
+        this.ProductList = new ArrayList<>();
+        this.IsShowOrderProgress = isShowOrderProgress;
+        this.CompileByPackageListOnly = compileByPackageListOnly;
+    }
 
     public String GetOrderId()
     {
-        return OrderGuid;
+        return BaseDocumentGuid;
     }
 
     public void SetOrderGuid(String guid)
     {
-        this.OrderGuid = guid;
+        this.BaseDocumentGuid = guid;
     }
 
     public void Add(ProductOrderStructureModel product)
     {
         this.ProductList.add(product);
+    }
+
+    public Boolean IsShowOrderProgressAllowed()
+    {
+        return this.IsShowOrderProgress;
     }
 
     public Boolean IfProductExists(String productGuid)
@@ -43,6 +57,11 @@ public class OrderStructureModel implements Serializable {
         return false;
     }
 
+    public Boolean IsCompileByPackageListOnly ()
+    {
+        return this.CompileByPackageListOnly;
+    }
+
     public static class ProductOrderStructureModel implements Serializable
     {
         private String ProductGuid;
@@ -54,16 +73,16 @@ public class OrderStructureModel implements Serializable {
         private Integer DoneItems;
         private Integer LeftItems;
 
-        public  ProductOrderStructureModel(String productGuid, String characteristicGuid, Double orderedKilos, Double doneKilos, Double leftKilos, Integer orderedItems, Integer doneItems, Integer leftItems)
+        public  ProductOrderStructureModel(String productGuid, String characteristicGuid, Double orderedKilos, Double doneKilos, Integer orderedItems, Integer doneItems)
         {
             this.ProductGuid = productGuid;
             this.CharacteristicGuid = characteristicGuid;
             this.OrderedKilos = orderedKilos;
             this.DoneKilos = doneKilos;
-            this.LeftKilos = leftKilos;
+            this.LeftKilos = orderedKilos - doneKilos;
             this.OrderedItems = orderedItems;
             this.DoneItems = doneItems;
-            this.LeftItems = leftItems;
+            this.LeftItems = orderedItems - doneItems;
         }
 
         public String GetProductGuid()

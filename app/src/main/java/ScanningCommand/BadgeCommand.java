@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
@@ -8,16 +8,17 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.concurrent.ExecutionException;
 
+import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanBadgeFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
+import serverDatabaseInteraction.AsyncWebServiceResponse;
 import serverDatabaseInteraction.ResponseStructureModel;
-import serverDatabaseInteraction.WebServiceResponse;
 
-public class BadgeCommand implements Command  {
+public class BadgeCommand implements Command {
 
     Activity Activity;
 
@@ -35,27 +36,57 @@ public class BadgeCommand implements Command  {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-        appState.BadgeGuid = data.getData();
+        appState.SetBadge(data.getData());
+
+        // 3. Отправить POST
+
+        try {
+            String url = appState.serverConnection.getResponseUrl();
+            ResponseStructureModel responseStructureModel = AnswerToServer(appState);
+            String jsonResponse = ConvertModelToJson(responseStructureModel);
+
+            Integer resultCode = (new AsyncWebServiceResponse())
+                    .execute(
+                        url,
+                        appState.serverConnection.GetUsernameAndPassword(),
+                        jsonResponse)
+                    .get();
+
+            //TODO: notification for user if Success or not
+            ((MainActivity)this.Activity).new AsyncMessageDialog().execute(String.valueOf(resultCode));
+
+            if(resultCode == 200)
+            {
+                // TODO: 5. переходить на выбор операции
+               appState.CleanContextEntities();
+            }
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ApplicationException e) {
+            ((MainActivity)this.Activity).AlarmAndNotify(e.getMessage());
+        }
+
+
+        // TODO: 4. GET для печатной формы
 
     }
 
-    @Override
-    public void PostAction()
+    protected String ConvertModelToJson(ResponseStructureModel model)
     {
-        // 3. Отправить POST
+        Gson gson = new Gson();
+        return gson.toJson(model);
+    }
 
-        ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-        String url = appState.serverConnection.getResponseUrl();
-
+    protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication) throws ApplicationException {
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = appState.LocationContext.GetAccountingAreaGUID();
-        responseStructureModel.UserID = appState.BadgeGuid;
-        if(appState.orderStructureModel != null)
-        {
-            responseStructureModel.DocumentID = appState.orderStructureModel.GetOrderId();
-        }
+        responseStructureModel.AccountingAreaGUID = scannerApplication.GetLocationContext().GetAccountingAreaGUID();
+        responseStructureModel.UserID = scannerApplication.GetBadgeGuid();
+        responseStructureModel.DocumentID = scannerApplication.GetBaseDocument().GetOrderId();
 
-        for(FullDataTableControl.Details product : appState.ScannedProductsToSend.GetListOfProducts())
+        for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())
         {
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.ProductGUID = product.getProductGuid();
@@ -68,33 +99,6 @@ public class BadgeCommand implements Command  {
             responseStructureModel.ProductList.add(rpsm);
         }
 
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(responseStructureModel);
-
-        try {
-            Integer resultCode = (new WebServiceResponse()).execute(url,appState.serverConnection.GetUsernameAndPassword(), jsonResponse).get();
-
-            //TODO: notification for user if Success or not
-            ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
-
-            if(resultCode == 200)
-            {
-                // TODO: 5. очищать таблицы или переходить на выбор операции
-                appState.ScannedProductsToSend.CleanListOfProducts();
-                appState.LocationContext = null;
-                appState.orderStructureModel = null;
-                appState.BadgeGuid = null;
-
-            }
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-        // TODO: 4. GET для печатной формы
-
+        return responseStructureModel;
     }
 }

@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +37,16 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         listView = (ListView)findViewById(R.id.OperationListView);
         okButton = (Button) findViewById(R.id.OKButton);
         cancelButton = (Button) findViewById(R.id.CancelButton);
+        progressBar = findViewById(R.id.progressBar);
 
+        progressBar.setVisibility(ProgressBar.VISIBLE);
         ScannerApplication appState = ((ScannerApplication) this.getApplication());
 
         try {
             OperationTypesHelper operationTypesHelper = new OperationTypesHelper(
                     appState.serverConnection.GetOperationTypesURL(),
                     appState.serverConnection.GetUsernameAndPassword());
-            appState.operationsTypesAccountingAreaStructureModel = operationTypesHelper.GetData();
+            appState.operationsTypesAccountingAreaStructureModel = (OperationsTypesAccountingAreaStructureModel) operationTypesHelper.GetData();
             data = appState.operationsTypesAccountingAreaStructureModel;
         }
         catch (ApplicationException | ExecutionException | InterruptedException  exception)
@@ -69,6 +73,8 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
 
         final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem);
         listView.setAdapter(adapter);
+
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -141,6 +147,25 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                 startActivity(preSettings);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        {
+            Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
+            FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+            if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("NoConnection") )
+            {
+                Intent preSettingsIntent = new Intent(getBaseContext(), PreSettingsActivity.class);
+                startActivity(preSettingsIntent);
+            }
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     public void RefreshActivity()
