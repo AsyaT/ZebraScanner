@@ -206,9 +206,9 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
     }
 
     @Test
-    public void TestDuplicate() throws ParseException, ApplicationException {
+    public void TestSkipDuplicatedProducts() throws ParseException, ApplicationException {
         ArrayList<ProductStructureModel> actual = barcodeProductLogic.FindProductByBarcode("04660017707529", BarcodeTypes.LocalEAN13);
 
-        Assert.assertEquals(2,actual.size());
+        Assert.assertEquals(2, actual.size());
     }
 }
