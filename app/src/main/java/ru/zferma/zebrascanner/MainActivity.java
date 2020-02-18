@@ -596,7 +596,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             appState.barcodeStructureModel = bh.GetBarcodeModel();
             appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
-            appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+            appState.characteristicStructureModel = bh.GetCharacteristicModel();
         }
         catch (ParseException  e)
         {
@@ -670,7 +670,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 BarcodeHelper bh = new BarcodeHelper(result);
                 appState.barcodeStructureModel = bh.GetBarcodeModel();
                 appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
-                appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+                appState.characteristicStructureModel = bh.GetCharacteristicModel();
             }
             catch (ParseException  e)
             {

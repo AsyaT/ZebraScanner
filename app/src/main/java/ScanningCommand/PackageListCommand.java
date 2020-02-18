@@ -35,7 +35,7 @@ public class PackageListCommand extends ResponseFormat implements Command {
 
         this.ProductLogic = new ProductLogic(
                 appState.nomenclatureStructureModel,
-                appState.characterisiticStructureModel,
+                appState.characteristicStructureModel,
                 appState.manufacturerStructureModel);
 
         try {

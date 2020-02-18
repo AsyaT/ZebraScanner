@@ -53,12 +53,12 @@ public class ProductCommand extends ResponseFormat implements Command
 
         this.BarcodeProductLogic = new BarcodeProductLogic(appState.barcodeStructureModel,
                 appState.nomenclatureStructureModel,
-                appState.characterisiticStructureModel,
+                appState.characteristicStructureModel,
                 appState.manufacturerStructureModel);
 
         this.ProductLogic = new ProductLogic(
                 appState.nomenclatureStructureModel,
-                appState.characterisiticStructureModel,
+                appState.characteristicStructureModel,
                 appState.manufacturerStructureModel
         );
 
@@ -80,7 +80,7 @@ public class ProductCommand extends ResponseFormat implements Command
         for (ProductStructureModel nomenclature : listNomenclature) {
             nomenclatures.add(
                     appState.nomenclatureStructureModel.FindProductByGuid(nomenclature.GetProductGuid()) +
-                            "\n Характеристика: " + appState.characterisiticStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID()) +
+                            "\n Характеристика: " + appState.characteristicStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID()) +
                             "\n Вес: " + nomenclature.GetWeight().toString() + "\n\n");
         }
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class BarcodeProductLogic {
     BarcodeStructureModel BarcodeStructureModel = null;
     NomenclatureStructureModel NomenclatureStructureModel = null;
-    CharacterisiticStructureModel CharacterisiticStructureModel = null;
+    CharacteristicStructureModel characteristicStructureModel = null;
     ManufacturerStructureModel ManufacturerStructureModel = null;
 
     private ScanningBarcodeStructureModel parsedBarcode = null;
@@ -15,13 +15,13 @@ public class BarcodeProductLogic {
     public BarcodeProductLogic(
             BarcodeStructureModel barcodeStructureModel,
             NomenclatureStructureModel nomenclatureStructureModel,
-            CharacterisiticStructureModel characterisiticStructureModel,
+            CharacteristicStructureModel characteristicStructureModel,
             ManufacturerStructureModel manufacturerStructureModel
             )
     {
         this.BarcodeStructureModel = barcodeStructureModel;
         this.NomenclatureStructureModel = nomenclatureStructureModel;
-        this.CharacterisiticStructureModel = characterisiticStructureModel;
+        this.characteristicStructureModel = characteristicStructureModel;
         this.ManufacturerStructureModel = manufacturerStructureModel;
     }
 
@@ -96,7 +96,7 @@ public class BarcodeProductLogic {
         if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
             resultText="Штрих-код: "+ parsedBarcode.getUniqueIdentifier()
                     +"\nНоменклатура: "+ NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid())
-                    +"\nХарактеристика: "+ CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
+                    +"\nХарактеристика: "+ characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
                     +"\nВес: "+ WeightCalculator(parsedBarcode, product) + " кг";
         }
         else if(parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
@@ -113,7 +113,7 @@ public class BarcodeProductLogic {
             resultText=
                     "Штрих-код: "+parsedBarcode.getUniqueIdentifier()
                             +"\nНоменклатура: "+ NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid())
-                            +"\nХарактеристика: "+ CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
+                            +"\nХарактеристика: "+ characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
                             +"\nВес: "+ WeightCalculator(parsedBarcode, product)+" кг"
                             + "\nНомер партии: "+parsedBarcode.getLotNumber()
                             + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())

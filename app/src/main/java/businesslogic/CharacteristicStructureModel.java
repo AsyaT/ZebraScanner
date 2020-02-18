@@ -2,7 +2,7 @@ package businesslogic;
 
 import java.util.HashMap;
 
-public class CharacterisiticStructureModel {
+public class CharacteristicStructureModel {
     HashMap<String,String> Characteristic = new HashMap<>();
 
     public String FindCharacteristicByGuid(String characteristicGuid)
