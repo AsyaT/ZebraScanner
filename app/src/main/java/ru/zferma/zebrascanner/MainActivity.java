@@ -315,6 +315,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
             FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+
+            ScannerApplication appState = ((ScannerApplication) getApplication());
+
             if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("OrderProgress") )
             {
                 getSupportFragmentManager().popBackStack();
@@ -329,10 +332,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
                 startActivity(operationSelectionIntent);
+                appState.scannerState.Set(ScannerState.PRODUCT);
             }
             else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("ScanBadge") )
             {
                 getSupportFragmentManager().popBackStack();
+                appState.scannerState.Set(ScannerState.PRODUCT);
             }
             else
             {
