@@ -48,15 +48,9 @@ public class ScannerApplication extends Application {
     {
         baseDocumentStructureModel = model;
     }
-    public BaseDocumentStructureModel GetBaseDocument() throws ApplicationException {
-        if(baseDocumentStructureModel != null)
-        {
+    public BaseDocumentStructureModel GetBaseDocument()
+    {
             return baseDocumentStructureModel;
-        }
-        else
-        {
-            throw new ApplicationException("Документ-основание не задан.");
-        }
     }
 
     protected String BadgeGuid = null;
