@@ -127,29 +127,29 @@ public class BarcodeProductLogic {
         String productNomenclature = CalculateNomenclature(product.GetProductGuid());
         String productCharacteristic= CalculateCharacteristic(product.GetCharacteristicGUID());
 
-                if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
-                    resultText = "Штрих-код: " + parsedBarcode.getFullBarcode()
+        if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
+            resultText = "Штрих-код: " + parsedBarcode.getFullBarcode()
+                    + "\nНоменклатура: " + productNomenclature
+                    + "\nХарактеристика: " + productCharacteristic
+                    + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг";
+        }
+        else if (parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
+        {
+            String manufacturerName = CalculateManufacturer(parsedBarcode.getInternalProducer());
+
+            resultText =
+                    "Штрих-код: " + parsedBarcode.getUniqueIdentifier()
                             + "\nНоменклатура: " + productNomenclature
                             + "\nХарактеристика: " + productCharacteristic
-                            + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг";
-                }
-                else if (parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
-                {
-                    String manufacturerName = CalculateManufacturer(parsedBarcode.getInternalProducer());
-
-                    resultText =
-                            "Штрих-код: " + parsedBarcode.getUniqueIdentifier()
-                                    + "\nНоменклатура: " + productNomenclature
-                                    + "\nХарактеристика: " + productCharacteristic
-                                    + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг"
-                                    + "\nНомер партии: " + parsedBarcode.getLotNumber()
-                                    + "\nДата производства: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
-                                    + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
-                                    + "\nСерийный номер: " + parsedBarcode.getSerialNumber()
-                                    + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() + " - " + manufacturerName
-                                    + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
-                }
-                return resultText;
+                            + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг"
+                            + "\nНомер партии: " + parsedBarcode.getLotNumber()
+                            + "\nДата производства: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
+                            + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
+                            + "\nСерийный номер: " + parsedBarcode.getSerialNumber()
+                            + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() + " - " + manufacturerName
+                            + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
+        }
+        return resultText;
     }
 
     private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, ProductModel product)
