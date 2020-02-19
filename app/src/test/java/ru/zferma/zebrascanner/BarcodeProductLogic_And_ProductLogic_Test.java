@@ -279,7 +279,7 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
 
     @Test
     public void StringResponseGS1EXPFail() throws ParseException, ApplicationException {
-        ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel("000",BarcodeTypes.LocalGS1_EXP);
+        ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel("0100000000000001310302560010082011190120171912252100001920000",BarcodeTypes.LocalGS1_EXP);
 
         Whitebox.setInternalState(barcodeProductLogic,"parsedBarcode", barcode);
 
@@ -287,9 +287,9 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
 
         String result = barcodeProductLogic.CreateStringResponse(product);
 
-        String expected = "Штрих-код: 4660017707116"
-                + "\nНоменклатура: Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)"
-                + "\nХарактеристика: Монетка"
+        String expected = "Штрих-код: 1"
+                + "\nНоменклатура: Продукт с таким GUID 000 не найден"
+                + "\nХарактеристика: Характеристика продкута с GUID 000 не найдена"
                 + "\nВес: 25.6 кг"
                 + "\nНомер партии: 0820"
                 + "\nДата производства: 20-01-2019"

@@ -26,7 +26,7 @@ public class ManufacturerStructureModel
         }
         else
         {
-            throw new ApplicationException("Производитель с номером" + id + " не найден");
+            throw new ApplicationException("Производитель с номером " + id + " не найден");
         }
 
     }
