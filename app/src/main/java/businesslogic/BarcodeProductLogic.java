@@ -89,43 +89,53 @@ public class BarcodeProductLogic {
         return false;
     }
 
+    private String CalculateNomenclature(String productGuid)
+    {
+        try {
+        return NomenclatureStructureModel.FindProductByGuid(productGuid);
+    }
+        catch (ApplicationException e)
+        {
+            return e.getMessage();
+        }
+    }
+
+    private String CalculateCharacteristic(String characteristicGuid)
+    {
+        try{
+            return characteristicStructureModel.FindCharacteristicByGuid(characteristicGuid);
+        }
+        catch(ApplicationException e)
+        {
+            return e.getMessage();
+        }
+    }
+
+    private String CalculateManufacturer(Byte manufacturerGuid)
+    {
+        try {
+            return ManufacturerStructureModel.GetManufacturerName(manufacturerGuid);
+        } catch (ApplicationException ex) {
+            return ex.getMessage();
+        }
+    }
+
     public String CreateStringResponse(ProductModel product)
     {
         String resultText="";
 
-        String productNomenclature = "";
-        String productCharacteristic= "";
-
-        try {
-            productNomenclature = NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid());
-        }
-        catch (ApplicationException e)
-        {
-            productNomenclature = e.getMessage();
-        }
-        finally
-        {
-            try{
-                productCharacteristic = characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID());
-            }
-            catch(ApplicationException e)
-            {
-                productCharacteristic = e.getMessage();
-            }
-            finally {
+        String productNomenclature = CalculateNomenclature(product.GetProductGuid());
+        String productCharacteristic= CalculateCharacteristic(product.GetCharacteristicGUID());
 
                 if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
                     resultText = "Штрих-код: " + parsedBarcode.getFullBarcode()
                             + "\nНоменклатура: " + productNomenclature
                             + "\nХарактеристика: " + productCharacteristic
                             + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг";
-                } else if (parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP) {
-                    String manufacturerName = "";
-                    try {
-                        manufacturerName = ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer());
-                    } catch (ApplicationException ex) {
-                        manufacturerName = ex.getMessage();
-                    }
+                }
+                else if (parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
+                {
+                    String manufacturerName = CalculateManufacturer(parsedBarcode.getInternalProducer());
 
                     resultText =
                             "Штрих-код: " + parsedBarcode.getUniqueIdentifier()
@@ -140,8 +150,6 @@ public class BarcodeProductLogic {
                                     + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
                 }
                 return resultText;
-            }
-        }
     }
 
     private Double WeightCalculator(ScanningBarcodeStructureModel scannedBarcode, ProductModel product)
