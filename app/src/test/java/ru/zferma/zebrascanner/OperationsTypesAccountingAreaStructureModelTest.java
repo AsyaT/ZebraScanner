@@ -1,10 +1,8 @@
 package ru.zferma.zebrascanner;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +13,7 @@ import businesslogic.OperationsTypesAccountingAreaStructureModel;
 import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
 import serverDatabaseInteraction.OperationTypesHelper;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ OperationTypesHelper.class })
-class OperationTypesHelperTest {
+public class OperationsTypesAccountingAreaStructureModelTest {
 
     OperationTypesHelper helper;
 
@@ -25,26 +21,9 @@ class OperationTypesHelperTest {
 
     OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel;
 
-    public OperationTypesHelperTest()
+    @Before
+    public void Init()
     {
-        /*
-        OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel = new OperationsTypesAccountingAreaStructureModel();
-
-        OperationsTypesAccountingAreaStructureModel.Operation operation = new OperationsTypesAccountingAreaStructureModel.Operation();
-        operation.SetName("Ротация");
-
-        OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea = new OperationsTypesAccountingAreaStructureModel.AccountingArea();
-
-        HashMap<ScanDataCollection.LabelType, Boolean> rules = new HashMap<>();
-        rules.put(ScanDataCollection.LabelType.EAN13, false);
-        rules.put(ScanDataCollection.LabelType.GS1_DATABAR_EXP, true);
-
-        accountingArea.Add("Ротация",rules,false);
-        operation.AddAccountingArea("97e2d02c-ad73-11e7-80c4-a4bf011ce3c3",accountingArea);
-
-        operationsTypesAccountingAreaStructureModel.Add("Ротация",operation);
-*/
-
         model = new OperationTypesAndAccountingAreasModel();
         model.Error = false;
         model.AccountingAreasAndTypes = new ArrayList<OperationTypesAndAccountingAreasModel.OperationTypeModel>();
@@ -98,23 +77,30 @@ class OperationTypesHelperTest {
     }
 
     @Test
-    public void Test_HasSeveralAccountingAreas()
-    {
+    public void Test_HasSeveralAccountingAreas() throws ApplicationException {
         Assert.assertFalse(operationsTypesAccountingAreaStructureModel.HasSeveralAccountingAreas("Ротация"));
         
         Assert.assertTrue(operationsTypesAccountingAreaStructureModel.HasSeveralAccountingAreas("Приемка"));
     }
 
+    @Test(expected = ApplicationException.class)
+    public void Test_HasSeveralAccountingAreas_Fail() throws ApplicationException {
+        operationsTypesAccountingAreaStructureModel.HasSeveralAccountingAreas("1111");
+    }
+
     @Test
-    public void Test_GetAccountingAreas()
-    {
+    public void Test_GetAccountingAreas() throws ApplicationException {
         Assert.assertTrue(operationsTypesAccountingAreaStructureModel.GetAccountingAreas("Приемка").containsKey("414d48d4-f210-11e6-80cb-001e67e5da8c"));
         Assert.assertTrue(operationsTypesAccountingAreaStructureModel.GetAccountingAreas("Приемка").containsKey("b50985a2-ddad-11e8-80cd-a4bf011ce3c3"));
     }
 
+    @Test(expected = ApplicationException.class)
+    public void Test_GetAccountingArea_fail() throws ApplicationException {
+        operationsTypesAccountingAreaStructureModel.GetAccountingAreas("1111");
+    }
+
     @Test
-    public void Test_Permissions()
-    {
+    public void Test_Permissions() throws ApplicationException {
         HashMap<BarcodeTypes, Boolean> permissions = new HashMap<>();
         permissions.put(BarcodeTypes.LocalEAN13, Boolean.FALSE);
         permissions.put(BarcodeTypes.LocalGS1_EXP, Boolean.TRUE);
@@ -133,8 +119,7 @@ class OperationTypesHelperTest {
     }
 
     @Test
-    public void Test_GetOperationName()
-    {
+    public void Test_GetOperationName() throws ApplicationException {
         Assert.assertEquals("Приемка", operationsTypesAccountingAreaStructureModel.GetOperationName("Приемка"));
     }
 
@@ -142,6 +127,11 @@ class OperationTypesHelperTest {
     public void Test_GetOperationSet()
     {
         Assert.assertEquals(2,operationsTypesAccountingAreaStructureModel.GetOperationKeys().size());
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void Test_GetOperationNAme_fali() throws ApplicationException {
+        operationsTypesAccountingAreaStructureModel.GetOperationName("1111");
     }
 
 }
