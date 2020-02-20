@@ -5,25 +5,22 @@ import java.util.Set;
 
 public class OperationsTypesAccountingAreaStructureModel {
 
+    private HashMap<String,Operation> Operations;
+
     public OperationsTypesAccountingAreaStructureModel()
     {
         this.Operations = new HashMap<>();
     }
 
-    private HashMap<String,Operation> Operations;
 
     public static class Operation {
-
-        public Operation()
-        {
-            this.AccountingAreas = new HashMap<>();
-        }
 
         private String OperationName;
         private HashMap<String,AccountingArea> AccountingAreas;
 
-        public void SetName(String operationName)
+        public Operation(String operationName)
         {
+            this.AccountingAreas = new HashMap<>();
             this.OperationName = operationName;
         }
 
@@ -66,20 +63,38 @@ public class OperationsTypesAccountingAreaStructureModel {
         return  this.Operations.keySet();
     }
 
-    public String GetOperationName(String operationGuid)
-    {
-        return this.Operations.get(operationGuid).OperationName;
+    public String GetOperationName(String operationGuid) throws ApplicationException {
+        if(this.Operations.containsKey(operationGuid))
+        {
+            return this.Operations.get(operationGuid).OperationName;
+        }
+        else
+            {
+                throw new ApplicationException("Операции "+operationGuid+" не найдено");
+            }
     }
 
-    public Boolean HasSeveralAccountingAreas(String operationGuid)
-    {
-       return this.Operations.get(operationGuid).AccountingAreas.size() > 1;
+    public Boolean HasSeveralAccountingAreas(String operationGuid) throws ApplicationException {
+        if(this.Operations.containsKey(operationGuid))
+        {
+            return this.Operations.get(operationGuid).AccountingAreas.size() > 1;
+        }
+        else
+        {
+            throw new ApplicationException("Операции "+operationGuid+" не найдено");
+        }
     }
 
 
-    public HashMap<String,AccountingArea> GetAccountingAreas(String operationGuid)
-    {
-        return this.Operations.get(operationGuid).AccountingAreas;
+    public HashMap<String,AccountingArea> GetAccountingAreas(String operationGuid) throws ApplicationException {
+        if(this.Operations.containsKey(operationGuid))
+        {
+            return this.Operations.get(operationGuid).AccountingAreas;
+        }
+        else
+        {
+            throw new ApplicationException("Операции "+operationGuid+" не найдено");
+        }
     }
 
     public void Add(String operationGuid, OperationsTypesAccountingAreaStructureModel.Operation operationData)

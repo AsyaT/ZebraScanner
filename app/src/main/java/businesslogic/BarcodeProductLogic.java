@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class BarcodeProductLogic {
     BarcodeStructureModel BarcodeStructureModel = null;
     NomenclatureStructureModel NomenclatureStructureModel = null;
-    CharacterisiticStructureModel CharacterisiticStructureModel = null;
+    CharacteristicStructureModel characteristicStructureModel = null;
     ManufacturerStructureModel ManufacturerStructureModel = null;
 
     private ScanningBarcodeStructureModel parsedBarcode = null;
@@ -15,13 +15,13 @@ public class BarcodeProductLogic {
     public BarcodeProductLogic(
             BarcodeStructureModel barcodeStructureModel,
             NomenclatureStructureModel nomenclatureStructureModel,
-            CharacterisiticStructureModel characterisiticStructureModel,
+            CharacteristicStructureModel characteristicStructureModel,
             ManufacturerStructureModel manufacturerStructureModel
             )
     {
         this.BarcodeStructureModel = barcodeStructureModel;
         this.NomenclatureStructureModel = nomenclatureStructureModel;
-        this.CharacterisiticStructureModel = characterisiticStructureModel;
+        this.characteristicStructureModel = characteristicStructureModel;
         this.ManufacturerStructureModel = manufacturerStructureModel;
     }
 
@@ -33,7 +33,7 @@ public class BarcodeProductLogic {
 
         if(listOfProducts == null)
         {
-            throw new ApplicationException("Такой штрих-код не найден в номенклатуре!");
+            throw new ApplicationException("Не найдено продуктов по штрих-коду "+ scannedBarcode);
         }
 
         listOfProducts = RemoveDuplicateProducts(listOfProducts);
@@ -89,37 +89,64 @@ public class BarcodeProductLogic {
         return false;
     }
 
+    private String CalculateNomenclature(String productGuid)
+    {
+        try {
+        return NomenclatureStructureModel.FindProductByGuid(productGuid);
+    }
+        catch (ApplicationException e)
+        {
+            return e.getMessage();
+        }
+    }
+
+    private String CalculateCharacteristic(String characteristicGuid)
+    {
+        try{
+            return characteristicStructureModel.FindCharacteristicByGuid(characteristicGuid);
+        }
+        catch(ApplicationException e)
+        {
+            return e.getMessage();
+        }
+    }
+
+    private String CalculateManufacturer(Byte manufacturerGuid)
+    {
+        try {
+            return ManufacturerStructureModel.GetManufacturerName(manufacturerGuid);
+        } catch (ApplicationException ex) {
+            return ex.getMessage();
+        }
+    }
+
     public String CreateStringResponse(ProductModel product)
     {
         String resultText="";
 
-        if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
-            resultText="Штрих-код: "+ parsedBarcode.getUniqueIdentifier()
-                    +"\nНоменклатура: "+ NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid())
-                    +"\nХарактеристика: "+ CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
-                    +"\nВес: "+ WeightCalculator(parsedBarcode, product) + " кг";
-        }
-        else if(parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
-        {
-            String manufacturerName = "";
-            try{
-                manufacturerName = ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer());
-            }
-            catch (ApplicationException ex)
-            {
-                manufacturerName = ex.getMessage();
-            }
+        String productNomenclature = CalculateNomenclature(product.GetProductGuid());
+        String productCharacteristic= CalculateCharacteristic(product.GetCharacteristicGUID());
 
-            resultText=
-                    "Штрих-код: "+parsedBarcode.getUniqueIdentifier()
-                            +"\nНоменклатура: "+ NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid())
-                            +"\nХарактеристика: "+ CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID())
-                            +"\nВес: "+ WeightCalculator(parsedBarcode, product)+" кг"
-                            + "\nНомер партии: "+parsedBarcode.getLotNumber()
-                            + "\nДата производства: "+ new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
+        if (parsedBarcode.getLabelType() == BarcodeTypes.LocalEAN13) {
+            resultText = "Штрих-код: " + parsedBarcode.getFullBarcode()
+                    + "\nНоменклатура: " + productNomenclature
+                    + "\nХарактеристика: " + productCharacteristic
+                    + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг";
+        }
+        else if (parsedBarcode.getLabelType() == BarcodeTypes.LocalGS1_EXP)
+        {
+            String manufacturerName = CalculateManufacturer(parsedBarcode.getInternalProducer());
+
+            resultText =
+                    "Штрих-код: " + parsedBarcode.getUniqueIdentifier()
+                            + "\nНоменклатура: " + productNomenclature
+                            + "\nХарактеристика: " + productCharacteristic
+                            + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг"
+                            + "\nНомер партии: " + parsedBarcode.getLotNumber()
+                            + "\nДата производства: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
                             + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
                             + "\nСерийный номер: " + parsedBarcode.getSerialNumber()
-                            + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() +" - "+ manufacturerName
+                            + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() + " - " + manufacturerName
                             + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
         }
         return resultText;

@@ -4,18 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import businesslogic.ApplicationException;
-import businesslogic.BarcodeStructureModel;
-import businesslogic.BaseDocumentStructureModel;
-import businesslogic.CharacterisiticStructureModel;
-import businesslogic.FullDataTableControl;
-import businesslogic.ManufacturerStructureModel;
-import businesslogic.NomenclatureStructureModel;
-import businesslogic.OperationTypesStructureModel;
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
-import businesslogic.PackageListDataTable;
-import businesslogic.ScannerStateHelper;
-import businesslogic.ServerConnection;
+import businesslogic.*;
 
 public class ScannerApplication extends Application {
 
@@ -30,7 +19,7 @@ public class ScannerApplication extends Application {
 
     public BarcodeStructureModel barcodeStructureModel = null;
     public NomenclatureStructureModel nomenclatureStructureModel = null;
-    public CharacterisiticStructureModel characterisiticStructureModel = null;
+    public CharacteristicStructureModel characteristicStructureModel = null;
     public OperationsTypesAccountingAreaStructureModel operationsTypesAccountingAreaStructureModel = null;
     public ManufacturerStructureModel manufacturerStructureModel = null;
 
@@ -59,15 +48,9 @@ public class ScannerApplication extends Application {
     {
         baseDocumentStructureModel = model;
     }
-    public BaseDocumentStructureModel GetBaseDocument() throws ApplicationException {
-        if(baseDocumentStructureModel != null)
-        {
+    public BaseDocumentStructureModel GetBaseDocument()
+    {
             return baseDocumentStructureModel;
-        }
-        else
-        {
-            throw new ApplicationException("Документ-основание не задан.");
-        }
     }
 
     protected String BadgeGuid = null;

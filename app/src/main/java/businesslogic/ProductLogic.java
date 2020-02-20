@@ -3,28 +3,28 @@ package businesslogic;
 public class ProductLogic {
 
     NomenclatureStructureModel NomenclatureStructureModel = null;
-    CharacterisiticStructureModel CharacterisiticStructureModel = null;
+    CharacteristicStructureModel characteristicStructureModel = null;
     ManufacturerStructureModel ManufacturerStructureModel = null;
 
 
     public ProductLogic(
             NomenclatureStructureModel nomenclatureStructureModel,
-            CharacterisiticStructureModel characterisiticStructureModel,
+            CharacteristicStructureModel characterisiticStructureModel,
             ManufacturerStructureModel manufacturerStructureModel
             )
     {
        this.NomenclatureStructureModel = nomenclatureStructureModel;
-       this.CharacterisiticStructureModel = characterisiticStructureModel;
+       this.characteristicStructureModel = characterisiticStructureModel;
        this.ManufacturerStructureModel = manufacturerStructureModel;
 
     }
 
-    public ListViewPresentationModel CreateListView(ProductModel product)
+    public ListViewPresentationModel CreateListView(ProductModel product) throws ApplicationException
     {
         return
                 new ListViewPresentationModel(
                         NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
-                        CharacterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
+                        characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
                         product.GetWeight(),
                         product.GetProductGuid())
         ;

@@ -52,7 +52,7 @@ public class ProgressOrderFragment extends Fragment {
                 txtView.setText(
                         appState.nomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()) +
                                 "\n" +
-                                appState.characterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGuid()));
+                                appState.characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGuid()));
                 txtView.setBackgroundResource(R.drawable.textviewborder);
 
                 LinearLayout linearLayoutKilos = new LinearLayout(getActivity());

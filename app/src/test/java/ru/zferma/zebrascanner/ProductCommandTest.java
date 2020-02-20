@@ -9,20 +9,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ScanningCommand.ProductCommand;
-import businesslogic.ApplicationException;
-import businesslogic.BarcodeProductLogic;
-import businesslogic.BarcodeScanningLogic;
-import businesslogic.BarcodeStructureModel;
-import businesslogic.BarcodeTypes;
-import businesslogic.BaseDocumentLogic;
-import businesslogic.BaseDocumentStructureModel;
-import businesslogic.CharacterisiticStructureModel;
-import businesslogic.DoesNotExistsInOrderException;
-import businesslogic.ManufacturerStructureModel;
-import businesslogic.NomenclatureStructureModel;
-import businesslogic.OperationTypesStructureModel;
-import businesslogic.ProductStructureModel;
+import scanningcommand.ProductCommand;
+import businesslogic.*;
 
 public class ProductCommandTest
 {
@@ -53,7 +41,7 @@ public class ProductCommandTest
         nomenclatureStructureModel.Add("6130fe3f-93ba-11e8-80cc-a4bf011ce3c3", "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)");
         nomenclatureStructureModel.Add("b1cc5c45-7ca8-11e6-80d7-e4115bea65d2", "Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)");
 
-        CharacterisiticStructureModel characterisiticStructureModel = new CharacterisiticStructureModel();
+        CharacteristicStructureModel characterisiticStructureModel = new CharacteristicStructureModel();
         characterisiticStructureModel.Add("41dbf472-19d8-11e7-80cb-001e67e5da8c","Метро");
         characterisiticStructureModel.Add("760d9dfd-93ba-11e8-80cc-a4bf011ce3c3","Тандер");
         characterisiticStructureModel.Add("b9e89741-ef89-11e6-80cb-001e67e5da8c","Монетка");

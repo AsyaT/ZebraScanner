@@ -33,12 +33,14 @@ public class OperationTypesHelper extends  PullDataHelperAbstractFactory
 
             for(OperationTypesAndAccountingAreasModel.OperationTypeModel otm : ((OperationTypesAndAccountingAreasModel) inputModel).AccountingAreasAndTypes)
             {
-                OperationsTypesAccountingAreaStructureModel.Operation data = new OperationsTypesAccountingAreaStructureModel.Operation();
-                data.SetName(otm.OperationTypeName);
+                OperationsTypesAccountingAreaStructureModel.Operation data =
+                        new OperationsTypesAccountingAreaStructureModel.Operation(otm.OperationTypeName);
 
                 for(OperationTypesAndAccountingAreasModel.AccountingAreaModel aa:otm.AccountingAreas)
                 {
-                    OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea = new OperationsTypesAccountingAreaStructureModel.AccountingArea();
+                    OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea =
+                            new OperationsTypesAccountingAreaStructureModel.AccountingArea();
+
                     HashMap<BarcodeTypes, Boolean> permissions = new HashMap<>();
 
                     permissions.put(BarcodeTypes.LocalEAN13, ! aa.EAN13_Denied);

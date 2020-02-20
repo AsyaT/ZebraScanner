@@ -11,19 +11,27 @@ import businesslogic.ProductStructureModel;
 
 public class BaseDocumentLogicTest {
 
+    BaseDocumentStructureModel dataModel;
     BaseDocumentLogic baseDocumentLogic;
 
     @Before
     public void Init()
     {
-        BaseDocumentStructureModel model = new BaseDocumentStructureModel("Заказ");
-        model.Add(new BaseDocumentStructureModel.ProductOrderStructureModel(
+        dataModel = new BaseDocumentStructureModel("Заказ");
+        dataModel.Add(new BaseDocumentStructureModel.ProductOrderStructureModel(
                 "345-333-444",
                 "475-222-22",
                 12.0,2.0,
                 6,1));
 
-        baseDocumentLogic = new BaseDocumentLogic(model);
+        baseDocumentLogic = new BaseDocumentLogic(dataModel);
+    }
+
+    @Test
+    public void TestBaseDocumentStructureModel()
+    {
+        Assert.assertTrue(dataModel.IfProductExists("345-333-444"));
+        Assert.assertFalse(dataModel.IfProductExists("000"));
     }
 
     @Test
