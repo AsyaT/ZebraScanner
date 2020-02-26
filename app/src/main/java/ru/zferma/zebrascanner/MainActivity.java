@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 EditText txtEditBarcodeToScan = findViewById(R.id.txtEditBarcodeToScan);
                 String emulatedBarcode = txtEditBarcodeToScan.getText().toString();
 
-                ScanDataCollection scanDataCollection = new MapScanDataCollection().CreateCollection(emulatedBarcode);
+                ScanDataCollection scanDataCollection = new MapScanDataCollection().CreateCollection(emulatedBarcode.split(",")[0], emulatedBarcode.split(",")[1]);
                 onData(scanDataCollection);
             }
         });

@@ -33,7 +33,7 @@ public  class MapScanDataCollection
     private static final String FIELD_IS_DEFAULT_SCANNER = "isDefaultScanner";
     private static final String FIELD_IS_CONNECTED = "isConnected";
 
-    public  ScanDataCollection CreateCollection(String input)
+    public  ScanDataCollection CreateCollection(String input, String labelType)
     {
         byte[] test_scan_barcode = input.getBytes();
 
@@ -43,15 +43,16 @@ public  class MapScanDataCollection
 
         String test_scan_charsetName = "UTF-8";
 
-        ScanDataCollection.LabelType test_scan_label_type = null;
-        if(input.length() == 14)
+        ScanDataCollection.LabelType test_scan_label_type = ScanDataCollection.LabelType.EAN13;
+        if(labelType.equalsIgnoreCase("EAN13"))
         {
             test_scan_label_type = ScanDataCollection.LabelType.EAN13;
         }
-        else if(input.length() > 50)
+        else if(labelType.equalsIgnoreCase("GS1_DATABAR_EXP"))
         {
             test_scan_label_type = ScanDataCollection.LabelType.GS1_DATABAR_EXP;
         }
+        //TODO: add LabelTypes for SSCC, order guid and badge
 
         ScanDataStub temp = new ScanDataStub(test_scan_barcode,test_scan_label_type,test_scan_charsetName,test_scan_timestamp);
         bufferedScans.add(temp);
