@@ -43,7 +43,7 @@ public  class MapScanDataCollection
 
         String test_scan_charsetName = "UTF-8";
 
-        ScanDataCollection.LabelType test_scan_label_type = ScanDataCollection.LabelType.EAN13;
+        ScanDataCollection.LabelType test_scan_label_type = null;
         if(labelType.equalsIgnoreCase("EAN13"))
         {
             test_scan_label_type = ScanDataCollection.LabelType.EAN13;
