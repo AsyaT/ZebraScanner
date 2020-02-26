@@ -4,17 +4,14 @@
 
     <EditText
         android:id="@+id/txtEditBarcodeToScan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:visibility="invisible"
-        android:inputType="number" />
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:inputType="none" />
 
     <Button
         android:id="@+id/btnDoScan"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:text="Button" />
 
     <LinearLayout
