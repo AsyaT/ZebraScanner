@@ -126,7 +126,7 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
         ListViewPresentationModel expected = new ListViewPresentationModel(
                 "Голень куриная \"Здоровая Ферма\", охл.~10,00 кг*1/~10,0 кг/ (пакет пнд, гофрокороб)",
                 "Тандер",
-                8.3,
+                10.0,
                 "6130fe3f-93ba-11e8-80cc-a4bf011ce3c3"
         );
 
@@ -151,7 +151,7 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
         ListViewPresentationModel expected = new ListViewPresentationModel(
                 "Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)",
                 "Монетка",
-                25.6,
+                4.0,
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2"
         );
 

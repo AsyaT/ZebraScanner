@@ -106,11 +106,18 @@ public class ProductCommand extends ResponseFormat implements Command
 
                                 try {
 
-                                    SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, CheckInOrder(result[0]));
+                                    ProductStructureModel orderProduct =  CheckInOrder(result[0]);
+                                    ProductStructureModel calculatedProduct = BarcodeProductLogic.MixBarcodeWithDatabase(orderProduct);
+                                    SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, calculatedProduct);
 
                                 } catch (DoesNotExistsInOrderException ex) {
                                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
-                                } finally {
+                                }
+                                catch (ApplicationException ex)
+                                {
+                                    ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+                                }
+                                finally {
 
                                     try {
                                         CurrentScanner.enable();
@@ -175,8 +182,8 @@ public class ProductCommand extends ResponseFormat implements Command
             }
             else
             {
-                return CheckInOrder(products.get(0));
-
+                ProductStructureModel orderProduct =  CheckInOrder(products.get(0));
+                return this.BarcodeProductLogic.MixBarcodeWithDatabase(orderProduct);
             }
 
         return null;
