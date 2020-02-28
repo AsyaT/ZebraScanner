@@ -36,27 +36,25 @@ public class BarcodeProductLogic {
             throw new ApplicationException("Не найдено продуктов по штрих-коду "+ scannedBarcode);
         }
 
-        listOfProducts = RemoveDuplicateProducts(listOfProducts);
+        return RemoveDuplicateProducts(listOfProducts);
+    }
 
-        for(ProductStructureModel product : listOfProducts)
+    public ProductStructureModel MixBarcodeWithDatabase(ProductStructureModel product) throws ApplicationException {
+        product.SetWeight(parsedBarcode.getWeight());
+        product.SetProductionDate(parsedBarcode.getProductionDate());
+        product.SetExpirationDate(parsedBarcode.getExpirationDate());
+        if(parsedBarcode.getInternalProducer() !=null)
         {
-            product.SetWeight(parsedBarcode.getWeight());
-            product.SetProductionDate(parsedBarcode.getProductionDate());
-            product.SetExpirationDate(parsedBarcode.getExpirationDate());
-            if(parsedBarcode.getInternalProducer() !=null)
+            try {
+                product.SetManufacturerGuid(ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer()));
+            }
+            catch (ApplicationException ex)
             {
-                try {
-                    product.SetManufacturerGuid(ManufacturerStructureModel.GetManufacturerName(parsedBarcode.getInternalProducer()));
-                }
-                catch (ApplicationException ex)
-                {
-                    throw new ApplicationException(ex.getMessage());
-                }
+                throw new ApplicationException(ex.getMessage());
             }
         }
 
-        return listOfProducts;
-
+        return product;
     }
 
     protected ArrayList<ProductStructureModel> RemoveDuplicateProducts(ArrayList<ProductStructureModel> products)
