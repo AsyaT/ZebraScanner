@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,7 +42,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import scanningcommand.BarcodeExecutor;
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
@@ -50,6 +50,8 @@ import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
+import presentation.MapScanDataCollection;
+import scanningcommand.BarcodeExecutor;
 import serverDatabaseInteraction.BarcodeHelper;
 import serverDatabaseInteraction.ManufacturerHelper;
 
@@ -186,6 +188,30 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
                 // Считать бейдж
                 ShowFragmentScanBadge();
+            }
+        });
+
+        Button btnDoScan = findViewById(R.id.btnDoScan);
+        btnDoScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                EditText txtEditBarcodeToScan = findViewById(R.id.txtEditBarcodeToScan);
+                String emulatedBarcode = txtEditBarcodeToScan.getText().toString();
+
+                String[] scannedCollection = emulatedBarcode.split(",");
+
+                if(scannedCollection.length == 2) {
+                    String barcode = scannedCollection[0];
+                    String labelType = scannedCollection[1];
+
+                    ScanDataCollection scanDataCollection = new MapScanDataCollection().CreateCollection(barcode, labelType);
+                    onData(scanDataCollection);
+                }
+                else
+                    {
+                        AlarmAndNotify("Неправильно введены данные: "+ emulatedBarcode);
+                    }
             }
         });
     }
