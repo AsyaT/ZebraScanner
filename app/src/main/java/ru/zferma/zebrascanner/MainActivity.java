@@ -107,12 +107,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                dataTableControl.ItemClicked(view,position-1);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
+            {
+                String productGuidToRemove = dataTableControl.GetItemByIndex(position - 1).getProductGuid();
+                dataTableControl.ItemClicked(view,productGuidToRemove);
 
                 try {
-                    appState.ScannedProductsToSend.ItemIsClicked(dataTableControl.GetItemByIndex(position - 1).getProductGuid());
+                    appState.ScannedProductsToSend.ItemIsClicked(productGuidToRemove);
                 }
                 catch (IndexOutOfBoundsException e)
                 {
