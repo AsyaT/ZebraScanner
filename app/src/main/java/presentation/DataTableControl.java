@@ -7,13 +7,14 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import businesslogic.ListViewPresentationModel;
 
 public class DataTableControl {
 
     private ArrayList<ProductListViewModel> DataTable;
-    private ArrayList<Integer> ItemsToDelete;
+    private ArrayList<String> ItemsToDelete;
 
     public Integer GetSizeOfList()
     {
@@ -23,7 +24,7 @@ public class DataTableControl {
     public DataTableControl()
     {
         DataTable = new ArrayList<ProductListViewModel>();
-        ItemsToDelete = new ArrayList<Integer>();
+        ItemsToDelete = new ArrayList<String>();
     }
 
     public ArrayList<ProductListViewModel> GetDataTable()
@@ -57,17 +58,17 @@ public class DataTableControl {
         return Boolean.FALSE;
     }
 
-    public void ItemClicked(View view, int index)
+    public void ItemClicked(View view, String productGuid)
     {
-        if(ItemsToDelete.contains(index))
+        if(ItemsToDelete.contains(productGuid))
         {
             view.setBackgroundColor(Color.WHITE);
-            ItemsToDelete.remove((Integer) index);
+            ItemsToDelete.remove((String) productGuid);
         }
         else
         {
             view.setBackgroundColor(Color.YELLOW);
-            ItemsToDelete.add(index);
+            ItemsToDelete.add(productGuid);
         }
     }
 
@@ -121,14 +122,27 @@ public class DataTableControl {
 
     public void RemoveSelected()
     {
-        for (Integer x : ItemsToDelete) {
-            ProductListViewModel removedItem = DataTable.remove((int) x);
-
-            for(ProductListViewModel leftProduct : DataTable)
+        for (String productGuid : ItemsToDelete)
+        {
+            Iterator<ProductListViewModel> i = DataTable.iterator();
+            ProductListViewModel existingLVModel = i.next();
+            while (i.hasNext())
             {
-                if(Integer.valueOf( leftProduct.getStringNumber()) > Integer.valueOf(removedItem.getStringNumber()) )
+                if(existingLVModel.getProductGuid().equalsIgnoreCase(productGuid))
                 {
-                    leftProduct.setStringNumber(String.valueOf(Integer.valueOf( leftProduct.getStringNumber()) - 1));
+                    Integer newStrinNumber = Integer.parseInt(existingLVModel.getStringNumber());
+                    while(i.hasNext())
+                    {
+                        ProductListViewModel itemToRewriteNumber = i.next();
+                        itemToRewriteNumber.setStringNumber(newStrinNumber.toString());
+                        newStrinNumber = newStrinNumber + 1 ;
+                    }
+
+                    DataTable.remove(existingLVModel);
+                    break;
+                }
+                else{
+                    existingLVModel = i.next();
                 }
             }
         };

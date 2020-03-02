@@ -14,6 +14,7 @@ import presentation.DataTableControl;
 import presentation.ProductListViewModel;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 
@@ -139,15 +140,19 @@ public class DataTableControlTest {
     @Test
     public void RemoveProduct()
     {
-        Table.ItemClicked(testView,2);
-        Table.ItemClicked(testView,0);
+        Table.ItemClicked(testView,"789-168-038-557");
+        Table.ItemClicked(testView,"111-111-111-111");
         Table.RemoveSelected();
 
         ProductListViewModel result = Table.FindProduct("493-58-33");
 
-        assertEquals(result.getStringNumber(),"2");
-        assertEquals(result.getCoefficient(),"2");
-        assertEquals(result.getWeight(),"51.2");
+        assertEquals("2",result.getStringNumber());
+        assertEquals("2", result.getCoefficient());
+        assertEquals("51.2", result.getWeight());
+
+
+        ProductListViewModel removed = Table.FindProduct("111-111-111-111");
+        assertNull(removed);
     }
 
     @Test
