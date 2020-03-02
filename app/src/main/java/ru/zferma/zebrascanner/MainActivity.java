@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 try{
                     Fragment barcodeInfoFragment = new BarcodeInfoFragment();
                     FragmentHelper fragmentHelper = new FragmentHelper(MainActivity.this);
-                    fragmentHelper.replaceFragment(barcodeInfoFragment, R.id.frBarcodeInfo);
+                    fragmentHelper.replaceFragment(barcodeInfoFragment, R.id.frBarcodeInfo, "BarcodeInfo");
                     IsBarcodeInfoFragmentShowed = true;
                 }
                 catch (Exception ex){
@@ -370,6 +370,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             {
                 getSupportFragmentManager().popBackStack();
                 appState.scannerState.Set(ScannerState.PRODUCT);
+            }
+            else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("BarcodeInfo") )
+            {
+                getSupportFragmentManager().popBackStack();
+                appState.scannerState.Set(ScannerState.PRODUCT);
+                IsBarcodeInfoFragmentShowed = false;
             }
             else
             {
