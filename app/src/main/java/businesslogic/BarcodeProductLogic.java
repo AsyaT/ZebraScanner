@@ -142,7 +142,7 @@ public class BarcodeProductLogic {
                             + "\nВес: " + WeightCalculator(parsedBarcode, product) + " кг"
                             + "\nНомер партии: " + parsedBarcode.getLotNumber()
                             + "\nДата производства: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getProductionDate())
-                            + "\nДата истечения срока годност: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
+                            + "\nДата истечения срока годности: " + new SimpleDateFormat("dd-MM-yyyy").format(parsedBarcode.getExpirationDate())
                             + "\nСерийный номер: " + parsedBarcode.getSerialNumber()
                             + "\nВнутренний код производителя: " + parsedBarcode.getInternalProducer() + " - " + manufacturerName
                             + "\nВнутренний код оборудования: " + parsedBarcode.getInternalEquipment();
