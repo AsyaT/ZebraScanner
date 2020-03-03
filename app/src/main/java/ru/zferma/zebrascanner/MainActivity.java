@@ -386,6 +386,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
         } else {
             super.onBackPressed();
+            Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
+            startActivity(operationSelectionIntent);
         }
     }
 
