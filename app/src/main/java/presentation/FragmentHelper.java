@@ -35,7 +35,7 @@ public class FragmentHelper {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         fragmentTransaction.hide(fragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentManager.popBackStack();
         fragmentTransaction.commit();
     }
 }

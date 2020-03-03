@@ -347,6 +347,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
             FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+            FragmentHelper fragmentHelper = new FragmentHelper(MainActivity.this);
 
             ScannerApplication appState = ((ScannerApplication) getApplication());
 
@@ -373,7 +374,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
             else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("BarcodeInfo") )
             {
-                getSupportFragmentManager().popBackStack();
+                Fragment frBarcodeInfo = getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+                fragmentHelper.closeFragment(frBarcodeInfo);
+
                 appState.scannerState.Set(ScannerState.PRODUCT);
                 IsBarcodeInfoFragmentShowed = false;
             }
