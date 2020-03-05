@@ -11,6 +11,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 import businesslogic.BaseDocumentStructureModel;
 
 public class ProgressOrderFragment extends Fragment {
@@ -33,6 +38,9 @@ public class ProgressOrderFragment extends Fragment {
         TableLayout tblLayout = view.findViewById(R.id.tblProgrssOrder);
 
         ScannerApplication appState = ((ScannerApplication) getActivity().getApplication());
+
+        DecimalFormat formatter = new DecimalFormat("#.###", DecimalFormatSymbols.getInstance( Locale.GERMAN ));
+        formatter.setRoundingMode( RoundingMode.DOWN );
 
         for(BaseDocumentStructureModel.ProductOrderStructureModel product : Order.ProductList())
         {
@@ -61,21 +69,21 @@ public class ProgressOrderFragment extends Fragment {
                 TextView txtOrderd = new TextView(getActivity());
                 txtOrderd.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
                 txtOrderd.setGravity(Gravity.CENTER);
-                txtOrderd.setText(product.OrderedInKilos().toString());
+                txtOrderd.setText(formatter.format(product.OrderedInKilos()));
                 txtOrderd.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtExecuted = new TextView(getActivity());
                 txtExecuted.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
                 txtExecuted.setGravity(Gravity.CENTER);
                 Double finalSum = product.DoneInKilos() + doneKilos;
-                txtExecuted.setText(finalSum.toString());
+                txtExecuted.setText(formatter.format(finalSum));
                 txtExecuted.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtLeft = new TextView(getActivity());
                 txtLeft.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
                 txtLeft.setGravity(Gravity.CENTER);
                 Double finalDiff = product.LeftInKilos() - doneKilos;
-                txtLeft.setText(finalDiff.toString());
+                txtLeft.setText(formatter.format(finalDiff));
                 txtLeft.setBackgroundResource(R.drawable.textviewborder);
 
                 linearLayoutKilos.addView(txtOrderd);
