@@ -52,6 +52,10 @@ public  class MapScanDataCollection
         {
             test_scan_label_type = ScanDataCollection.LabelType.GS1_DATABAR_EXP;
         }
+        else if(labelType.equalsIgnoreCase("Code-128"))
+        {
+            test_scan_label_type = ScanDataCollection.LabelType.CODE128;
+        }
         //TODO: add LabelTypes for SSCC, order guid and badge
 
         ScanDataStub temp = new ScanDataStub(test_scan_barcode,test_scan_label_type,test_scan_charsetName,test_scan_timestamp);
