@@ -65,6 +65,7 @@ public class ProgressOrderFragment extends Fragment {
 
                 LinearLayout linearLayoutKilos = new LinearLayout(getActivity());
                 linearLayoutKilos.setOrientation(LinearLayout.HORIZONTAL);
+                linearLayoutKilos.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.MATCH_PARENT));
 
                 TextView txtOrderd = new TextView(getActivity());
                 txtOrderd.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
@@ -92,6 +93,7 @@ public class ProgressOrderFragment extends Fragment {
 
                 LinearLayout linearLayoutItems = new LinearLayout(getActivity());
                 linearLayoutItems.setOrientation(LinearLayout.HORIZONTAL);
+                linearLayoutItems.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.MATCH_PARENT));
 
                 TextView txtOrderedPieces = new TextView(getActivity());
                 txtOrderedPieces.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
