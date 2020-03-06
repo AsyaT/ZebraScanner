@@ -125,26 +125,26 @@ public class DataTableControl {
         for (String productGuid : ItemsToDelete)
         {
             Iterator<ProductListViewModel> i = DataTable.iterator();
-            ProductListViewModel existingLVModel = i.next();
+
             while (i.hasNext())
             {
+                ProductListViewModel existingLVModel = i.next();
+
                 if(existingLVModel.getProductGuid().equalsIgnoreCase(productGuid))
                 {
-                    Integer newStrinNumber = Integer.parseInt(existingLVModel.getStringNumber());
+                    Integer newStringNumber = Integer.parseInt(existingLVModel.getStringNumber());
                     while(i.hasNext())
                     {
                         ProductListViewModel itemToRewriteNumber = i.next();
-                        itemToRewriteNumber.setStringNumber(newStrinNumber.toString());
-                        newStrinNumber = newStrinNumber + 1 ;
+                        itemToRewriteNumber.setStringNumber(newStringNumber.toString());
+                        newStringNumber = newStringNumber + 1 ;
                     }
 
                     DataTable.remove(existingLVModel);
                     break;
                 }
-                else{
-                    existingLVModel = i.next();
-                }
-            }
+
+            };
         };
         ItemsToDelete.clear();
     }
