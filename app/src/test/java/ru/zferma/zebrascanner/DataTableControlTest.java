@@ -13,10 +13,10 @@ import businesslogic.ListViewPresentationModel;
 import presentation.DataTableControl;
 import presentation.ProductListViewModel;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 public class DataTableControlTest {
 
@@ -152,6 +152,14 @@ public class DataTableControlTest {
 
 
         ProductListViewModel removed = Table.FindProduct("111-111-111-111");
+        assertNull(removed);
+
+        Table.ItemClicked(testView, "493-58-33");
+        Table.RemoveSelected();
+
+        assertEquals(1,Table.GetDataTable().size());
+
+        removed = Table.FindProduct("493-58-33");
         assertNull(removed);
     }
 
