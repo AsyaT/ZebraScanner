@@ -107,7 +107,10 @@ public class ProductCommandTest
 
     @Test
     public void ParseTestEAN13() throws ParseException, DoesNotExistsInOrderException, ApplicationException {
-        ProductStructureModel actual = productCommand.ParseAction("4660017708243", BarcodeTypes.LocalEAN13);
+
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("4660017708243", BarcodeTypes.LocalEAN13);
+
+        ProductStructureModel actual = productCommand.ParseAction(barcodeStructureModel);
         ProductStructureModel expected = new ProductStructureModel(
                 "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0);
         Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
@@ -116,8 +119,10 @@ public class ProductCommandTest
     }
 
     @Test
-    public void ParseTestGS1EXP() throws ParseException, DoesNotExistsInOrderException, ApplicationException {
-        ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+    public void ParseTestGS1EXP() throws ParseException, DoesNotExistsInOrderException, ApplicationException
+    {
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        ProductStructureModel actual = productCommand.ParseAction(barcodeStructureModel);
         ProductStructureModel expected = new ProductStructureModel(
                 "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
 
@@ -128,21 +133,24 @@ public class ProductCommandTest
 
     @Test(expected = DoesNotExistsInOrderException.class)
     public void ParseTestNotInOrder() throws DoesNotExistsInOrderException, ParseException, ApplicationException {
-        productCommand.ParseAction("0104660017707116310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017707116310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        productCommand.ParseAction(barcodeStructureModel);
 
     }
 
 
     @Test(expected = ApplicationException.class)
     public void ParseTestManufacturerNotFound() throws ApplicationException, DoesNotExistsInOrderException, ParseException {
-        productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
+        productCommand.ParseAction(barcodeStructureModel);
 
     }
 
     @Test(expected = ApplicationException.class)
     public void BarcodeNotFoundTest() throws ApplicationException, DoesNotExistsInOrderException,ParseException
     {
-        productCommand.ParseAction("0199999999999999310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0199999999999999310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
+        productCommand.ParseAction(barcodeStructureModel);
     }
 
     @Test
@@ -152,7 +160,8 @@ public class ProductCommandTest
 
         Whitebox.setInternalState(productCommand,"baseDocumentLogic", baseDocumentLogic);
 
-        ProductStructureModel actual = productCommand.ParseAction("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        ProductStructureModel actual = productCommand.ParseAction(barcodeStructureModel);
         ProductStructureModel expected = new ProductStructureModel(
                 "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
 
@@ -163,6 +172,10 @@ public class ProductCommandTest
 
     @Test
     public void ScanDialogAgain() throws ParseException, DoesNotExistsInOrderException, ApplicationException {
+
+        BaseDocumentLogic baseDocumentLogic = new BaseDocumentLogic(null);
+        Whitebox.setInternalState(productCommand,"baseDocumentLogic", baseDocumentLogic);
+
         ProductStructureModel selectedProduct = new ProductStructureModel("7a017e91-bf8e-11e7-80c5-a4bf011ce3c3","641e7835-ed76-11e8-80cd-a4bf011ce3c3", 1.0);
         HashMap<String, ProductStructureModel> selected = new HashMap<>();
         selected.put("4660017706843", selectedProduct);
@@ -171,7 +184,9 @@ public class ProductCommandTest
         scannerApplication.SelectedDialogNomenclatures = selected;
         Whitebox.setInternalState(productCommand,"appState", scannerApplication);
 
-        ProductStructureModel actual = productCommand.ParseAction("0104660017706843310301245610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017706843310301245610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+
+        ProductStructureModel actual = productCommand.ParseAction(barcodeStructureModel);
 
         ProductStructureModel expected = new ProductStructureModel(
                 "7a017e91-bf8e-11e7-80c5-a4bf011ce3c3","641e7835-ed76-11e8-80cd-a4bf011ce3c3",12.456);
