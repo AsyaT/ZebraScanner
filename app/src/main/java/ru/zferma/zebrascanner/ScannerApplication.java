@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
+
 import businesslogic.*;
 
 public class ScannerApplication extends Application {
@@ -70,6 +72,7 @@ public class ScannerApplication extends Application {
 
     public FullDataTableControl ScannedProductsToSend = new FullDataTableControl();
     public PackageListDataTable packageListDataTable = new PackageListDataTable();
+    public HashMap<String, ProductStructureModel> SelectedDialogNomenclatures = new HashMap<>();
 
     public void CleanContextEntities()
     {
@@ -78,6 +81,7 @@ public class ScannerApplication extends Application {
         BadgeGuid = null;
         ScannedProductsToSend = new FullDataTableControl();
         packageListDataTable = new PackageListDataTable();
+        SelectedDialogNomenclatures = new HashMap<>();
     }
 
     public void onCreate() {
