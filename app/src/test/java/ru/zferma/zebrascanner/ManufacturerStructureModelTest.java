@@ -22,22 +22,31 @@ public class ManufacturerStructureModelTest
     @Test
     public void FindTest() throws ApplicationException
     {
-        Assert.assertEquals("23504297-7ee1-11e6-80d7-e4115bea65d2", model.GetManufacturerGuid((byte)5) );
-        Assert.assertEquals("Уральская мясная компания ООО ИНН 7438028838", model.GetManufacturerName((byte)8) );
+        Assert.assertEquals("23504297-7ee1-11e6-80d7-e4115bea65d2", model.GetManufacturerGuidById((byte)5) );
+        Assert.assertEquals("Уральская мясная компания ООО ИНН 7438028838", model.GetManufacturerNameById((byte)8) );
     }
 
     @Test(expected = ApplicationException.class)
     public void OutOfRangeTest() throws ApplicationException
     {
-        model.GetManufacturerGuid((byte)2);
-
+        model.GetManufacturerGuidById((byte)2);
     }
 
     @Test(expected = ApplicationException.class)
     public void OutOfRangeTestBig() throws ApplicationException
     {
-        model.GetManufacturerGuid((byte)100);
-
+        model.GetManufacturerGuidById((byte)100);
     }
 
+    @Test
+    public void FindNameByGuid() throws ApplicationException {
+        String actual = model.GetManufacturerNameByGuid("23504297-7ee1-11e6-80d7-e4115bea65d2");
+        String expected = "УРАЛБРОЙЛЕР ЗАО (Ишалино)";
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void FindNameByGuidFail() throws ApplicationException {
+        String actual = model.GetManufacturerNameByGuid("000");
+    }
 }

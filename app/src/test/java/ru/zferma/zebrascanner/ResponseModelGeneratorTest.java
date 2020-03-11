@@ -67,6 +67,8 @@ public class ResponseModelGeneratorTest
         ManufacturerStructureModel manufacturerStructureModel = new ManufacturerStructureModel();
         Byte manufacturer_1 = 1;
         manufacturerStructureModel.Add(manufacturer_1, "УРАЛБРОЙЛЕР ЗАО (Ишалино)","23504297-7ee1-11e6-80d7-e4115bea65d2");
+        Byte manufacturer_3 = 3;
+        manufacturerStructureModel.Add(manufacturer_3, "УРАЛБРОЙЛЕР ЗАО (Кунашак)","5ef1b244-c11e-11e6-80c7-001e67e5da8b");
 
         ModelGenerator = new ResponseModelGenerator(nomenclatureStructureModel, characteristicStructureModel,manufacturerStructureModel);
     }
@@ -349,8 +351,8 @@ public class ResponseModelGeneratorTest
 
         String actual = ModelGenerator.CreateStringResponse(barcode, product);
         String expected = "Штрих-код: 000000"
-                + "\nНоменклатура: Продукт с таким GUID 000 не найден"
-                + "\nХарактеристика: Характеристика продкута с GUID 000 не найдена"
+                + "\nНоменклатура: Продукт с таким GUID 0 не найден"
+                + "\nХарактеристика: Характеристика продкута с GUID 0 не найдена"
                 + "\nВес: 0.0 кг";
 
         Assert.assertEquals(expected, actual);

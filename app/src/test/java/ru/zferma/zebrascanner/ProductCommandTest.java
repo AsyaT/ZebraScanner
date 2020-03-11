@@ -68,11 +68,7 @@ public class ProductCommandTest
         Byte manufacturer_1 = 1;
         manufacturerStructureModel.Add(manufacturer_1, "УРАЛБРОЙЛЕР ЗАО (Ишалино)","23504297-7ee1-11e6-80d7-e4115bea65d2");
 
-        BarcodeProductLogic barcodeProductLogic = new BarcodeProductLogic(
-                BarcodeStructureModel,
-                nomenclatureStructureModel,
-                characterisiticStructureModel,
-                manufacturerStructureModel);
+        BarcodeProductLogic barcodeProductLogic = new BarcodeProductLogic( BarcodeStructureModel);
 
         // --------------------
 

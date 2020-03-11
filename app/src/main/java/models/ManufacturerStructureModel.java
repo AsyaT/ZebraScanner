@@ -21,7 +21,6 @@ public class ManufacturerStructureModel
         return GetManufacturer(id).Name;
     }
 
-    //TODO: create test
     public String GetManufacturerNameByGuid(String guid) throws ApplicationException
     {
         for(Map.Entry<Byte, ManufacturerDetails> details : this.Manufacturers.entrySet())
@@ -31,7 +30,7 @@ public class ManufacturerStructureModel
                 return details.getValue().Name;
             }
         }
-        return null;
+        throw new ApplicationException("Производитель с таким GUID не найден");
     }
 
     protected ManufacturerStructureModel.ManufacturerDetails GetManufacturer(Byte id) throws ApplicationException

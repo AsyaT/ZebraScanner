@@ -22,8 +22,8 @@ public class Product_PackageListStructureModel extends ProductModel
         this.ProductGUID = productGuid;
         this.CharacteristicGUID = characteristicGuid;
         this.Weight = weight;
-        this.ExpirationDate = production;
-        this.ProductionDate = expired;
+        this.ExpirationDate = expired;
+        this.ProductionDate = production;
         this.ManufacturerGUID = manufacturerGuid;
         this.Items = items;
     }

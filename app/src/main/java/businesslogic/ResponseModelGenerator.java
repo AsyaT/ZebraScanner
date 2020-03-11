@@ -61,7 +61,7 @@ public class ResponseModelGenerator
                 WeightCalculator(barcode,product),
                 barcode.getProductionDate(),
                 barcode.getExpirationDate(),
-                ManufacturerStructureModel.GetManufacturerNameById(barcode.getInternalProducer()),
+                ManufacturerStructureModel.GetManufacturerGuidById(barcode.getInternalProducer()),
                 1
                 );
         return result;
