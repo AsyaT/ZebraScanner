@@ -136,5 +136,15 @@ public class FullDataTableControl
        public Date getExpiredDate() { return this.ExpiredDate;}
 
        public String getManufacturerGuid() { return this.ManufacturerGuid;}
+
+       public boolean equals(Details obj) {
+           return this.ProductGuid.equals(obj.ProductGuid)
+                   && this.CharacteristicGuid.equals(obj.CharacteristicGuid)
+                   && ((this.ManufacturerGuid == null && obj.ManufacturerGuid == null) || this.ManufacturerGuid.equals(obj.ManufacturerGuid))
+                   && ((this.ProductionDate==null && obj.ProductionDate==null) || this.ProductionDate.equals(obj.ProductionDate) )
+                   && ((this.ExpiredDate==null && obj.ExpiredDate==null) || this.ExpiredDate.equals(obj.ExpiredDate) )
+                   && this.Weight.equals(obj.Weight)
+                   && this.ScannedQuantity.equals(obj.ScannedQuantity);
+       }
    }
 }

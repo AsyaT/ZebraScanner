@@ -15,4 +15,12 @@ public class ListViewPresentationModel {
         this.ProductGuid = productGuid;
         this.Coefficient = coefficient;
     }
+
+    public boolean equals(ListViewPresentationModel obj) {
+        return this.ProductGuid.equals(obj.ProductGuid)
+                && this.Nomenclature.equals(obj.Nomenclature)
+                && this.Characteristic.equals(obj.Characteristic)
+                && this.Weight.equals(obj.Weight)
+                && this.Coefficient.equals(obj.Coefficient);
+    }
 }

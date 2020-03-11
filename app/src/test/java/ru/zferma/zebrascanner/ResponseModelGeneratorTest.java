@@ -93,11 +93,7 @@ public class ResponseModelGeneratorTest
                 1
         );
 
-        Assert.assertEquals(expected.ProductGuid, actual.ProductGuid);
-        Assert.assertEquals(expected.Nomenclature,actual.Nomenclature);
-        Assert.assertEquals(expected.Characteristic,actual.Characteristic);
-        Assert.assertEquals(expected.Coefficient,actual.Coefficient);
-        Assert.assertEquals(expected.Weight,actual.Weight);
+        Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
@@ -118,12 +114,7 @@ public class ResponseModelGeneratorTest
                 "f821d239-0d59-11e7-80cb-001e67e5da8c",
                 1
         );
-
-        Assert.assertEquals(expected.ProductGuid, actual.ProductGuid);
-        Assert.assertEquals(expected.Nomenclature,actual.Nomenclature);
-        Assert.assertEquals(expected.Characteristic,actual.Characteristic);
-        Assert.assertEquals(expected.Coefficient,actual.Coefficient);
-        Assert.assertEquals(expected.Weight,actual.Weight);
+        Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
@@ -145,11 +136,7 @@ public class ResponseModelGeneratorTest
                 1
         );
 
-        Assert.assertEquals(expected.ProductGuid, actual.ProductGuid);
-        Assert.assertEquals(expected.Nomenclature,actual.Nomenclature);
-        Assert.assertEquals(expected.Characteristic,actual.Characteristic);
-        Assert.assertEquals(expected.Coefficient,actual.Coefficient);
-        Assert.assertEquals(expected.Weight,actual.Weight);
+        Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
@@ -173,11 +160,7 @@ public class ResponseModelGeneratorTest
                 5
         );
 
-        Assert.assertEquals(expected.ProductGuid, actual.ProductGuid);
-        Assert.assertEquals(expected.Nomenclature,actual.Nomenclature);
-        Assert.assertEquals(expected.Characteristic,actual.Characteristic);
-        Assert.assertEquals(expected.Coefficient,actual.Coefficient);
-        Assert.assertEquals(expected.Weight,actual.Weight);
+        Assert.assertTrue(expected.equals(actual));
 
     }
 
@@ -201,14 +184,7 @@ public class ResponseModelGeneratorTest
                 null,
                 1
         );
-
-        Assert.assertEquals(expected.getProductGuid(), actual.getProductGuid());
-        Assert.assertEquals(expected.getCharacteristicGuid(), actual.getCharacteristicGuid());
-        Assert.assertEquals(expected.getManufacturerGuid(), actual.getManufacturerGuid());
-        Assert.assertEquals(expected.getProductionDate(), actual.getProductionDate());
-        Assert.assertEquals(expected.getExpiredDate(), actual.getExpiredDate());
-        Assert.assertEquals(expected.getWeight(), actual.getWeight());
-        Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
+        Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
@@ -231,14 +207,7 @@ public class ResponseModelGeneratorTest
                 null,
                 1
         );
-
-        Assert.assertEquals(expected.getProductGuid(), actual.getProductGuid());
-        Assert.assertEquals(expected.getCharacteristicGuid(), actual.getCharacteristicGuid());
-        Assert.assertEquals(expected.getManufacturerGuid(), actual.getManufacturerGuid());
-        Assert.assertEquals(expected.getProductionDate(), actual.getProductionDate());
-        Assert.assertEquals(expected.getExpiredDate(), actual.getExpiredDate());
-        Assert.assertEquals(expected.getWeight(), actual.getWeight());
-        Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
+        Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
@@ -263,13 +232,7 @@ public class ResponseModelGeneratorTest
                 1
         );
 
-        Assert.assertEquals(expected.getProductGuid(), actual.getProductGuid());
-        Assert.assertEquals(expected.getCharacteristicGuid(), actual.getCharacteristicGuid());
-        Assert.assertEquals(expected.getManufacturerGuid(), actual.getManufacturerGuid());
-        Assert.assertEquals(expected.getProductionDate(), actual.getProductionDate());
-        Assert.assertEquals(expected.getExpiredDate(), actual.getExpiredDate());
-        Assert.assertEquals(expected.getWeight(), actual.getWeight());
-        Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
+        Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
@@ -296,13 +259,7 @@ public class ResponseModelGeneratorTest
                 5
         );
 
-        Assert.assertEquals(expected.getProductGuid(), actual.getProductGuid());
-        Assert.assertEquals(expected.getCharacteristicGuid(), actual.getCharacteristicGuid());
-        Assert.assertEquals(expected.getManufacturerGuid(), actual.getManufacturerGuid());
-        Assert.assertEquals(expected.getProductionDate(), actual.getProductionDate());
-        Assert.assertEquals(expected.getExpiredDate(), actual.getExpiredDate());
-        Assert.assertEquals(expected.getWeight(), actual.getWeight());
-        Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
+        Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
