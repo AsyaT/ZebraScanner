@@ -1,7 +1,7 @@
 package scanningcommand;
 
-import businesslogic.ObjectForSaving;
-import businesslogic.ScanningBarcodeStructureModel;
+import models.ObjectForSaving;
+import models.ScanningBarcodeStructureModel;
 
 public abstract class ResponseFormat
 {
@@ -9,14 +9,14 @@ public abstract class ResponseFormat
     {
         if(isFragmentShowed)
         {
-            ShowInfoForFragment(product, barcode);
+            ShowInfoForFragment(barcode, product);
         }
         else
         {
-            SaveInfoForProductList(product);
+            SaveInfoForProductList(barcode, product);
         }
     }
 
-    protected abstract void SaveInfoForProductList(ObjectForSaving product);
-    protected abstract void ShowInfoForFragment(ObjectForSaving product, ScanningBarcodeStructureModel barcode);
+    protected abstract void SaveInfoForProductList(ScanningBarcodeStructureModel barcode, ObjectForSaving product);
+    protected abstract void ShowInfoForFragment(ScanningBarcodeStructureModel barcode, ObjectForSaving product);
 }

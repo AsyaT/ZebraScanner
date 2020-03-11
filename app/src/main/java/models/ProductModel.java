@@ -1,15 +1,10 @@
-package businesslogic;
+package models;
 
-public class ProductModel {
+public class ProductModel
+{
     protected String ProductGUID ;
     protected String CharacteristicGUID ;
     protected Double Weight;
-
-
-    protected ProductModel()
-    {
-
-    }
 
     public String GetProductGuid()
     {
@@ -26,7 +21,7 @@ public class ProductModel {
         return Weight;
     }
 
-
+// TODO: remove?
     public void SetWeight(Double scannedWeight)
     {
         if(scannedWeight != null)

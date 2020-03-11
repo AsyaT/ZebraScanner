@@ -14,12 +14,12 @@ import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
-import businesslogic.ObjectForSaving;
-import businesslogic.PackageListStructureModel;
-import businesslogic.ProductLogic;
-import businesslogic.Product_PackageListStructureModel;
+import businesslogic.ResponseModelGenerator;
+import models.ObjectForSaving;
+import models.PackageListStructureModel;
+import models.Product_PackageListStructureModel;
 import businesslogic.ScannerState;
-import businesslogic.ScanningBarcodeStructureModel;
+import models.ScanningBarcodeStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
@@ -28,7 +28,7 @@ public class PackageListCommand extends ResponseFormat implements Command {
     Activity Activity;
     ScannerApplication appState;
 
-    businesslogic.ProductLogic ProductLogic;
+    ResponseModelGenerator responseModelGenerator;
     BaseDocumentLogic baseDocumentLogic;
     BarcodeScanningLogic barcodeScanningLogic;
 
@@ -36,7 +36,7 @@ public class PackageListCommand extends ResponseFormat implements Command {
     public void Action(Activity activity) {
         this.Activity = activity;
 
-        this.ProductLogic = new ProductLogic(
+        this.responseModelGenerator = new ResponseModelGenerator(
                 appState.nomenclatureStructureModel,
                 appState.characteristicStructureModel,
                 appState.manufacturerStructureModel);
@@ -94,7 +94,7 @@ public class PackageListCommand extends ResponseFormat implements Command {
 
 
     @Override
-    protected void SaveInfoForProductList(ObjectForSaving packageList)
+    protected void SaveInfoForProductList(ScanningBarcodeStructureModel barcode, ObjectForSaving packageList)
     {
         PackageListStructureModel input = (PackageListStructureModel) packageList;
 
@@ -104,10 +104,10 @@ public class PackageListCommand extends ResponseFormat implements Command {
             for (Product_PackageListStructureModel product : input.GetProducts()) {
 
                 for (int i = 1; i <= product.GetItems(); i++) {
-                    ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
+                    ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(product);
                     ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
-                    FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
+                    FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(product);
                     appState.ScannedProductsToSend.Add(detailsModel);
                 }
             }
@@ -119,9 +119,16 @@ public class PackageListCommand extends ResponseFormat implements Command {
     }
 
     @Override
-    protected void ShowInfoForFragment(ObjectForSaving packageList, ScanningBarcodeStructureModel barcode)
+    protected void ShowInfoForFragment(ScanningBarcodeStructureModel barcode, ObjectForSaving packageList)
     {
-            //TODO: show full info about Package List
+        String result = "";
+        PackageListStructureModel input = (PackageListStructureModel) packageList;
+        for (Product_PackageListStructureModel product : input.GetProducts()) {
+
+            result = result + "\n--------------\n" + (this.responseModelGenerator.CreateStringResponse(product));
+        }
+
+        ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
     }
 
 }

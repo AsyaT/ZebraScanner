@@ -1,6 +1,9 @@
-package businesslogic;
+package models;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import businesslogic.ApplicationException;
 
 public class ManufacturerStructureModel
 {
@@ -9,13 +12,26 @@ public class ManufacturerStructureModel
         Manufacturers = new HashMap<>();
     }
 
-    public String GetManufacturerGuid(Byte id) throws ApplicationException
+    public String GetManufacturerGuidById(Byte id) throws ApplicationException
     {
         return GetManufacturer(id).Guid;
     }
-    public String GetManufacturerName(Byte id) throws ApplicationException
+    public String GetManufacturerNameById(Byte id) throws ApplicationException
     {
         return GetManufacturer(id).Name;
+    }
+
+    //TODO: create test
+    public String GetManufacturerNameByGuid(String guid) throws ApplicationException
+    {
+        for(Map.Entry<Byte, ManufacturerDetails> details : this.Manufacturers.entrySet())
+        {
+            if(details.getValue().Guid.equalsIgnoreCase(guid))
+            {
+                return details.getValue().Name;
+            }
+        }
+        return null;
     }
 
     protected ManufacturerStructureModel.ManufacturerDetails GetManufacturer(Byte id) throws ApplicationException

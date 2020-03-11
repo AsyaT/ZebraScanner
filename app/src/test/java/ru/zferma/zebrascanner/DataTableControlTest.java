@@ -35,7 +35,8 @@ public class DataTableControlTest {
                 "Nomenclature 1",
                 "Char 1",
                 2.5,
-                "111-111-111-111"
+                "111-111-111-111",
+                1
         );
         Table.AddOne(model);
         Table.AddOne(model);
@@ -45,7 +46,8 @@ public class DataTableControlTest {
                 "Nomenclature 2",
                 "Char 2",
                 9.7,
-                "222-222-222-222"
+                "222-222-222-222",
+                1
         );
         Table.AddOne(model);
         Table.AddOne(model);
@@ -54,7 +56,8 @@ public class DataTableControlTest {
                 "Nomenclature 3",
                 "Char 1",
                 8.2,
-                "789-168-038-557"
+                "789-168-038-557",
+                1
         );
         Table.AddOne(model);
 
@@ -62,7 +65,8 @@ public class DataTableControlTest {
                 "Nomenclature 4",
                 "Char 2",
                 25.6,
-                "493-58-33"
+                "493-58-33",
+                1
         );
         Table.AddOne(model);
         Table.AddOne(model);

@@ -1,4 +1,4 @@
-package businesslogic;
+package models;
 
 public interface ObjectForSaving {
 }

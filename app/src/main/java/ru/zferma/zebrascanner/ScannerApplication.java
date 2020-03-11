@@ -7,6 +7,14 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 
 import businesslogic.*;
+import models.BarcodeStructureModel;
+import models.BaseDocumentStructureModel;
+import models.CharacteristicStructureModel;
+import models.ManufacturerStructureModel;
+import models.NomenclatureStructureModel;
+import models.OperationTypesStructureModel;
+import models.OperationsTypesAccountingAreaStructureModel;
+import models.ProductStructureModel;
 
 public class ScannerApplication extends Application {
 

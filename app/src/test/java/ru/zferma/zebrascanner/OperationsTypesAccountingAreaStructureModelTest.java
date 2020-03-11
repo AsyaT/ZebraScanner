@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import models.OperationsTypesAccountingAreaStructureModel;
 import serverDatabaseInteraction.OperationTypesAndAccountingAreasModel;
 import serverDatabaseInteraction.OperationTypesHelper;
 

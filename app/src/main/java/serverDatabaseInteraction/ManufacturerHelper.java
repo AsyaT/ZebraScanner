@@ -3,7 +3,7 @@ package serverDatabaseInteraction;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
-import businesslogic.ManufacturerStructureModel;
+import models.ManufacturerStructureModel;
 
 public class ManufacturerHelper extends PullDataHelperAbstractFactory
 {

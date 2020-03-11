@@ -1,10 +1,13 @@
 package businesslogic;
 
+import models.BaseDocumentStructureModel;
+import models.OperationTypesStructureModel;
+
 public class BarcodeScanningLogic
 {
     //TODO: move here logic for PackageListScanning
 
-    OperationTypesStructureModel OperationTypesStructureModel = null;
+    models.OperationTypesStructureModel OperationTypesStructureModel = null;
     BaseDocumentStructureModel baseDocumentStructureModel = null;
 
     public BarcodeScanningLogic(OperationTypesStructureModel operationTypesStructureModel, BaseDocumentStructureModel baseDocument)

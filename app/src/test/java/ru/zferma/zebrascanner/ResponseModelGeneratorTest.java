@@ -2,18 +2,24 @@ package ru.zferma.zebrascanner;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
-import businesslogic.ProductStructureModel;
-import businesslogic.Product_PackageListStructureModel;
 import businesslogic.ResponseModelGenerator;
-import businesslogic.ScanningBarcodeStructureModel;
+import models.BarcodeStructureModel;
+import models.CharacteristicStructureModel;
+import models.ManufacturerStructureModel;
+import models.NomenclatureStructureModel;
+import models.ProductStructureModel;
+import models.Product_PackageListStructureModel;
+import models.ScanningBarcodeStructureModel;
 
 public class ResponseModelGeneratorTest
 {
@@ -22,9 +28,50 @@ public class ResponseModelGeneratorTest
     @Before
     public void Init()
     {
-        ModelGenerator = new ResponseModelGenerator();
+        BarcodeStructureModel BarcodeStructureModel = new BarcodeStructureModel();
+
+        ArrayList<ProductStructureModel> productList = new ArrayList<>();
+        productList.add(new ProductStructureModel(
+                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0));
+        BarcodeStructureModel.Add("4660017708243", productList);
+
+        productList = new ArrayList<>();
+        productList.add(new ProductStructureModel(
+                "f821d239-0d59-11e7-80cb-001e67e5da8c","6ff4018a-108b-11e7-80cb-001e67e5da8c",1.0));
+        BarcodeStructureModel.Add("2370650", productList);
+
+        productList = new ArrayList<>();
+        productList.add(new ProductStructureModel(
+                "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
+        BarcodeStructureModel.Add("4660017707116", productList);
+
+        productList = new ArrayList<>();
+        productList.add(new ProductStructureModel(
+                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0));
+        productList.add(new ProductStructureModel(
+                "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
+        productList.add(new ProductStructureModel(
+                "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
+        BarcodeStructureModel.Add("4660017707529", productList);
+
+        NomenclatureStructureModel nomenclatureStructureModel = new NomenclatureStructureModel();
+        nomenclatureStructureModel.Add("f50d315d-7ca8-11e6-80d7-e4115bea65d2", "Бедрышко куриное \"Здоровая Ферма\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)");
+        nomenclatureStructureModel.Add("f821d239-0d59-11e7-80cb-001e67e5da8c", "Бедрышко куриное \"Турбаслинский бройлер\", охл., ~0,80 кг*6/~4,8 кг/ (подложка, стрейч)");
+        nomenclatureStructureModel.Add("b1cc5c45-7ca8-11e6-80d7-e4115bea65d2", "Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)");
+
+        CharacteristicStructureModel characteristicStructureModel = new CharacteristicStructureModel();
+        characteristicStructureModel.Add("41dbf472-19d8-11e7-80cb-001e67e5da8c","Метро");
+        characteristicStructureModel.Add("6ff4018a-108b-11e7-80cb-001e67e5da8c","Тандер");
+        characteristicStructureModel.Add("b9e89741-ef89-11e6-80cb-001e67e5da8c","Монетка");
+
+        ManufacturerStructureModel manufacturerStructureModel = new ManufacturerStructureModel();
+        Byte manufacturer_1 = 1;
+        manufacturerStructureModel.Add(manufacturer_1, "УРАЛБРОЙЛЕР ЗАО (Ишалино)","23504297-7ee1-11e6-80d7-e4115bea65d2");
+
+        ModelGenerator = new ResponseModelGenerator(nomenclatureStructureModel, characteristicStructureModel,manufacturerStructureModel);
     }
 
+    @Test
     public void ListViewProductEAN13Test() throws ParseException, ApplicationException {
         String scannedBarcode = "04660017708243";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
@@ -50,6 +97,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected.Weight,actual.Weight);
     }
 
+    @Test
     public void ListViewProductEAN13WeightTest() throws ParseException, ApplicationException {
         String scannedBarcode = "2370650050006";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
@@ -75,6 +123,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected.Weight,actual.Weight);
     }
 
+    @Test
     public void ListViewProductGS1tTest() throws ParseException, ApplicationException {
         String scannedBarcode = "0104660017707116310300410010082011190120171912252100001921000";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP);
@@ -100,8 +149,8 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected.Weight,actual.Weight);
     }
 
-    public void ListViewPackageListTest()
-    {
+    @Test
+    public void ListViewPackageListTest() throws ApplicationException {
         Product_PackageListStructureModel plProduct = new Product_PackageListStructureModel(
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2",
                 "b9e89741-ef89-11e6-80cb-001e67e5da8c",
@@ -111,7 +160,7 @@ public class ResponseModelGeneratorTest
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
                 5);
 
-        ListViewPresentationModel actual = ModelGenerator.CreateListViewResponse( product);
+        ListViewPresentationModel actual = ModelGenerator.CreateListViewResponse( plProduct);
 
         ListViewPresentationModel expected = new ListViewPresentationModel(
                 "Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)",
@@ -129,6 +178,7 @@ public class ResponseModelGeneratorTest
 
     }
 
+    @Test
     public void FullDataTableProductEAN13Test() throws ParseException, ApplicationException {
         String scannedBarcode = "04660017708243";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
@@ -158,6 +208,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
     }
 
+    @Test
     public void FullDataTableProductEAN13WeightTest() throws ParseException, ApplicationException {
         String scannedBarcode = "2370650050006";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
@@ -187,6 +238,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
     }
 
+    @Test
     public void FullDataTableProductGS1Test() throws ParseException, ApplicationException
     {
         String scannedBarcode = "0104660017707116310300410010082011190120171912252100001921000";
@@ -217,6 +269,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
     }
 
+    @Test
     public void FullDataTablePackageListTest()
     {
         Product_PackageListStructureModel plProduct = new Product_PackageListStructureModel(
@@ -249,6 +302,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected.getScannedQuantity(), actual.getScannedQuantity());
     }
 
+    @Test
     public void StringResponseProductEAN13Test() throws ParseException, ApplicationException {
         String scannedBarcode = "04660017708243";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
@@ -266,6 +320,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
     public void StringResponseProductEAN13WeightTest() throws ParseException, ApplicationException {
         String scannedBarcode = "2370650050006";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
@@ -283,6 +338,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
     public void StringResponseProductEAN13ErrorTest() throws ParseException, ApplicationException {
         String scannedBarcode = "000000";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
@@ -300,6 +356,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
     public void StringResponseProductGS1Test() throws ParseException, ApplicationException {
         String scannedBarcode = "0104660017707116310300410010082011190120171912252100001921000";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP);
@@ -323,6 +380,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
     public void StringResponseProductGS1FailTest() throws ParseException, ApplicationException {
         String scannedBarcode = "0100000000000001310302560010082011190120171912252100001920000";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP);
@@ -346,6 +404,7 @@ public class ResponseModelGeneratorTest
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
     public void StringResponsePackageListTest()
     {
         Product_PackageListStructureModel plProduct = new Product_PackageListStructureModel(
@@ -365,7 +424,8 @@ public class ResponseModelGeneratorTest
                 + "\nВес: 4.1 кг"
                 + "\nДата производства: 14-02-2020"
                 + "\nДата истечения срока годности: 21-02-2020"
-                + "\nВнутренний код производителя: 3 - УРАЛБРОЙЛЕР ЗАО (Кунашак)";
+                + "\nПроизводитель: УРАЛБРОЙЛЕР ЗАО (Кунашак)"
+                + "\nКоличество: 5";
 
         Assert.assertEquals(expected, actual);
     }

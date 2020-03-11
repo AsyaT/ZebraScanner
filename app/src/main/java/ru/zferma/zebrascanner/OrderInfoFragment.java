@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import businesslogic.BaseDocumentStructureModel;
+import models.BaseDocumentStructureModel;
 import presentation.FragmentHelper;
 
 

@@ -9,8 +9,8 @@ import java.util.HashMap;
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
 import businesslogic.BarcodeTypes;
-import businesslogic.BaseDocumentStructureModel;
-import businesslogic.OperationTypesStructureModel;
+import models.BaseDocumentStructureModel;
+import models.OperationTypesStructureModel;
 import businesslogic.ScannerState;
 
 public class BarcodeScanningLogicTest

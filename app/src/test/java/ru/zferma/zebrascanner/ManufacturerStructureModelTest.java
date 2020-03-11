@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import businesslogic.ApplicationException;
-import businesslogic.ManufacturerStructureModel;
+import models.ManufacturerStructureModel;
 
 public class ManufacturerStructureModelTest
 {

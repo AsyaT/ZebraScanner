@@ -9,6 +9,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import models.BarcodeStructureModel;
+import models.BaseDocumentStructureModel;
+import models.CharacteristicStructureModel;
+import models.ManufacturerStructureModel;
+import models.NomenclatureStructureModel;
+import models.OperationTypesStructureModel;
+import models.ProductStructureModel;
+import models.ScanningBarcodeStructureModel;
 import scanningcommand.ProductCommand;
 import businesslogic.*;
 

@@ -15,8 +15,8 @@ import java.util.HashMap;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
-import businesslogic.OperationTypesStructureModel;
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import models.OperationTypesStructureModel;
+import models.OperationsTypesAccountingAreaStructureModel;
 import presentation.AccountingAreasAdapter;
 import presentation.AccountingAreasListViewModel;
 import presentation.FragmentHelper;

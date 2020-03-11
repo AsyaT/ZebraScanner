@@ -1,7 +1,9 @@
-package businesslogic;
+package models;
 
 import java.io.Serializable;
 import java.util.HashMap;
+
+import businesslogic.BarcodeTypes;
 
 public class OperationTypesStructureModel implements Serializable {
 

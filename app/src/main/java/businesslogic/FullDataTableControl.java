@@ -111,7 +111,7 @@ public class FullDataTableControl
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;
            this.ManufacturerGuid = manufacturerGuid;
-           this.ScannedQuantity = scannedQuantity
+           this.ScannedQuantity = scannedQuantity;
        }
 
        public String getProductGuid()

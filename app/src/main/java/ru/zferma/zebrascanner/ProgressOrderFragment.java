@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import businesslogic.BaseDocumentStructureModel;
+import models.BaseDocumentStructureModel;
 
 public class ProgressOrderFragment extends Fragment {
 

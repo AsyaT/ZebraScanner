@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Locale;
 
 import businesslogic.*;
+import models.BarcodeStructureModel;
+import models.CharacteristicStructureModel;
+import models.NomenclatureStructureModel;
+import models.ProductStructureModel;
 
 public class BarcodeHelper {
 

@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import businesslogic.ApplicationException;
-import businesslogic.BarcodeStructureModel;
-import businesslogic.CharacteristicStructureModel;
-import businesslogic.NomenclatureStructureModel;
-import businesslogic.ProductStructureModel;
+import models.BarcodeStructureModel;
+import models.CharacteristicStructureModel;
+import models.NomenclatureStructureModel;
+import models.ProductStructureModel;
 import serverDatabaseInteraction.BarcodeHelper;
 
 @RunWith(PowerMockRunner.class)

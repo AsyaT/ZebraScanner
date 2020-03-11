@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import businesslogic.OperationTypesStructureModel;
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import models.OperationTypesStructureModel;
+import models.OperationsTypesAccountingAreaStructureModel;
 import presentation.OperationTypesListViewModel;
 import presentation.OperationsListAdapter;
 import businesslogic.ApplicationException;

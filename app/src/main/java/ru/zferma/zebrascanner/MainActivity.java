@@ -45,7 +45,7 @@ import java.util.concurrent.ExecutionException;
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
 import businesslogic.ListViewPresentationModel;
-import businesslogic.ManufacturerStructureModel;
+import models.ManufacturerStructureModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;

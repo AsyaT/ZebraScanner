@@ -2,6 +2,8 @@ package businesslogic;
 
 import java.util.ArrayList;
 
+import models.PackageListStructureModel;
+
 public class PackageListDataTable {
     private ArrayList<PackageListStructureModel> DataTable;
 

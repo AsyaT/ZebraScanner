@@ -1,8 +1,9 @@
-package businesslogic;
+package models;
 
 import java.util.Date;
 
-public class Product_PackageListStructureModel   extends ProductModel{
+public class Product_PackageListStructureModel extends ProductModel
+{
 
     protected Integer Items; // Now is using in PackageListCommand. TODO: move to logic?
 
@@ -36,7 +37,7 @@ public class Product_PackageListStructureModel   extends ProductModel{
 
     public Date GetProductionDate() { return ProductionDate;}
 
-    public Date getExpirationDate() { return ExpirationDate;}
+    public Date GetExpirationDate() { return ExpirationDate;}
 
 
 }
