@@ -10,8 +10,6 @@ public class BarcodeProductLogic {
     CharacteristicStructureModel characteristicStructureModel = null;
     ManufacturerStructureModel ManufacturerStructureModel = null;
 
-    private ScanningBarcodeStructureModel parsedBarcode = null;
-
     public BarcodeProductLogic(
             BarcodeStructureModel barcodeStructureModel,
             NomenclatureStructureModel nomenclatureStructureModel,
@@ -25,21 +23,19 @@ public class BarcodeProductLogic {
         this.ManufacturerStructureModel = manufacturerStructureModel;
     }
 
-    public ArrayList<ProductStructureModel> FindProductByBarcode(String scannedBarcode, BarcodeTypes type) throws ParseException, ApplicationException {
-        parsedBarcode = new ScanningBarcodeStructureModel(scannedBarcode, type);
-
+    public ArrayList<ProductStructureModel> FindProductByBarcode(String scannedBarcodeUniqueIdentifier) throws ParseException, ApplicationException {
         ArrayList<ProductStructureModel> listOfProducts =
-                BarcodeStructureModel.FindProductByBarcode(parsedBarcode.getUniqueIdentifier());
+                BarcodeStructureModel.FindProductByBarcode(scannedBarcodeUniqueIdentifier);
 
         if(listOfProducts == null)
         {
-            throw new ApplicationException("Не найдено продуктов по штрих-коду "+ scannedBarcode);
+            throw new ApplicationException("Не найдено продуктов по штрих-коду "+ scannedBarcodeUniqueIdentifier);
         }
 
         return RemoveDuplicateProducts(listOfProducts);
     }
 
-    public ProductStructureModel MixBarcodeWithDatabase(ProductStructureModel product) throws ApplicationException {
+    public ProductStructureModel MixBarcodeWithDatabase(ProductStructureModel product, ScanningBarcodeStructureModel parsedBarcode) throws ApplicationException {
         product.SetWeight(parsedBarcode.getWeight());
         product.SetProductionDate(parsedBarcode.getProductionDate());
         product.SetExpirationDate(parsedBarcode.getExpirationDate());
@@ -118,7 +114,7 @@ public class BarcodeProductLogic {
         }
     }
 
-    public String CreateStringResponse(ProductModel product)
+    public String CreateStringResponse(ProductModel product, ScanningBarcodeStructureModel parsedBarcode)
     {
         String resultText="";
 

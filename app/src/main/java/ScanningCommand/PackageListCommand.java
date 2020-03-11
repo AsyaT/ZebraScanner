@@ -4,10 +4,12 @@ import android.app.Activity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
+import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
@@ -17,6 +19,7 @@ import businesslogic.PackageListStructureModel;
 import businesslogic.ProductLogic;
 import businesslogic.Product_PackageListStructureModel;
 import businesslogic.ScannerState;
+import businesslogic.ScanningBarcodeStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
@@ -56,6 +59,8 @@ public class PackageListCommand extends ResponseFormat implements Command {
             this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
             appState.packageListDataTable.IsActionAllowedWithPackageList(data.getData());
 
+            ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+
             // GO to DB and get list of products
 
             PackageListStructureModel packageListStructureModel = new PackageListStructureModel("", new Date(),"",""); //TODO : create helper
@@ -74,10 +79,14 @@ public class PackageListCommand extends ResponseFormat implements Command {
                 }
             }
 
-            SuccessSaveData(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed,packageListStructureModel );
+            SuccessSaveData(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed,packageListStructureModel , barcode);
 
         }
         catch (ApplicationException ex)
+        {
+            ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
+        }
+        catch (ParseException ex)
         {
             ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
         }
@@ -110,7 +119,7 @@ public class PackageListCommand extends ResponseFormat implements Command {
     }
 
     @Override
-    protected void ShowInfoForFragment(ObjectForSaving packageList)
+    protected void ShowInfoForFragment(ObjectForSaving packageList, ScanningBarcodeStructureModel barcode)
     {
             //TODO: show full info about Package List
     }

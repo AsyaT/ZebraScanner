@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.powermock.reflect.Whitebox;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -82,13 +81,13 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
     }
 
     @Test
-    public void TestEAN13()
-    {
+    public void TestEAN13() throws ParseException, ApplicationException {
        String scannedBarcode = "04660017708243";
+        ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(barcode.getUniqueIdentifier()).get(0);
             actual = productLogic.CreateListView(products);
 
         } catch (ParseException e) {
@@ -109,13 +108,13 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
     }
 
     @Test
-    public void TestEAN13Weight()
-    {
+    public void TestEAN13Weight() throws ParseException, ApplicationException {
         String scannedBarcode = "2308107083006";
+        ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(barcode.getUniqueIdentifier()).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -134,13 +133,14 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
     }
 
     @Test
-    public void TestGS1EXP()
-    {
+    public void TestGS1EXP() throws ParseException, ApplicationException {
         String scannedBarcode = "0104660017707116310302560010082011190120171912252100001921000";
+
+        ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP);
 
         ListViewPresentationModel actual = null;
         try {
-            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
+            ProductStructureModel products = barcodeProductLogic.FindProductByBarcode(barcode.getUniqueIdentifier()).get(0);
             actual = productLogic.CreateListView(products);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -219,7 +219,10 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
 
     @Test
     public void TestSkipDuplicatedProducts() throws ParseException, ApplicationException {
-        ArrayList<ProductStructureModel> actual = barcodeProductLogic.FindProductByBarcode("04660017707529", BarcodeTypes.LocalEAN13);
+
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("04660017707529", BarcodeTypes.LocalEAN13);
+
+        ArrayList<ProductStructureModel> actual = barcodeProductLogic.FindProductByBarcode(barcodeStructureModel.getUniqueIdentifier());
 
         Assert.assertEquals(2, actual.size());
     }
@@ -228,14 +231,15 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
     public void StringResponseEAN13() throws ParseException, ApplicationException
     {
         String scannedBarcode = "04660017708243";
-        ProductStructureModel product = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalEAN13).get(0);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalEAN13);
+        ProductStructureModel product = barcodeProductLogic.FindProductByBarcode(barcodeStructureModel.getUniqueIdentifier()).get(0);
 
         String expected = "Штрих-код: 04660017708243"
                 + "\nНоменклатура: Бедрышко куриное \"Здоровая Ферма\", охл.~8,00 кг*1/~8,0 кг/ (гофрокороб, пленка пнд)"
                 + "\nХарактеристика: Метро"
                 + "\nВес: 8.0 кг";
 
-        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product));
+        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product, barcodeStructureModel));
     }
 
 
@@ -244,11 +248,9 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
     {
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel("000",BarcodeTypes.LocalEAN13);
 
-        Whitebox.setInternalState(barcodeProductLogic,"parsedBarcode", barcode);
-
         ProductStructureModel product = new ProductStructureModel("000","000",0.0);
 
-        String result = barcodeProductLogic.CreateStringResponse(product);
+        String result = barcodeProductLogic.CreateStringResponse(product, barcode);
 
         String expected = "Штрих-код: 000"
                 + "\nНоменклатура: Продукт с таким GUID 000 не найден"
@@ -261,7 +263,9 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
     @Test
     public void StringResponseGS1EXP() throws ParseException, ApplicationException {
         String scannedBarcode = "0104660017707116310302560010082011190120171912252100001921000";
-        ProductStructureModel product = barcodeProductLogic.FindProductByBarcode(scannedBarcode, BarcodeTypes.LocalGS1_EXP).get(0);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP);
+
+        ProductStructureModel product = barcodeProductLogic.FindProductByBarcode(barcodeStructureModel.getUniqueIdentifier()).get(0);
 
         String expected = "Штрих-код: 4660017707116"
                 + "\nНоменклатура: Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)"
@@ -274,18 +278,15 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
                 + "\nВнутренний код производителя: 1 - УРАЛБРОЙЛЕР ЗАО (Ишалино)"
                 + "\nВнутренний код оборудования: 0" ;
 
-        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product));
+        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product, barcodeStructureModel));
     }
 
     @Test
     public void StringResponseGS1EXPFail() throws ParseException, ApplicationException {
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel("0100000000000001310302560010082011190120171912252100001920000",BarcodeTypes.LocalGS1_EXP);
-
-        Whitebox.setInternalState(barcodeProductLogic,"parsedBarcode", barcode);
-
         ProductStructureModel product = new ProductStructureModel("000","000",0.0);
 
-        String result = barcodeProductLogic.CreateStringResponse(product);
+        String result = barcodeProductLogic.CreateStringResponse(product, barcode);
 
         String expected = "Штрих-код: 1"
                 + "\nНоменклатура: Продукт с таким GUID 000 не найден"
@@ -298,7 +299,7 @@ public class BarcodeProductLogic_And_ProductLogic_Test {
                 + "\nВнутренний код производителя: 0 - Производитель с номером 0 не найден"
                 + "\nВнутренний код оборудования: 0" ;
 
-        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product));
+        Assert.assertEquals(expected, barcodeProductLogic.CreateStringResponse(product, barcode));
     }
 
     @Test
