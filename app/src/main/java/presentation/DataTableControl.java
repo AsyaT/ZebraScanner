@@ -86,7 +86,7 @@ public class DataTableControl {
                     newStringNumber.toString(),
                     model.Characteristic,
                     model.Nomenclature,
-                    model.Coefficient.toString(),
+                    model.Quantity.toString(),
                     model.Weight.toString());
         }
         else

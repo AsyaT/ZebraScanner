@@ -6,14 +6,14 @@ public class ListViewPresentationModel {
     public String Nomenclature;
     public String Characteristic;
     public Double Weight;
-    public Integer Coefficient;
+    public Integer Quantity;
 
-    public ListViewPresentationModel( String nomenclature, String characteristic, Double weight, String productGuid, Integer coefficient){
+    public ListViewPresentationModel( String nomenclature, String characteristic, Double weight, String productGuid, Integer quantity){
         this.Nomenclature = nomenclature;
         this.Characteristic= characteristic;
         this.Weight = weight;
         this.ProductGuid = productGuid;
-        this.Coefficient = coefficient;
+        this.Quantity = quantity;
     }
 
     public boolean equals(ListViewPresentationModel obj) {
@@ -21,6 +21,6 @@ public class ListViewPresentationModel {
                 && this.Nomenclature.equals(obj.Nomenclature)
                 && this.Characteristic.equals(obj.Characteristic)
                 && this.Weight.equals(obj.Weight)
-                && this.Coefficient.equals(obj.Coefficient);
+                && this.Quantity.equals(obj.Quantity);
     }
 }
