@@ -97,10 +97,13 @@ public class FullDataTableControl
        Date ExpiredDate;
        String ManufacturerGuid;
 
-       public Details()
-       {}
-
-       public Details(String productGuid, String characteristicGuid, Double weight, Date productionDate, Date expiredDate, String manufacturerGuid)
+       public Details(String productGuid,
+                      String characteristicGuid,
+                      Double weight,
+                      Date productionDate,
+                      Date expiredDate,
+                      String manufacturerGuid,
+                      Integer scannedQuantity)
        {
            this.ProductGuid = productGuid;
            this.CharacteristicGuid= characteristicGuid;
@@ -108,6 +111,7 @@ public class FullDataTableControl
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;
            this.ManufacturerGuid = manufacturerGuid;
+           this.ScannedQuantity = scannedQuantity
        }
 
        public String getProductGuid()

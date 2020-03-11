@@ -80,13 +80,13 @@ public class DataTableControl {
         ProductListViewModel existingTableModel =  this.FindProduct( model.ProductGuid);
         if(existingTableModel == null)
         {
-            Integer newStringNumber = this.GetSizeOfList()+1;
+            Integer newStringNumber = this.GetSizeOfList() + 1;
             result = new ProductListViewModel(
                     model.ProductGuid,
                     newStringNumber.toString(),
                     model.Characteristic,
                     model.Nomenclature,
-                    "1",
+                    model.Coefficient.toString(),
                     model.Weight.toString());
         }
         else
