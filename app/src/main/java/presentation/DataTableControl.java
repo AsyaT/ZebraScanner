@@ -81,20 +81,25 @@ public class DataTableControl {
         if(existingTableModel == null)
         {
             Integer newStringNumber = this.GetSizeOfList() + 1;
+
+            Double calculateWeight = model.Quantity * model.Weight;
+
             result = new ProductListViewModel(
                     model.ProductGuid,
                     newStringNumber.toString(),
                     model.Characteristic,
                     model.Nomenclature,
                     model.Quantity.toString(),
-                    model.Weight.toString());
+                    calculateWeight.toString());
         }
         else
         {
             DataTable.remove(existingTableModel);
 
-            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
-            Double newWeight = Double.parseDouble( existingTableModel.getWeight()) + model.Weight;
+            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + model.Quantity;
+
+            Double calculateExtraWeight = model.Weight * model.Quantity;
+            Double newWeight = Double.parseDouble( existingTableModel.getSummaryWeight()) + calculateExtraWeight;
 
             result = new ProductListViewModel(
                     model.ProductGuid,

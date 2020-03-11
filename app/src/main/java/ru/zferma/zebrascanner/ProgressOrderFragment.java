@@ -50,7 +50,7 @@ public class ProgressOrderFragment extends Fragment {
 
                 if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
                 {
-                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getWeight());
+                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getSummaryWeight());
                     doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
                 }
 
