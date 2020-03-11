@@ -61,7 +61,7 @@ public class ResponseModelGenerator
                 WeightCalculator(barcode,product),
                 barcode.getProductionDate(),
                 barcode.getExpirationDate(),
-                ManufacturerStructureModel.GetManufacturerGuidById(barcode.getInternalProducer()),
+                CalculateManufacturerGuidForDataTable(barcode.getInternalProducer()),
                 1
                 );
         return result;
@@ -155,6 +155,15 @@ public class ResponseModelGenerator
             return ManufacturerStructureModel.GetManufacturerNameByGuid(guid);
         } catch (ApplicationException ex) {
             return ex.getMessage();
+        }
+    }
+
+    private String CalculateManufacturerGuidForDataTable(Byte id)
+    {
+        try {
+            return ManufacturerStructureModel.GetManufacturerGuidById(id);
+        } catch (ApplicationException ex) {
+            return null;
         }
     }
 

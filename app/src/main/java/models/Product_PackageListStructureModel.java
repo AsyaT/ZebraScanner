@@ -33,11 +33,11 @@ public class Product_PackageListStructureModel extends ProductModel
         return this.Items;
     }
 
-    public String GetManufacturerGuid(){return ManufacturerGUID;}
+    public String GetManufacturerGuid() { return ManufacturerGUID; }
 
-    public Date GetProductionDate() { return ProductionDate;}
+    public Date GetProductionDate() { return ProductionDate; }
 
-    public Date GetExpirationDate() { return ExpirationDate;}
+    public Date GetExpirationDate() { return ExpirationDate; }
 
 
 }

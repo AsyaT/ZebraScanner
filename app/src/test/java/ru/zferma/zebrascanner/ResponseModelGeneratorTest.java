@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
@@ -243,7 +244,7 @@ public class ResponseModelGeneratorTest
     @Test
     public void FullDataTableProductGS1Test() throws ParseException, ApplicationException
     {
-        String scannedBarcode = "0104660017707116310300410010082011190120171912252100001921000";
+        String scannedBarcode = "(01)04660017707116(3103)004100(10)0820(11)191230(17)200105(21)00001(92)1000";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel product = new ProductStructureModel(
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2",
@@ -256,8 +257,8 @@ public class ResponseModelGeneratorTest
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2",
                 "b9e89741-ef89-11e6-80cb-001e67e5da8c",
                 4.1,
-                new Date(2019,12,20),
-                new Date(2019,12,25),
+                new GregorianCalendar(2019,11,30).getTime(),
+                new GregorianCalendar(2020,0,5).getTime(),
                 "23504297-7ee1-11e6-80d7-e4115bea65d2",
                 1
         );
@@ -384,7 +385,7 @@ public class ResponseModelGeneratorTest
 
     @Test
     public void StringResponseProductGS1FailTest() throws ParseException, ApplicationException {
-        String scannedBarcode = "0100000000000001310302560010082011190120171912252100001920000";
+        String scannedBarcode = "(01)00000000000001(3103)025600(10)0820(11)191227(17)200125(21)00001(92)0000";
         ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(scannedBarcode, BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel product = new ProductStructureModel(
                 "000",
@@ -397,8 +398,8 @@ public class ResponseModelGeneratorTest
                 + "\nХарактеристика: Характеристика продкута с GUID 000 не найдена"
                 + "\nВес: 25.6 кг"
                 + "\nНомер партии: 0820"
-                + "\nДата производства: 20-01-2019"
-                + "\nДата истечения срока годности: 25-12-2019"
+                + "\nДата производства: 27-12-2019"
+                + "\nДата истечения срока годности: 25-01-2020"
                 + "\nСерийный номер: 00001"
                 + "\nВнутренний код производителя: 0 - Производитель с номером 0 не найден"
                 + "\nВнутренний код оборудования: 0" ;
@@ -413,8 +414,8 @@ public class ResponseModelGeneratorTest
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2",
                 "b9e89741-ef89-11e6-80cb-001e67e5da8c",
                 4.1,
-                new Date(2020,2,14),
-                new Date(2020,2,21),
+                new GregorianCalendar(2019, 11, 14).getTime(),
+                new GregorianCalendar(2020, 1,21).getTime(),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
                 5);
 
@@ -424,7 +425,7 @@ public class ResponseModelGeneratorTest
                 "Номенклатура: Грудка куриная \"Здоровая Ферма\", охл.~0,80 кг*5/~4,0 кг/ (подложка, стрейч)"
                 + "\nХарактеристика: Монетка"
                 + "\nВес: 4.1 кг"
-                + "\nДата производства: 14-02-2020"
+                + "\nДата производства: 14-12-2019"
                 + "\nДата истечения срока годности: 21-02-2020"
                 + "\nПроизводитель: УРАЛБРОЙЛЕР ЗАО (Кунашак)"
                 + "\nКоличество: 5";
