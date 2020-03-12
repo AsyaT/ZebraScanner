@@ -40,6 +40,8 @@ public class BarcodeProductLogicTest {
         productList = new ArrayList<>();
         productList.add(new ProductStructureModel(
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",4.0));
+        productList.add(new ProductStructureModel(
+                "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2","b9e89741-ef89-11e6-80cb-001e67e5da8c",1.0));
         BarcodeStructureModel.Add("4660017707116", productList);
 
         productList = new ArrayList<>();
@@ -71,6 +73,16 @@ public class BarcodeProductLogicTest {
     }
 
     @Test
+    public void SinglProducts() throws ParseException, ApplicationException {
+
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("04660017708243", BarcodeTypes.LocalEAN13);
+
+        ArrayList<ProductStructureModel> actual = barcodeProductLogic.FindProductByBarcode(barcodeStructureModel.getUniqueIdentifier());
+
+        Assert.assertEquals(1, actual.size());
+    }
+
+    @Test
     public void TestSkipDuplicatedProducts() throws ParseException, ApplicationException {
 
         ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("04660017707529", BarcodeTypes.LocalEAN13);
@@ -80,5 +92,13 @@ public class BarcodeProductLogicTest {
         Assert.assertEquals(2, actual.size());
     }
 
+    @Test
+    public void TestSkipDuplicatedProductsWeightDiff() throws ParseException, ApplicationException {
 
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("04660017707116", BarcodeTypes.LocalEAN13);
+
+        ArrayList<ProductStructureModel> actual = barcodeProductLogic.FindProductByBarcode(barcodeStructureModel.getUniqueIdentifier());
+
+        Assert.assertEquals(2, actual.size());
+    }
 }

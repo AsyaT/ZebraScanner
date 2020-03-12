@@ -49,7 +49,8 @@ public class BarcodeProductLogic {
         {
             if(
                     collectionItem.GetProductGuid().equalsIgnoreCase(product.GetProductGuid()) &&
-                    collectionItem.GetCharacteristicGUID().equalsIgnoreCase(product.GetCharacteristicGUID())
+                    collectionItem.GetCharacteristicGUID().equalsIgnoreCase(product.GetCharacteristicGUID()) &&
+                    collectionItem.GetWeight().equals(product.GetWeight())
             )
             {
                 return true;
