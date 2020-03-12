@@ -16,7 +16,10 @@ public class ListViewPresentationModel {
         this.Quantity = quantity;
     }
 
-    public boolean equals(ListViewPresentationModel obj) {
+    @Override
+    public boolean equals(Object input)
+    {
+        ListViewPresentationModel obj = (ListViewPresentationModel) input;
         return this.ProductGuid.equals(obj.ProductGuid)
                 && this.Nomenclature.equals(obj.Nomenclature)
                 && this.Characteristic.equals(obj.Characteristic)

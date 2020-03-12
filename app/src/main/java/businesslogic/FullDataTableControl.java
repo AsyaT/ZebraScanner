@@ -137,7 +137,9 @@ public class FullDataTableControl
 
        public String getManufacturerGuid() { return this.ManufacturerGuid;}
 
-       public boolean equals(Details obj) {
+       @Override
+       public boolean equals(Object input) {
+           Details obj = (Details) input;
            return this.ProductGuid.equals(obj.ProductGuid)
                    && this.CharacteristicGuid.equals(obj.CharacteristicGuid)
                    && ((this.ManufacturerGuid == null && obj.ManufacturerGuid == null) || this.ManufacturerGuid.equals(obj.ManufacturerGuid))
