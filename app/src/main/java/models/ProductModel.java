@@ -20,13 +20,4 @@ public class ProductModel
     {
         return Weight;
     }
-
-// TODO: remove?
-    public void SetWeight(Double scannedWeight)
-    {
-        if(scannedWeight != null)
-        {
-            this.Weight = scannedWeight;
-        }
-    }
 }
