@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import businesslogic.ListViewPresentationModel;
+import models.ListViewPresentationModel;
 import presentation.DataTableControl;
 import presentation.ProductListViewModel;
 

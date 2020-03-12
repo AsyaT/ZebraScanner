@@ -20,7 +20,7 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import businesslogic.ListViewPresentationModel;
+import models.ListViewPresentationModel;
 import businesslogic.ResponseModelGenerator;
 import businesslogic.ScannerState;
 import models.ObjectForSaving;

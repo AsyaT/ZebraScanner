@@ -3,6 +3,7 @@ package businesslogic;
 import java.text.SimpleDateFormat;
 
 import models.CharacteristicStructureModel;
+import models.ListViewPresentationModel;
 import models.ManufacturerStructureModel;
 import models.NomenclatureStructureModel;
 import models.ProductStructureModel;

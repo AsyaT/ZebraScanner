@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
-import businesslogic.ListViewPresentationModel;
+import models.ListViewPresentationModel;
 import businesslogic.ResponseModelGenerator;
 import models.BarcodeStructureModel;
 import models.CharacteristicStructureModel;

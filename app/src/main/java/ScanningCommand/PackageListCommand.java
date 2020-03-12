@@ -13,7 +13,7 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import businesslogic.ListViewPresentationModel;
+import models.ListViewPresentationModel;
 import businesslogic.ResponseModelGenerator;
 import models.ObjectForSaving;
 import models.PackageListStructureModel;
