@@ -13,7 +13,7 @@ import java.util.Date;
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
 import businesslogic.FullDataTableControl;
-import businesslogic.ScanningBarcodeStructureModel;
+import models.ScanningBarcodeStructureModel;
 
 public class FullDataControlTest {
 
@@ -40,7 +40,8 @@ public class FullDataControlTest {
                 10.0,
                 new Date(2019,8,20),
                 new Date(2019,8,25),
-                "5ef1b244-c11e-11e6-80c7-001e67e5da8b");
+                "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
+                8);
 
         fullDataTableControl.Add(  details);
     }
@@ -63,7 +64,8 @@ public class FullDataControlTest {
                 10.0,
                 new Date(2019,8,20),
                 new Date(2019,8,25),
-                "5ef1b244-c11e-11e6-80c7-001e67e5da8b"));
+                "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
+                2));
 
         Assert.assertEquals(1, fullDataTableControl.GetListOfProducts().size());
 
@@ -93,7 +95,8 @@ public class FullDataControlTest {
                 1.0,
                 new Date(2019,8,20),
                 new Date(2019,8,25),
-                "5ef1b244-c11e-11e6-80c7-001e67e5da8b"
+                "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
+                3
                 ));
 
         Assert.assertEquals(2, fullDataTableControl.GetListOfProducts().size());
@@ -114,7 +117,8 @@ public class FullDataControlTest {
                 25.0,
                 new Date(2019,8,20),
                 new Date(2019,8,25),
-                "5ef1b244-c11e-11e6-80c7-001e67e5da8b"));
+                "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
+                9));
 
         Assert.assertEquals(3, fullDataTableControl.GetListOfProducts().size());
 
@@ -134,7 +138,8 @@ public class FullDataControlTest {
                 4.0,
                 new Date(2019,8,20),
                 new Date(2019,8,25),
-                "5ef1b244-c11e-11e6-80c7-001e67e5da8b"));
+                "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
+                4));
 
         Assert.assertEquals(4, fullDataTableControl.GetListOfProducts().size());
 
@@ -154,7 +159,8 @@ public class FullDataControlTest {
                 1.0,
                 new Date(2019,8,20),
                 new Date(2019,8,25),
-                "23504297-7ee1-11e6-80d7-e4115bea65d2"));
+                "23504297-7ee1-11e6-80d7-e4115bea65d2",
+                2));
 
         Assert.assertEquals(5, fullDataTableControl.GetListOfProducts().size());
     }
@@ -178,7 +184,8 @@ public class FullDataControlTest {
                 10.0,
                 null,
                 null,
-                null));
+                null,
+                1));
 
         Assert.assertEquals(2, fullDataTableControl.GetListOfProducts().size());
     }

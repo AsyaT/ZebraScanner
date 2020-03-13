@@ -1,8 +1,11 @@
-package businesslogic;
+package models;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import businesslogic.ApplicationException;
+import businesslogic.BarcodeTypes;
 
 public class ScanningBarcodeStructureModel {
     private String UniqueIdentifier;

@@ -9,6 +9,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import models.BarcodeStructureModel;
+import models.BaseDocumentStructureModel;
+import models.CharacteristicStructureModel;
+import models.ManufacturerStructureModel;
+import models.NomenclatureStructureModel;
+import models.OperationTypesStructureModel;
+import models.ProductStructureModel;
+import models.ScanningBarcodeStructureModel;
 import scanningcommand.ProductCommand;
 import businesslogic.*;
 
@@ -60,11 +68,7 @@ public class ProductCommandTest
         Byte manufacturer_1 = 1;
         manufacturerStructureModel.Add(manufacturer_1, "УРАЛБРОЙЛЕР ЗАО (Ишалино)","23504297-7ee1-11e6-80d7-e4115bea65d2");
 
-        BarcodeProductLogic barcodeProductLogic = new BarcodeProductLogic(
-                BarcodeStructureModel,
-                nomenclatureStructureModel,
-                characterisiticStructureModel,
-                manufacturerStructureModel);
+        BarcodeProductLogic barcodeProductLogic = new BarcodeProductLogic( BarcodeStructureModel);
 
         // --------------------
 
@@ -121,10 +125,11 @@ public class ProductCommandTest
     @Test
     public void ParseTestGS1EXP() throws ParseException, DoesNotExistsInOrderException, ApplicationException
     {
-        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
+        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel(
+                "(01)04660017708243(3103)007456(10)0820(11)190820(17)190825(21)00001(92)1000", BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel actual = productCommand.ParseAction(barcodeStructureModel);
         ProductStructureModel expected = new ProductStructureModel(
-                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
+                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0);
 
         Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
         Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());
@@ -134,14 +139,6 @@ public class ProductCommandTest
     @Test(expected = DoesNotExistsInOrderException.class)
     public void ParseTestNotInOrder() throws DoesNotExistsInOrderException, ParseException, ApplicationException {
         ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017707116310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
-        productCommand.ParseAction(barcodeStructureModel);
-
-    }
-
-
-    @Test(expected = ApplicationException.class)
-    public void ParseTestManufacturerNotFound() throws ApplicationException, DoesNotExistsInOrderException, ParseException {
-        ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017708243310300745610082011190820171908252100001922000", BarcodeTypes.LocalGS1_EXP);
         productCommand.ParseAction(barcodeStructureModel);
 
     }
@@ -163,7 +160,7 @@ public class ProductCommandTest
         ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017708243310300745610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
         ProductStructureModel actual = productCommand.ParseAction(barcodeStructureModel);
         ProductStructureModel expected = new ProductStructureModel(
-                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",7.456);
+                "f50d315d-7ca8-11e6-80d7-e4115bea65d2","41dbf472-19d8-11e7-80cb-001e67e5da8c",8.0);
 
         Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
         Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());
@@ -189,7 +186,7 @@ public class ProductCommandTest
         ProductStructureModel actual = productCommand.ParseAction(barcodeStructureModel);
 
         ProductStructureModel expected = new ProductStructureModel(
-                "7a017e91-bf8e-11e7-80c5-a4bf011ce3c3","641e7835-ed76-11e8-80cd-a4bf011ce3c3",12.456);
+                "7a017e91-bf8e-11e7-80c5-a4bf011ce3c3","641e7835-ed76-11e8-80cd-a4bf011ce3c3",1.0);
 
         Assert.assertEquals(expected.GetProductGuid(),actual.GetProductGuid());
         Assert.assertEquals(expected.GetCharacteristicGUID(),actual.GetCharacteristicGUID());

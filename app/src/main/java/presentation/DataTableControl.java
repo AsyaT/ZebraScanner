@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import businesslogic.ListViewPresentationModel;
+import models.ListViewPresentationModel;
 
 public class DataTableControl {
 
@@ -80,21 +80,26 @@ public class DataTableControl {
         ProductListViewModel existingTableModel =  this.FindProduct( model.ProductGuid);
         if(existingTableModel == null)
         {
-            Integer newStringNumber = this.GetSizeOfList()+1;
+            Integer newStringNumber = this.GetSizeOfList() + 1;
+
+            Double calculateWeight = model.Quantity * model.Weight;
+
             result = new ProductListViewModel(
                     model.ProductGuid,
                     newStringNumber.toString(),
                     model.Characteristic,
                     model.Nomenclature,
-                    "1",
-                    model.Weight.toString());
+                    model.Quantity.toString(),
+                    calculateWeight.toString());
         }
         else
         {
             DataTable.remove(existingTableModel);
 
-            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
-            Double newWeight = Double.parseDouble( existingTableModel.getWeight()) + model.Weight;
+            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + model.Quantity;
+
+            Double calculateExtraWeight = model.Weight * model.Quantity;
+            Double newWeight = Double.parseDouble( existingTableModel.getSummaryWeight()) + calculateExtraWeight;
 
             result = new ProductListViewModel(
                     model.ProductGuid,

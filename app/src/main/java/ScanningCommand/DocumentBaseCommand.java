@@ -10,7 +10,7 @@ import com.symbol.emdk.barcode.ScanDataCollection;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
-import businesslogic.BaseDocumentStructureModel;
+import models.BaseDocumentStructureModel;
 import businesslogic.ScannerState;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.OrderInfoFragment;

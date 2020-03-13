@@ -5,9 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import businesslogic.BaseDocumentLogic;
-import businesslogic.BaseDocumentStructureModel;
+import models.BaseDocumentStructureModel;
 import businesslogic.DoesNotExistsInOrderException;
-import businesslogic.ProductStructureModel;
+import models.ProductStructureModel;
 
 public class BaseDocumentLogicTest {
 

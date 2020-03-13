@@ -20,13 +20,12 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import businesslogic.ListViewPresentationModel;
-import businesslogic.ObjectForSaving;
-import businesslogic.ProductLogic;
-import businesslogic.ProductModel;
-import businesslogic.ProductStructureModel;
+import models.ListViewPresentationModel;
+import businesslogic.ResponseModelGenerator;
 import businesslogic.ScannerState;
-import businesslogic.ScanningBarcodeStructureModel;
+import models.ObjectForSaving;
+import models.ProductStructureModel;
+import models.ScanningBarcodeStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
@@ -41,7 +40,7 @@ public class ProductCommand extends ResponseFormat implements Command
     MediaPlayer mediaPlayer = null;
 
     businesslogic.BarcodeProductLogic BarcodeProductLogic;
-    businesslogic.ProductLogic ProductLogic;
+    ResponseModelGenerator responseModelGenerator;
     BarcodeScanningLogic barcodeScanningLogic;
     BaseDocumentLogic baseDocumentLogic;
 
@@ -52,12 +51,9 @@ public class ProductCommand extends ResponseFormat implements Command
 
         appState = ((ScannerApplication) Activity.getApplication());
 
-        this.BarcodeProductLogic = new BarcodeProductLogic(appState.barcodeStructureModel,
-                appState.nomenclatureStructureModel,
-                appState.characteristicStructureModel,
-                appState.manufacturerStructureModel);
+        this.BarcodeProductLogic = new BarcodeProductLogic(appState.barcodeStructureModel);
 
-        this.ProductLogic = new ProductLogic(
+        this.responseModelGenerator = new ResponseModelGenerator(
                 appState.nomenclatureStructureModel,
                 appState.characteristicStructureModel,
                 appState.manufacturerStructureModel
@@ -109,15 +105,10 @@ public class ProductCommand extends ResponseFormat implements Command
 
                                     ProductStructureModel orderProduct =  CheckInOrder(result[0]);
                                     appState.SelectedDialogNomenclatures.put(barcode.getUniqueIdentifier(), orderProduct);
-                                    ProductStructureModel calculatedProduct = BarcodeProductLogic.MixBarcodeWithDatabase(orderProduct, barcode);
-                                    SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, calculatedProduct, barcode);
+                                    SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, orderProduct, barcode);
 
 
                                 } catch (DoesNotExistsInOrderException ex) {
-                                    ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
-                                }
-                                catch (ApplicationException ex)
-                                {
                                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
                                 }
                                 finally {
@@ -184,7 +175,7 @@ public class ProductCommand extends ResponseFormat implements Command
                 if(appState.SelectedDialogNomenclatures.containsKey(barcode.getUniqueIdentifier()))
                 {
                     ProductStructureModel orderProduct =  CheckInOrder(appState.SelectedDialogNomenclatures.get(barcode.getUniqueIdentifier()));
-                    return this.BarcodeProductLogic.MixBarcodeWithDatabase(orderProduct, barcode);
+                    return orderProduct;
                 }
                 else
                     {
@@ -194,7 +185,7 @@ public class ProductCommand extends ResponseFormat implements Command
             else
             {
                 ProductStructureModel orderProduct =  CheckInOrder(products.get(0));
-                return this.BarcodeProductLogic.MixBarcodeWithDatabase(orderProduct, barcode);
+                return orderProduct;
             }
 
         return null;
@@ -209,14 +200,14 @@ public class ProductCommand extends ResponseFormat implements Command
     }
 
     @Override
-    protected void SaveInfoForProductList(ObjectForSaving product)
+    protected void SaveInfoForProductList(ScanningBarcodeStructureModel barcode, ObjectForSaving product)
     {
         try {
-            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView((ProductModel) product);
+            ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(barcode,(ProductStructureModel) product);
 
             ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
-            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails((ProductModel) product);
+            FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(barcode,(ProductStructureModel) product);
             appState.ScannedProductsToSend.Add(detailsModel);
         }
         catch (ApplicationException e)
@@ -226,9 +217,9 @@ public class ProductCommand extends ResponseFormat implements Command
     }
 
     @Override
-    protected void ShowInfoForFragment(ObjectForSaving product, ScanningBarcodeStructureModel barcode)
+    protected void ShowInfoForFragment(ScanningBarcodeStructureModel barcode, ObjectForSaving product)
     {
-        String result = this.BarcodeProductLogic.CreateStringResponse((ProductModel)product, barcode);
+        String result = this.responseModelGenerator.CreateStringResponse(barcode,(ProductStructureModel) product);
         ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
     }
 }

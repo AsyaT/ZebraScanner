@@ -1,7 +1,10 @@
-package businesslogic;
+package models;
 
 import java.util.HashMap;
 import java.util.Set;
+
+import businesslogic.ApplicationException;
+import businesslogic.BarcodeTypes;
 
 public class OperationsTypesAccountingAreaStructureModel {
 

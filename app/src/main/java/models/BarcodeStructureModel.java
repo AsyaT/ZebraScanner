@@ -1,7 +1,9 @@
-package businesslogic;
+package models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import businesslogic.ApplicationException;
 
 public class BarcodeStructureModel {
     private HashMap<String, ArrayList<ProductStructureModel>> BarcodeUnique;

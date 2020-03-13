@@ -97,10 +97,13 @@ public class FullDataTableControl
        Date ExpiredDate;
        String ManufacturerGuid;
 
-       public Details()
-       {}
-
-       public Details(String productGuid, String characteristicGuid, Double weight, Date productionDate, Date expiredDate, String manufacturerGuid)
+       public Details(String productGuid,
+                      String characteristicGuid,
+                      Double weight,
+                      Date productionDate,
+                      Date expiredDate,
+                      String manufacturerGuid,
+                      Integer scannedQuantity)
        {
            this.ProductGuid = productGuid;
            this.CharacteristicGuid= characteristicGuid;
@@ -108,6 +111,7 @@ public class FullDataTableControl
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;
            this.ManufacturerGuid = manufacturerGuid;
+           this.ScannedQuantity = scannedQuantity;
        }
 
        public String getProductGuid()
@@ -132,5 +136,17 @@ public class FullDataTableControl
        public Date getExpiredDate() { return this.ExpiredDate;}
 
        public String getManufacturerGuid() { return this.ManufacturerGuid;}
+
+       @Override
+       public boolean equals(Object input) {
+           Details obj = (Details) input;
+           return this.ProductGuid.equals(obj.ProductGuid)
+                   && this.CharacteristicGuid.equals(obj.CharacteristicGuid)
+                   && ((this.ManufacturerGuid == null && obj.ManufacturerGuid == null) || this.ManufacturerGuid.equals(obj.ManufacturerGuid))
+                   && ((this.ProductionDate==null && obj.ProductionDate==null) || this.ProductionDate.equals(obj.ProductionDate) )
+                   && ((this.ExpiredDate==null && obj.ExpiredDate==null) || this.ExpiredDate.equals(obj.ExpiredDate) )
+                   && this.Weight.equals(obj.Weight)
+                   && this.ScannedQuantity.equals(obj.ScannedQuantity);
+       }
    }
 }

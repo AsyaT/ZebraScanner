@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeTypes;
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import models.OperationsTypesAccountingAreaStructureModel;
 
 public class OperationTypesHelper extends  PullDataHelperAbstractFactory
 {

@@ -1,8 +1,11 @@
 package businesslogic;
 
+import models.BaseDocumentStructureModel;
+import models.ProductModel;
+
 public class BaseDocumentLogic {
 
-    BaseDocumentStructureModel BaseDocumentStructureModel = null;
+    models.BaseDocumentStructureModel BaseDocumentStructureModel = null;
 
     public BaseDocumentLogic(BaseDocumentStructureModel baseDocumentStructureModel)
     {

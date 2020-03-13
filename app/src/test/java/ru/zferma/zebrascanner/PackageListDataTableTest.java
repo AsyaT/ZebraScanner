@@ -8,7 +8,7 @@ import java.util.Date;
 
 import businesslogic.ApplicationException;
 import businesslogic.PackageListDataTable;
-import businesslogic.PackageListStructureModel;
+import models.PackageListStructureModel;
 
 public class PackageListDataTableTest
 {

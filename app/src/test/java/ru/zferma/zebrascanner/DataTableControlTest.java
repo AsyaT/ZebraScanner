@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import businesslogic.ListViewPresentationModel;
+import models.ListViewPresentationModel;
 import presentation.DataTableControl;
 import presentation.ProductListViewModel;
 
@@ -35,7 +35,8 @@ public class DataTableControlTest {
                 "Nomenclature 1",
                 "Char 1",
                 2.5,
-                "111-111-111-111"
+                "111-111-111-111",
+                1
         );
         Table.AddOne(model);
         Table.AddOne(model);
@@ -45,7 +46,8 @@ public class DataTableControlTest {
                 "Nomenclature 2",
                 "Char 2",
                 9.7,
-                "222-222-222-222"
+                "222-222-222-222",
+                1
         );
         Table.AddOne(model);
         Table.AddOne(model);
@@ -54,7 +56,8 @@ public class DataTableControlTest {
                 "Nomenclature 3",
                 "Char 1",
                 8.2,
-                "789-168-038-557"
+                "789-168-038-557",
+                1
         );
         Table.AddOne(model);
 
@@ -62,16 +65,26 @@ public class DataTableControlTest {
                 "Nomenclature 4",
                 "Char 2",
                 25.6,
-                "493-58-33"
+                "493-58-33",
+                1
         );
         Table.AddOne(model);
+        Table.AddOne(model);
+
+        model = new ListViewPresentationModel(
+                "Nomenclature 5",
+                "Char 9",
+                3.7,
+                "0385-67-2446",
+                7
+        );
         Table.AddOne(model);
     }
 
     @Test
     public void SizeOfList()
     {
-        Integer sizeOfList = 4;
+        Integer sizeOfList = 5;
         assertEquals(sizeOfList, Table.GetSizeOfList());
     }
 
@@ -91,6 +104,57 @@ public class DataTableControlTest {
 
     }
 
+    @Test
+    public void AddExtraOne()
+    {
+        ListViewPresentationModel model = new ListViewPresentationModel(
+                "Nomenclature 5",
+                "Char 9",
+                3.7,
+                "0385-67-2446",
+                3
+        );
+        Table.AddOne(model);
+
+        ProductListViewModel actual  = Table.FindProduct("0385-67-2446");
+
+        ProductListViewModel expected = new ProductListViewModel(
+                "0385-67-2446",
+                "5",
+                "Char 9",
+                "Nomenclature 5",
+                "10",
+                "37.0");
+
+        CompareModels(expected,actual);
+
+        AddExtraOneDifferentWeight();
+    }
+
+    public void AddExtraOneDifferentWeight()
+    {
+        ListViewPresentationModel model = new ListViewPresentationModel(
+                "Nomenclature 5",
+                "Char 9",
+                6.5,
+                "0385-67-2446",
+                4
+        );
+        Table.AddOne(model);
+
+        ProductListViewModel actual  = Table.FindProduct("0385-67-2446");
+
+        ProductListViewModel expected = new ProductListViewModel(
+                "0385-67-2446",
+                "5",
+                "Char 9",
+                "Nomenclature 5",
+                "14",
+                "63.0");
+
+        CompareModels(expected,actual);
+    }
+
     private void CompareModels(ProductListViewModel actual, ProductListViewModel expected)
     {
         assertEquals(actual.getProductGuid(), expected.getProductGuid());
@@ -98,7 +162,7 @@ public class DataTableControlTest {
         assertEquals(actual.getCharacteristic(), expected.getCharacteristic());
         assertEquals(actual.getNomenclature(), expected.getNomenclature());
         assertEquals(actual.getCoefficient(), expected.getCoefficient());
-        assertEquals(actual.getWeight(), expected.getWeight());
+        assertEquals(actual.getSummaryWeight(), expected.getSummaryWeight());
     }
 
     @Test
@@ -148,7 +212,7 @@ public class DataTableControlTest {
 
         assertEquals("2",result.getStringNumber());
         assertEquals("2", result.getCoefficient());
-        assertEquals("51.2", result.getWeight());
+        assertEquals("51.2", result.getSummaryWeight());
 
 
         ProductListViewModel removed = Table.FindProduct("111-111-111-111");
@@ -157,7 +221,7 @@ public class DataTableControlTest {
         Table.ItemClicked(testView, "493-58-33");
         Table.RemoveSelected();
 
-        assertEquals(1,Table.GetDataTable().size());
+        assertEquals(2,Table.GetDataTable().size());
 
         removed = Table.FindProduct("493-58-33");
         assertNull(removed);

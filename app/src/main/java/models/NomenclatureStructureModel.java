@@ -1,6 +1,8 @@
-package businesslogic;
+package models;
 
 import java.util.HashMap;
+
+import businesslogic.ApplicationException;
 
 public class NomenclatureStructureModel {
 

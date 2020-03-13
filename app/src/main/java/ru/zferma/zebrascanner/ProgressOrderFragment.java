@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import businesslogic.BaseDocumentStructureModel;
+import models.BaseDocumentStructureModel;
 
 public class ProgressOrderFragment extends Fragment {
 
@@ -50,7 +50,7 @@ public class ProgressOrderFragment extends Fragment {
 
                 if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
                 {
-                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getWeight());
+                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getSummaryWeight());
                     doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
                 }
 
