@@ -3,6 +3,7 @@ package upgrading;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -54,7 +55,7 @@ public class DownloadingService extends Service
             try {
 
                 String webServerURL = "http://192.168.88.217/";
-                String globalFolder = "/storage/emulated/0/Download";
+                String globalFolder = Environment.getExternalStorageDirectory().toString();;
                 String folderName = "APPS";
                 String apkFileName = "zebraapp.apk";
 
