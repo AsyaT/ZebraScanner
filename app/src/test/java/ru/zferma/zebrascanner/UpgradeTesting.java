@@ -28,9 +28,9 @@ public class UpgradeTesting
     }
 
     @Test
-    public void Download()
+    public void ReadVersionTest()
     {
-
+        Assert.assertEquals(UpgradeHelper.ReadNewVersion(), "1.2");
     }
 
     @Test

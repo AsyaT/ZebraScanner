@@ -6,10 +6,9 @@ import android.support.annotation.RequiresApi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class UpgradeHelper
 {
@@ -18,7 +17,7 @@ public class UpgradeHelper
         try
         {
             URL url = new URL("http://192.168.88.217/");
-            HttpsURLConnection uc = (HttpsURLConnection) url.openConnection();
+            HttpURLConnection uc = (HttpURLConnection) url.openConnection();
             BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
             String line;
             StringBuilder lin2 = new StringBuilder();
