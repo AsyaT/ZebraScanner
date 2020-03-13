@@ -1,5 +1,8 @@
 package upgrading;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
@@ -108,5 +111,30 @@ public class UpgradeHelper
             System.out.println("exception in DownloadFile: --------"+e.toString());
             e.printStackTrace();
         }
+    }
+
+    public static File CreateFile(String destinationPath, String folderName, String fileName)
+    {
+        String extStorageDirectory = destinationPath;
+        File folder = new File(extStorageDirectory, folderName);
+        folder.mkdir();
+        File file = new File(folder, fileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        return file;
+    }
+
+    public static void InstallApk(Context context, String filePath)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(
+                Uri.fromFile(new File(filePath)),
+                "application/vnd.android.package-archive"
+        );
+        context.startActivity(intent);
     }
 }

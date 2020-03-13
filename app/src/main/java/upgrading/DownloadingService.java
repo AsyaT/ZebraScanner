@@ -2,7 +2,6 @@ package upgrading;
 
 import android.app.Service;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -53,32 +52,22 @@ public class DownloadingService extends Service
         public void run()
         {
             try {
-                String currentVersionName = BuildConfig.VERSION_NAME;
 
-                String serverVersion = UpgradeHelper.ReadNewVersion("http://192.168.88.217/");
+                String webServerURL = "http://192.168.88.217/";
+                String globalFolder = "/storage/emulated/0/Download";
+                String folderName = "APPS";
+                String apkFileName = "zebraapp.apk";
+
+                String currentVersionName = BuildConfig.VERSION_NAME;
+                String serverVersion = UpgradeHelper.ReadNewVersion(webServerURL );
 
                 if (serverVersion!=null && UpgradeHelper.IsNewVersionAvailable(serverVersion, currentVersionName))
                 {
-                    String extStorageDirectory = "/storage/emulated/0/Download";
-                    File folder = new File(extStorageDirectory, "APPS");
-                    folder.mkdir();
-                    File file = new File(folder, "zebraapp." + "apk");
-                    try {
-                        file.createNewFile();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                    File file = UpgradeHelper.CreateFile(globalFolder, folderName, apkFileName);
 
-                    UpgradeHelper.DownloadNewApk("http://192.168.88.217/zebraapp.apk", file);
+                    UpgradeHelper.DownloadNewApk(webServerURL + apkFileName, file);
 
-
-                    //  install new apk
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(
-                            Uri.fromFile(new File(extStorageDirectory + "/APPS/" + "zebraapp.apk")),
-                            "application/vnd.android.package-archive"
-                    );
-                    startActivity(intent);
+                    UpgradeHelper.InstallApk(getBaseContext(), globalFolder + "/"+folderName+"/" + apkFileName);
                 }
             }
             catch (IOException ioException)
