@@ -1,5 +1,6 @@
 package ru.zferma.zebrascanner;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
@@ -7,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class PreSettingsActivity extends AppCompatActivity {
 
@@ -21,6 +24,7 @@ public class PreSettingsActivity extends AppCompatActivity {
 
     Button btnSelectOperationType;
     Button btnSettings;
+    TextView txtVersion;
 
     private Boolean AreSettingsFill()
     {
@@ -53,7 +57,9 @@ public class PreSettingsActivity extends AppCompatActivity {
         devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
 
         btnSelectOperationType = (Button) findViewById(R.id.btnSelectOperation);
-         btnSettings = (Button) findViewById(R.id.btnSettings);
+        btnSettings = (Button) findViewById(R.id.btnSettings);
+        txtVersion = (TextView) findViewById(R.id.txtVersion);
+        txtVersion.setText(BuildConfig.VERSION_NAME);
 
         btnSelectOperationType.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,14 +126,12 @@ public class PreSettingsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        /*
-        /// *** Removed because don't need read from file any more
 
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         ActivityCompat.requestPermissions(PreSettingsActivity.this,
                 permissions,
                 1);
 
-         */
+
     }
 }

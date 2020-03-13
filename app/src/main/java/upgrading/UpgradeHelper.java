@@ -4,7 +4,10 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -90,8 +93,27 @@ public class UpgradeHelper
         return false;
     }
 
-    public static void DownloadNewApk()
+    public static void DownloadNewApk(String fileURL, File existingFile)
     {
-        // TODO: implement
+        try {
+
+            FileOutputStream f = new FileOutputStream(existingFile);
+            URL u = new URL(fileURL);
+            HttpURLConnection c = (HttpURLConnection) u.openConnection();
+            c.setRequestMethod("GET");
+            //c.setDoOutput(true);
+            c.connect();
+            InputStream in = c.getInputStream();
+            byte[] buffer = new byte[1024];
+            int len1 = 0;
+            while ((len1 = in.read(buffer)) > 0) {
+                f.write(buffer, 0, len1);
+            }
+            f.close();
+        } catch (Exception e)
+        {
+            System.out.println("exception in DownloadFile: --------"+e.toString());
+            e.printStackTrace();
+        }
     }
 }
