@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -41,6 +40,12 @@ public class DownloadingService extends Service
         mTimer.scheduleAtFixedRate(new VersionComparerTask(), 0, NOTIFY_INTERVAL);
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        return super.onStartCommand(intent,flags,startId);
+    }
+
     class VersionComparerTask extends TimerTask
     {
 
@@ -54,7 +59,7 @@ public class DownloadingService extends Service
 
             if(UpgradeHelper.IsNewVersionAvailable(serverVersion, currentVersionName))
             {
-                String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+                String extStorageDirectory = "/storage/emulated/0/Download";
                 File folder = new File(extStorageDirectory, "APPS");
                 folder.mkdir();
                 File file = new File(folder, "zebraapp."+"apk");
@@ -70,7 +75,7 @@ public class DownloadingService extends Service
                 //  install new apk
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(
-                        Uri.fromFile( new File(Environment.getExternalStorageDirectory() + "/APPS/" + "zebraapp.apk")),
+                        Uri.fromFile( new File(extStorageDirectory + "/APPS/" + "zebraapp.apk")),
                         "application/vnd.android.package-archive"
                 );
                 startActivity(intent);

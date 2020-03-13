@@ -6,6 +6,7 @@ import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import upgrading.DownloadingService;
 
 public class PreSettingsActivity extends AppCompatActivity {
 
@@ -59,7 +62,14 @@ public class PreSettingsActivity extends AppCompatActivity {
         btnSelectOperationType = (Button) findViewById(R.id.btnSelectOperation);
         btnSettings = (Button) findViewById(R.id.btnSettings);
         txtVersion = (TextView) findViewById(R.id.txtVersion);
-        txtVersion.setText(BuildConfig.VERSION_NAME);
+        txtVersion.setText("Version: "+ BuildConfig.VERSION_NAME);
+
+        // TODO: remove from here
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent intent = new Intent(getBaseContext(), DownloadingService.class);
+            startForegroundService(intent);
+        }
+        //-------------
 
         btnSelectOperationType.setOnClickListener(new View.OnClickListener() {
             @Override
