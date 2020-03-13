@@ -15,26 +15,19 @@ import java.util.ArrayList;
 
 public class UpgradeHelper
 {
-    public static String ReadNewVersion(String httpUrl)
+    public static String ReadNewVersion(String httpUrl) throws IOException
     {
-        try
+        URL url = new URL(httpUrl);
+        HttpURLConnection uc = (HttpURLConnection) url.openConnection();
+        BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
+        String line;
+        StringBuilder lin2 = new StringBuilder();
+        while ((line = br.readLine()) != null)
         {
-            URL url = new URL(httpUrl);
-            HttpURLConnection uc = (HttpURLConnection) url.openConnection();
-            BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            String line;
-            StringBuilder lin2 = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                lin2.append(line);
-            }
-
-            return lin2.toString();
+            lin2.append(line);
         }
-        catch ( IOException e)
-        {
 
-        }
-        return null;
+        return lin2.toString();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
