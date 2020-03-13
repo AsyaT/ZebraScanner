@@ -7,8 +7,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.zferma.zebrascanner.BuildConfig;
-
-import static com.symbol.emdk.securenfc.MifareSam.TAG;
 
 public class DownloadingService extends Service
 {
@@ -47,8 +43,8 @@ public class DownloadingService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "onStart");
+        //Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
+        //Log.d(TAG, "onStart");
 
         return super.onStartCommand(intent,flags,startId);
     }

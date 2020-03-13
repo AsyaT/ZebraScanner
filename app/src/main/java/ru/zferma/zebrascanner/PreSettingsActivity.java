@@ -6,7 +6,6 @@ import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -14,8 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import upgrading.DownloadingService;
 
 public class PreSettingsActivity extends AppCompatActivity {
 
@@ -63,37 +60,6 @@ public class PreSettingsActivity extends AppCompatActivity {
         btnSettings = (Button) findViewById(R.id.btnSettings);
         txtVersion = (TextView) findViewById(R.id.txtVersion);
         txtVersion.setText("Version: "+ BuildConfig.VERSION_NAME);
-
-        // TODO: remove from here
-
-        Intent intent = new Intent(getBaseContext(), DownloadingService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            startForegroundService(intent);
-            AlertDialog.Builder builder = new AlertDialog.Builder(PreSettingsActivity.this);
-            builder.setTitle("Сервис! startForegroundService").setMessage("начали для "+Build.VERSION.SDK_INT );
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-        else {
-            startService(intent);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(PreSettingsActivity.this);
-            builder.setTitle("Сервис! startService").setMessage("начали для "+Build.VERSION.SDK_INT );
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-        //-------------
 
         btnSelectOperationType.setOnClickListener(new View.OnClickListener() {
             @Override
