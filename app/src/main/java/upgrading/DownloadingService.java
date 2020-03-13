@@ -2,8 +2,10 @@ package upgrading;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,11 +40,12 @@ public class DownloadingService extends Service
     class VersionComparerTask extends TimerTask
     {
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void run()
         {
             String currentVersionName = BuildConfig.VERSION_NAME;
-            String serverVersion = UpgradeHelper.ReadNewVersion();
+            String serverVersion = UpgradeHelper.ReadNewVersion("http://192.168.88.217/");
 
             if(UpgradeHelper.IsNewVersionAvailable(serverVersion, currentVersionName))
             {

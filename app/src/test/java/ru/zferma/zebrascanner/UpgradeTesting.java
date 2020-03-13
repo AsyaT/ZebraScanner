@@ -30,7 +30,7 @@ public class UpgradeTesting
     @Test
     public void ReadVersionTest()
     {
-        Assert.assertEquals(UpgradeHelper.ReadNewVersion(), "1.2");
+        Assert.assertEquals(UpgradeHelper.ReadNewVersion("http://192.168.88.217/"), "1.2");
     }
 
     @Test

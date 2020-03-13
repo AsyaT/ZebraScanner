@@ -12,11 +12,11 @@ import java.util.ArrayList;
 
 public class UpgradeHelper
 {
-    public static String ReadNewVersion()
+    public static String ReadNewVersion(String httpUrl)
     {
         try
         {
-            URL url = new URL("http://192.168.88.217/");
+            URL url = new URL(httpUrl);
             HttpURLConnection uc = (HttpURLConnection) url.openConnection();
             BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
             String line;
