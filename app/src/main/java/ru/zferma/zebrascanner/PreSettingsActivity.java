@@ -65,9 +65,33 @@ public class PreSettingsActivity extends AppCompatActivity {
         txtVersion.setText("Version: "+ BuildConfig.VERSION_NAME);
 
         // TODO: remove from here
+
+        Intent intent = new Intent(getBaseContext(), DownloadingService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Intent intent = new Intent(getBaseContext(), DownloadingService.class);
+
             startForegroundService(intent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(PreSettingsActivity.this);
+            builder.setTitle("Сервис! startForegroundService").setMessage("начали для "+Build.VERSION.SDK_INT );
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+        else {
+            startService(intent);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(PreSettingsActivity.this);
+            builder.setTitle("Сервис! startService").setMessage("начали для "+Build.VERSION.SDK_INT );
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
         //-------------
 
