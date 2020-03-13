@@ -59,7 +59,7 @@ public class PreSettingsActivity extends AppCompatActivity {
         btnSelectOperationType = (Button) findViewById(R.id.btnSelectOperation);
         btnSettings = (Button) findViewById(R.id.btnSettings);
         txtVersion = (TextView) findViewById(R.id.txtVersion);
-        txtVersion.setText("Version: "+ BuildConfig.VERSION_NAME);
+        txtVersion.setText("Версия: "+ BuildConfig.VERSION_NAME);
 
         btnSelectOperationType.setOnClickListener(new View.OnClickListener() {
             @Override

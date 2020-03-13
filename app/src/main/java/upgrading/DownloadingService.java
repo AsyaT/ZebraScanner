@@ -18,7 +18,7 @@ import ru.zferma.zebrascanner.BuildConfig;
 public class DownloadingService extends Service
 {
     private Timer mTimer = null;
-    public static final long NOTIFY_INTERVAL = 10 * 1000; // 10 seconds
+    public static final long NOTIFY_INTERVAL = 60 * 1000; // 60 seconds
 
 
     @Nullable
