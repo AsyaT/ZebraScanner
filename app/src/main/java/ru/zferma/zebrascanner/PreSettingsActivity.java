@@ -1,6 +1,5 @@
 package ru.zferma.zebrascanner;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
@@ -8,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -122,9 +120,14 @@ public class PreSettingsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        /*
+        /// *** Removed because don't need read from file any more
+
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         ActivityCompat.requestPermissions(PreSettingsActivity.this,
                 permissions,
                 1);
+
+         */
     }
 }
