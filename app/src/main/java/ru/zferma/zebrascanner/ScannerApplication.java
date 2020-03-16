@@ -2,11 +2,17 @@ package ru.zferma.zebrascanner;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import java.util.HashMap;
 
-import businesslogic.*;
+import businesslogic.ApplicationException;
+import businesslogic.FullDataTableControl;
+import businesslogic.PackageListDataTable;
+import businesslogic.ScannerStateHelper;
+import businesslogic.ServerConnection;
 import models.BarcodeStructureModel;
 import models.BaseDocumentStructureModel;
 import models.CharacteristicStructureModel;
@@ -15,6 +21,7 @@ import models.NomenclatureStructureModel;
 import models.OperationTypesStructureModel;
 import models.OperationsTypesAccountingAreaStructureModel;
 import models.ProductStructureModel;
+import upgrading.DownloadingService;
 
 public class ScannerApplication extends Application {
 
@@ -95,6 +102,17 @@ public class ScannerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ScannerApplication.context = getApplicationContext();
+
+        Intent intent = new Intent(getBaseContext(), DownloadingService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        }
+        else {
+            startService(intent);
+        }
+
+
+        //-------------
 
         SharedPreferences spSettings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         serverConnection = new ServerConnection(
