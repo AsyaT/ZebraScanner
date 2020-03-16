@@ -2,9 +2,7 @@ package ru.zferma.zebrascanner;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import java.util.HashMap;
 
@@ -21,7 +19,7 @@ import models.NomenclatureStructureModel;
 import models.OperationTypesStructureModel;
 import models.OperationsTypesAccountingAreaStructureModel;
 import models.ProductStructureModel;
-import upgrading.DownloadingService;
+import upgrading.UpgradeHelper;
 
 public class ScannerApplication extends Application {
 
@@ -103,16 +101,7 @@ public class ScannerApplication extends Application {
         super.onCreate();
         ScannerApplication.context = getApplicationContext();
 
-        Intent intent = new Intent(getBaseContext(), DownloadingService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        }
-        else {
-            startService(intent);
-        }
-
-
-        //-------------
+        UpgradeHelper.StartService(context);
 
         SharedPreferences spSettings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         serverConnection = new ServerConnection(

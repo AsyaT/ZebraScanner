@@ -146,4 +146,14 @@ public class UpgradeHelper
             context.startActivity(intent);
         }
     }
+
+    public static void StartService(Context context)
+    {
+        Intent intent = new Intent(context, DownloadingService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
+    }
 }
