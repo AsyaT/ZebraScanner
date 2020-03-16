@@ -56,7 +56,7 @@ public class DownloadingService extends Service
 
                 String webServerURL = "http://192.168.88.217/";
                 String globalFolder = Environment.getExternalStorageDirectory().toString();;
-                String folderName = "APPS";
+                String deviceLocationFolderName = "APPS";
                 String apkFileName = "zebraapp.apk";
 
                 String currentVersionName = BuildConfig.VERSION_NAME;
@@ -64,11 +64,11 @@ public class DownloadingService extends Service
 
                 if (serverVersion!=null && UpgradeHelper.IsNewVersionAvailable(serverVersion, currentVersionName))
                 {
-                    File file = UpgradeHelper.CreateFile(globalFolder, folderName, apkFileName);
+                    File file = UpgradeHelper.CreateFile(globalFolder, deviceLocationFolderName, apkFileName);
 
                     UpgradeHelper.DownloadNewApk(webServerURL + apkFileName, file);
 
-                    UpgradeHelper.InstallApk(getBaseContext(), globalFolder + "/"+folderName+"/" + apkFileName);
+                    UpgradeHelper.InstallApk(getBaseContext(), globalFolder + "/"+deviceLocationFolderName+"/" + apkFileName);
                 }
             }
             catch (IOException ioException)

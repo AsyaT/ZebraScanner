@@ -3,6 +3,8 @@ package ru.zferma.zebrascanner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import upgrading.UpgradeHelper;
 
 public class UpgradeTesting
@@ -13,6 +15,8 @@ public class UpgradeTesting
         Assert.assertFalse(UpgradeHelper.IsNewVersionAvailable("1.0","1.0"));
         Assert.assertTrue(UpgradeHelper.IsNewVersionAvailable("1.1","1.0"));
         Assert.assertFalse(UpgradeHelper.IsNewVersionAvailable("","1.0"));
+        Assert.assertTrue(UpgradeHelper.IsNewVersionAvailable("1.1",""));
+        Assert.assertFalse(UpgradeHelper.IsNewVersionAvailable("",""));
         Assert.assertFalse(UpgradeHelper.IsNewVersionAvailable("1.0","1.1"));
         Assert.assertTrue(UpgradeHelper.IsNewVersionAvailable("2.1.1","2.1"));
         Assert.assertTrue(UpgradeHelper.IsNewVersionAvailable("3","2.1.1"));
@@ -28,8 +32,7 @@ public class UpgradeTesting
     }
 
     @Test
-    public void ReadVersionTest()
-    {
+    public void ReadVersionTest() throws IOException {
         Assert.assertEquals(UpgradeHelper.ReadNewVersion("http://192.168.88.217/"), "1.2");
     }
 }

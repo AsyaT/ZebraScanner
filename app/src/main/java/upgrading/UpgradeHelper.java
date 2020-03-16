@@ -44,6 +44,11 @@ public class UpgradeHelper
             serverVersion = "0";
         }
 
+        if(currentVersion.isEmpty())
+        {
+            currentVersion = "0";
+        }
+
         for(String number : serverVersion.split("\\."))
         {
             serverIntVersion.add(Integer.parseInt(number));
@@ -130,11 +135,15 @@ public class UpgradeHelper
 
     public static void InstallApk(Context context, String filePath)
     {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(
-                Uri.fromFile(new File(filePath)),
-                "application/vnd.android.package-archive"
-        );
-        context.startActivity(intent);
+        File file = new File(filePath);
+
+        if(file.exists()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(
+                    Uri.fromFile(file),
+                    "application/vnd.android.package-archive"
+            );
+            context.startActivity(intent);
+        }
     }
 }
