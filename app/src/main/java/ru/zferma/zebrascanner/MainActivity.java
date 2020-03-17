@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -380,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         }
     }
 
+
     @Override
     public void onData(ScanDataCollection scanDataCollection) {
 
@@ -685,6 +688,30 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 AlarmAndNotify(e.getMessage());
             }
         }
+
+    }
+
+    public class AsyncListViewDataUpdate extends AsyncTask<Object, Void, Void> {
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected Void doInBackground(Object... params) {
+
+            try {
+                scanner.read();
+            } catch (ScannerException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected void onPostExecute(Void aVoid)
+        {
+            customListAdapter.notifyDataSetChanged();
+        }
+
 
     }
 /*

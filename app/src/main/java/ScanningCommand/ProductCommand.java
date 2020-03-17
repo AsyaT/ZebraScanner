@@ -20,7 +20,6 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import models.ListViewPresentationModel;
 import businesslogic.ResponseModelGenerator;
 import businesslogic.ScannerState;
 import models.ObjectForSaving;
@@ -205,6 +204,7 @@ public class ProductCommand extends ResponseFormat implements Command
         try {
             FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(barcode,(ProductStructureModel) product);
             appState.ScannedProductsToSend.Add(detailsModel);
+            ((MainActivity) Activity).new AsyncListViewDataUpdate().execute();
         }
         catch (ApplicationException e)
         {
