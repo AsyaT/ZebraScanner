@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.zferma.zebrascanner.BuildConfig;
+import ru.zferma.zebrascanner.ScannerApplication;
 
 public class DownloadingService extends Service
 {
@@ -53,8 +54,8 @@ public class DownloadingService extends Service
         public void run()
         {
             try {
-
-                String webServerURL = "http://192.168.88.217/";
+                ScannerApplication appState = ((ScannerApplication) getApplication());
+                String webServerURL = "http://"+appState.versionUpdateServerConnection.GetServerAddress()+"/" ;
                 String globalFolder = Environment.getExternalStorageDirectory().toString();;
                 String deviceLocationFolderName = "APPS";
                 String apkFileName = "zebraapp.apk";
