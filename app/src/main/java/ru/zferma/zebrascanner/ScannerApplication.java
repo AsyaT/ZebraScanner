@@ -11,6 +11,7 @@ import businesslogic.FullDataTableControl;
 import businesslogic.PackageListDataTable;
 import businesslogic.ScannerStateHelper;
 import businesslogic.ServerConnection;
+import businesslogic.VersionUpdateServerConnection;
 import models.BarcodeStructureModel;
 import models.BaseDocumentStructureModel;
 import models.CharacteristicStructureModel;
@@ -27,10 +28,14 @@ public class ScannerApplication extends Application {
     public static final String APP_1C_USERNAME = "Username";
     public static final String APP_1C_PASSWORD = "Password";
     public static final String APP_1C_SERVER = "Server";
+    public static final String APP_1C_DATABASE = "Database";
+    public static final String APP_UPDATE_SERVER = "UpdateServer";
 
     private static Context context;
 
     public ServerConnection serverConnection = null;
+
+    public VersionUpdateServerConnection versionUpdateServerConnection = null;
 
     public BarcodeStructureModel barcodeStructureModel = null;
     public NomenclatureStructureModel nomenclatureStructureModel = null;
@@ -106,8 +111,11 @@ public class ScannerApplication extends Application {
         SharedPreferences spSettings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         serverConnection = new ServerConnection(
                 spSettings.getString(APP_1C_SERVER,""),
+                spSettings.getString(APP_1C_DATABASE,""),
                 spSettings.getString(APP_1C_USERNAME,""),
                 spSettings.getString(APP_1C_PASSWORD,""));
+
+        versionUpdateServerConnection = new VersionUpdateServerConnection(spSettings.getString(APP_UPDATE_SERVER, ""));
     }
 
     public static Context getAppContext() {
