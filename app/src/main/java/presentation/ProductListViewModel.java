@@ -2,13 +2,15 @@ package presentation;
 
 public class ProductListViewModel extends Object {
     private String ProductGuid;
-    private String StringNumber;
+    private String CharacteristicGuid;
+    private Integer StringNumber;
     private String Nomenclature;
     private String Characteristic;
-    private String SummaryWeight;
-    private String Quantity;
+    private Double SummaryWeight;
+    private Integer Quantity;
 
     public String getProductGuid() { return ProductGuid;}
+    public String getCharacteristicGuid() { return CharacteristicGuid;}
     public String getNomenclature() {
         return Nomenclature;
     }
@@ -16,25 +18,19 @@ public class ProductListViewModel extends Object {
     {
         return Characteristic;
     }
-    public String getStringNumber(){return StringNumber;}
-
-    public void setStringNumber(String newStringNumber)
-    {
-        this.StringNumber = newStringNumber;
-    }
-
-    public String getSummaryWeight() {return SummaryWeight;}
-    public String getCoefficient(){
+    public Integer getStringNumber(){return StringNumber;}
+    public Double getSummaryWeight() {return SummaryWeight;}
+    public Integer getQuantity(){
         return Quantity;
     }
 
-    public ProductListViewModel(String productGuid, String stringNumber, String characteristic, String nomenclature, String coefficient, String weight){
+    public ProductListViewModel(String productGuid, String characteristicGuid, Integer stringNumber,  String nomenclature, String characteristic, Double weight, Integer coefficient){
         this.ProductGuid = productGuid;
+        this.CharacteristicGuid = characteristicGuid;
         this.StringNumber = stringNumber;
         this.Characteristic = characteristic;
         this.Nomenclature = nomenclature;
         this.Quantity = coefficient;
         this.SummaryWeight = weight;
     }
-
 }

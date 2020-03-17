@@ -203,10 +203,6 @@ public class ProductCommand extends ResponseFormat implements Command
     protected void SaveInfoForProductList(ScanningBarcodeStructureModel barcode, ObjectForSaving product)
     {
         try {
-            ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(barcode,(ProductStructureModel) product);
-
-            ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
-
             FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(barcode,(ProductStructureModel) product);
             appState.ScannedProductsToSend.Add(detailsModel);
         }

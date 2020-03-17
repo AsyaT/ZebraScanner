@@ -1,7 +1,12 @@
 package businesslogic;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.util.ArrayList;
 import java.util.Date;
+
+import presentation.ProductListViewModel;
 
 public class FullDataTableControl
 {
@@ -19,6 +24,37 @@ public class FullDataTableControl
        return ListOfProducts;
    }
 
+
+
+   @RequiresApi(api = Build.VERSION_CODES.N)
+   public Double GetSummaryWeight(String productGuid)
+   {
+       final Double[] result = {0.0};
+       FindProductsByGuid(productGuid).forEach((p) -> result[0] = result[0] + p.Weight);
+
+       return result[0];
+   }
+
+   @RequiresApi(api = Build.VERSION_CODES.N)
+   public Integer GetSummaryItems(String productGuid)
+   {
+       final Integer[] result = {0};
+       FindProductsByGuid(productGuid).forEach((p) -> result[0] = result[0] + p.ScannedQuantity);
+
+       return result[0];
+   }
+
+    public Boolean IsProductExists(String productGuid)
+    {
+        if(FindProductsByGuid(productGuid).size() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
    private Details IsProductExists(Details product)
    {
@@ -69,8 +105,10 @@ public class FullDataTableControl
            }
    }
 
-   public void ItemIsClicked(String productGuid)
+   public void ItemIsClicked(Integer position)
    {
+       ArrayList<ProductListViewModel> current = GetDataTable();
+       String productGuid = current.get(position-1).getProductGuid();
        this.ProductsToRemove.add(productGuid);
    }
 
@@ -87,10 +125,51 @@ public class FullDataTableControl
        }
    }
 
+   //TOD: write test for method
+   public ArrayList<ProductListViewModel> GetDataTable()
+   {
+       ArrayList<ProductListViewModel> result = new ArrayList<>();
+       Integer stringNumberCounter = 1;
+
+       for(Details product : ListOfProducts)
+       {
+           Integer existingQuantity = 0;
+           Double existingWeight = 0.0;
+
+            for(ProductListViewModel plm : result)
+            {
+                if(plm.getProductGuid().equals(product.getProductGuid()) && plm.getCharacteristicGuid().equals(product.getCharacteristicGuid()))
+                {
+                    existingQuantity = plm.getQuantity();
+                    existingWeight = plm.getSummaryWeight();
+                    result.remove(plm);
+                }
+            }
+
+            ProductListViewModel newModel = new ProductListViewModel(
+                    product.ProductGuid,
+                    product.CharacteristicGuid,
+                    stringNumberCounter,
+                    product.ProductNomenclature,
+                    product.CharacteristicName,
+                    product.Weight + existingWeight,
+                    product.ScannedQuantity + existingQuantity
+            );
+
+            result.add(newModel);
+           stringNumberCounter ++;
+       }
+
+       return result;
+   }
+
+
    public static class Details
    {
        String ProductGuid;
+       String ProductNomenclature;
        String CharacteristicGuid;
+       String CharacteristicName;
        Double Weight;
        Integer ScannedQuantity;
        Date ProductionDate;
@@ -98,7 +177,9 @@ public class FullDataTableControl
        String ManufacturerGuid;
 
        public Details(String productGuid,
+                      String productNomenclature,
                       String characteristicGuid,
+                      String characteristicName,
                       Double weight,
                       Date productionDate,
                       Date expiredDate,
@@ -106,7 +187,9 @@ public class FullDataTableControl
                       Integer scannedQuantity)
        {
            this.ProductGuid = productGuid;
+           this.ProductNomenclature = productNomenclature;
            this.CharacteristicGuid= characteristicGuid;
+           this.CharacteristicName = characteristicName;
            this.Weight = weight;
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;

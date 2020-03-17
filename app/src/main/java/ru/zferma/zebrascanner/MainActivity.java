@@ -5,9 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -44,11 +42,9 @@ import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
-import models.ListViewPresentationModel;
-import models.ManufacturerStructureModel;
 import businesslogic.ScannerState;
+import models.ManufacturerStructureModel;
 import presentation.CustomListAdapter;
-import presentation.DataTableControl;
 import presentation.FragmentHelper;
 import presentation.MapScanDataCollection;
 import scanningcommand.BarcodeExecutor;
@@ -71,11 +67,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         return scanner;
     }
 
-    DataTableControl dataTableControl;
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
+
+    ScannerApplication appState = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +85,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 getApplicationContext(), this);
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
-        ScannerApplication appState = ((ScannerApplication) getApplication());
+        appState = ((ScannerApplication) getApplication());
 
         appState.scannerState.Set(ScannerState.PRODUCT);
 
         //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
         UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
 
-        dataTableControl = new DataTableControl();
-        customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
+        customListAdapter = new CustomListAdapter(this, appState.ScannedProductsToSend.GetDataTable() );
         listView = (ListView) findViewById(R.id.listViewProductContainer);
 
         LayoutInflater inflater = getLayoutInflater();
@@ -109,11 +105,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-                String productGuidToRemove = dataTableControl.GetItemByIndex(position - 1).getProductGuid();
-                dataTableControl.ItemClicked(view,productGuidToRemove);
-
                 try {
-                    appState.ScannedProductsToSend.ItemIsClicked(productGuidToRemove);
+                    appState.ScannedProductsToSend.ItemIsClicked(position);
                 }
                 catch (IndexOutOfBoundsException e)
                 {
@@ -127,10 +120,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             @Override
             public void onClick(View view) {
-                dataTableControl.RemoveSelected();
-                customListAdapter.notifyDataSetChanged();
-
                 appState.ScannedProductsToSend.RemoveSelected();
+                customListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -138,10 +129,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         btnDelAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dataTableControl.RemoveAll();
-                customListAdapter.notifyDataSetChanged();
-
                 appState.ScannedProductsToSend = new FullDataTableControl();
+                customListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -541,42 +530,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected void onProgressUpdate(Void... values) {
         }
-    }
-
-
-    // AsyncTask that configures the scanned data on background
-// thread and updated the result on UI thread with scanned data and type of
-// label
-    public class AsyncListViewDataUpdate extends AsyncTask<Object, Void, Void> {
-
-        ListViewPresentationModel Model = null;
-
-        public AsyncListViewDataUpdate(ListViewPresentationModel model)
-        {
-            this.Model = model;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        protected Void doInBackground(Object... params) {
-
-            try {
-                scanner.read();
-            } catch (ScannerException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        protected void onPostExecute(Void aVoid)
-        {
-            dataTableControl.AddOne(Model);
-            customListAdapter.notifyDataSetChanged();
-        }
-
-
     }
 
     public class AsyncMessageDialog extends AsyncTask<String, Void, String>

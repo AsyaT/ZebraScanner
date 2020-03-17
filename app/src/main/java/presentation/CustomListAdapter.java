@@ -40,7 +40,7 @@ public class CustomListAdapter extends ArrayAdapter {
         ViewHolder holder = new ViewHolder();
 
         holder.textStringNumber  = (TextView) view.findViewById(R.id.textViewStringNumber);
-        holder.textStringNumber.setText(this.ListOrderModel.get(position).getStringNumber());
+        holder.textStringNumber.setText(this.ListOrderModel.get(position).getStringNumber().toString());
 
         holder.textNomenclature = (TextView) view.findViewById(R.id.textViewNomenclature);
         holder.textNomenclature.setText(this.ListOrderModel.get(position).getNomenclature()+"\nХарактеристика: "+this.ListOrderModel.get(position).getCharacteristic());
@@ -50,7 +50,7 @@ public class CustomListAdapter extends ArrayAdapter {
         holder.textWeight.setText(this.ListOrderModel.get(position).getSummaryWeight().toString());
 
         holder.textCoefficient = (TextView) view.findViewById(R.id.textViewCoefficient);
-        holder.textCoefficient.setText(this.ListOrderModel.get(position).getCoefficient());
+        holder.textCoefficient.setText(this.ListOrderModel.get(position).getQuantity().toString());
 
         return view;
     }

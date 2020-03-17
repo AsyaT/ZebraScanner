@@ -3,7 +3,6 @@ package businesslogic;
 import java.text.SimpleDateFormat;
 
 import models.CharacteristicStructureModel;
-import models.ListViewPresentationModel;
 import models.ManufacturerStructureModel;
 import models.NomenclatureStructureModel;
 import models.ProductStructureModel;
@@ -29,36 +28,13 @@ public class ResponseModelGenerator
 
     }
 
-    public ListViewPresentationModel CreateListViewResponse(ScanningBarcodeStructureModel barcode, ProductStructureModel product) throws ApplicationException
-    {
-        ListViewPresentationModel result = new ListViewPresentationModel
-                (
-                        NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
-                        CharacteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
-                        WeightCalculator(barcode,product),
-                        product.GetProductGuid(),
-                        1
-                );
-        return result;
-    }
-
-    public ListViewPresentationModel CreateListViewResponse(Product_PackageListStructureModel product) throws ApplicationException {
-        ListViewPresentationModel result = new ListViewPresentationModel
-                (
-                        NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
-                        CharacteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
-                        product.GetWeight(),
-                        product.GetProductGuid(),
-                        product.GetItems()
-                );
-        return result;
-    }
-
     public FullDataTableControl.Details CreateFullDataTableResponse(ScanningBarcodeStructureModel barcode, ProductStructureModel product) throws ApplicationException
     {
         FullDataTableControl.Details result = new FullDataTableControl.Details(
                 product.GetProductGuid(),
+                NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
                 product.GetCharacteristicGUID(),
+                CharacteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
                 WeightCalculator(barcode,product),
                 barcode.getProductionDate(),
                 barcode.getExpirationDate(),
@@ -68,11 +44,12 @@ public class ResponseModelGenerator
         return result;
     }
 
-    public FullDataTableControl.Details CreateFullDataTableResponse(Product_PackageListStructureModel product)
-    {
+    public FullDataTableControl.Details CreateFullDataTableResponse(Product_PackageListStructureModel product) throws ApplicationException {
         FullDataTableControl.Details result = new FullDataTableControl.Details(
                 product.GetProductGuid(),
+                NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
                 product.GetCharacteristicGUID(),
+                CharacteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
                 product.GetWeight(),
                 product.GetProductionDate(),
                 product.GetExpirationDate(),

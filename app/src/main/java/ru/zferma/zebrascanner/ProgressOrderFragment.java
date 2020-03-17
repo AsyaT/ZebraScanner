@@ -1,6 +1,8 @@
 package ru.zferma.zebrascanner;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ public class ProgressOrderFragment extends Fragment {
 
    BaseDocumentStructureModel Order;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -48,10 +51,10 @@ public class ProgressOrderFragment extends Fragment {
                 Double doneKilos = 0.0;
                 Integer doneItems = 0;
 
-                if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
+                if(activity.appState.ScannedProductsToSend.IsProductExists(product.GetProductGuid()))
                 {
-                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getSummaryWeight());
-                    doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
+                    doneKilos = activity.appState.ScannedProductsToSend.GetSummaryWeight(product.GetProductGuid());
+                    doneItems = activity.appState.ScannedProductsToSend.GetSummaryItems(product.GetProductGuid());
                 }
 
                 TextView txtView = new TextView(getActivity());

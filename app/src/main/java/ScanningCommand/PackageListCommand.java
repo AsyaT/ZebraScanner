@@ -13,12 +13,11 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import models.ListViewPresentationModel;
 import businesslogic.ResponseModelGenerator;
+import businesslogic.ScannerState;
 import models.ObjectForSaving;
 import models.PackageListStructureModel;
 import models.Product_PackageListStructureModel;
-import businesslogic.ScannerState;
 import models.ScanningBarcodeStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
@@ -104,8 +103,6 @@ public class PackageListCommand extends ResponseFormat implements Command {
             for (Product_PackageListStructureModel product : input.GetProducts()) {
 
                 for (int i = 1; i <= product.GetItems(); i++) {
-                    ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(product);
-                    ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
                     FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(product);
                     appState.ScannedProductsToSend.Add(detailsModel);
