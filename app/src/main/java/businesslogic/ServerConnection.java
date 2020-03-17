@@ -2,12 +2,14 @@ package businesslogic;
 
 public class ServerConnection {
     private String ServerIP;
+    private String Database;
     private String Username;
     private String Password;
 
-    public ServerConnection(String serverIP, String username, String password)
+    public ServerConnection(String serverIP, String database, String username, String password)
     {
         this.ServerIP = serverIP;
+        this.Database = database;
         this.Username = username;
         this.Password = password;
     }
@@ -53,9 +55,9 @@ public class ServerConnection {
         return this.ServerIP;
     }
 
-    public String GetUsername() {
-        return this.Username;
-    }
+    public String GetDatabaseName() { return this.Database;}
+
+    public String GetUsername() { return this.Username; }
 
     public String GetPassword() {
         return this.Password;

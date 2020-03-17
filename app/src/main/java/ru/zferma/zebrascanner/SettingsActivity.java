@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import businesslogic.ServerConnection;
 
+import static ru.zferma.zebrascanner.ScannerApplication.APP_1C_DATABASE;
 import static ru.zferma.zebrascanner.ScannerApplication.APP_1C_PASSWORD;
 import static ru.zferma.zebrascanner.ScannerApplication.APP_1C_SERVER;
 import static ru.zferma.zebrascanner.ScannerApplication.APP_1C_USERNAME;
@@ -33,12 +34,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         ScannerApplication appState = ((ScannerApplication)this.getApplication());
         EditText etServer = (EditText) findViewById(R.id.editTxtServer);
+        EditText etDatabaseName = (EditText) findViewById(R.id.editTextDBName);
         EditText et1CUsername = (EditText) findViewById(R.id.editTxt1CUserName);
         EditText  et1CPassword =  (EditText)findViewById(R.id.editTxt1CPassword);
 
         if(appState.serverConnection != null)
         {
             etServer.setText(appState.serverConnection.GetServerIP());
+
+            etDatabaseName.setText(appState.serverConnection.GetDatabaseName());
 
             et1CUsername.setText(appState.serverConnection.GetUsername());
 
@@ -50,17 +54,19 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String serverIP = etServer.getText().toString();
+                String dbName = etDatabaseName.getText().toString();
                 String username = et1CUsername.getText().toString();
                 String password = et1CPassword.getText().toString();
 
                 SharedPreferences spSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor e = spSettings.edit();
                 e.putString(APP_1C_USERNAME, et1CUsername.getText().toString());
+                e.putString(APP_1C_DATABASE, etDatabaseName.getText().toString());
                 e.putString(APP_1C_PASSWORD, et1CPassword.getText().toString());
                 e.putString(APP_1C_SERVER, etServer.getText().toString());
                 e.commit();
 
-                appState.serverConnection = new ServerConnection(serverIP,username,password);
+                appState.serverConnection = new ServerConnection(serverIP, dbName, username, password);
                 Toast.makeText(SettingsActivity.this, "Настройки сохранены", Toast.LENGTH_SHORT).show();
             }
         });

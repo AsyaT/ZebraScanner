@@ -49,6 +49,27 @@
         app:layout_constraintTop_toBottomOf="@+id/txtServer" />
 
     <TextView
+        android:id="@+id/txtDataBaseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="16dp"
+        android:text="Имя базы данных"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextDBName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:text="erp_tsd"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
         android:id="@+id/txt1CUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

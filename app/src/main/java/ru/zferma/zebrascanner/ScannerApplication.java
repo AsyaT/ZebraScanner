@@ -27,6 +27,7 @@ public class ScannerApplication extends Application {
     public static final String APP_1C_USERNAME = "Username";
     public static final String APP_1C_PASSWORD = "Password";
     public static final String APP_1C_SERVER = "Server";
+    public static final String APP_1C_DATABASE = "Database";
 
     private static Context context;
 
@@ -106,6 +107,7 @@ public class ScannerApplication extends Application {
         SharedPreferences spSettings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         serverConnection = new ServerConnection(
                 spSettings.getString(APP_1C_SERVER,""),
+                spSettings.getString(APP_1C_DATABASE,""),
                 spSettings.getString(APP_1C_USERNAME,""),
                 spSettings.getString(APP_1C_PASSWORD,""));
     }
