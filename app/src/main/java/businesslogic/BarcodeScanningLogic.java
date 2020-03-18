@@ -25,7 +25,7 @@ public class BarcodeScanningLogic
         }
         else
         {
-            return false;
+            return true;
         }
     }
 

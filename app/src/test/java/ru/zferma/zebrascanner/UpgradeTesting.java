@@ -33,6 +33,6 @@ public class UpgradeTesting
 
     @Test
     public void ReadVersionTest() throws IOException {
-        Assert.assertEquals(UpgradeHelper.ReadNewVersion("http://192.168.88.217/"), "1.2");
+        Assert.assertEquals(UpgradeHelper.ReadNewVersion("http://192.168.88.217/"), "1.0");
     }
 }

@@ -182,7 +182,8 @@ public class ResponseModelGeneratorTest
                 null,
                 null,
                 null,
-                1
+                1,
+                scannedBarcode
         );
         Assert.assertTrue(expected.equals(actual));
     }
@@ -205,7 +206,8 @@ public class ResponseModelGeneratorTest
                 null,
                 null,
                 null,
-                1
+                1,
+                scannedBarcode
         );
         Assert.assertTrue(expected.equals(actual));
     }
@@ -229,7 +231,8 @@ public class ResponseModelGeneratorTest
                 new GregorianCalendar(2019,11,30).getTime(),
                 new GregorianCalendar(2020,0,5).getTime(),
                 "23504297-7ee1-11e6-80d7-e4115bea65d2",
-                1
+                1,
+                scannedBarcode
         );
 
         Assert.assertTrue(expected.equals(actual));
@@ -256,7 +259,8 @@ public class ResponseModelGeneratorTest
                 new Date(2020,2,14),
                 new Date(2020,2,21),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
-                5
+                5,
+                "111111111111111111111111111111"
         );
 
         Assert.assertTrue(expected.equals(actual));

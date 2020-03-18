@@ -107,6 +107,13 @@ public class ProductCommandTest
         Whitebox.setInternalState(productCommand,"BarcodeProductLogic", barcodeProductLogic);
         Whitebox.setInternalState(productCommand,"barcodeScanningLogic", barcodeScanningLogic);
         Whitebox.setInternalState(productCommand,"baseDocumentLogic", baseDocumentLogic);
+
+        ScannerApplication scannerApplication = new ScannerApplication();
+        ProductStructureModel selectedProduct = new ProductStructureModel("7a017e91-bf8e-11e7-80c5-a4bf011ce3c3","641e7835-ed76-11e8-80cd-a4bf011ce3c3", 1.0);
+        HashMap<String, ProductStructureModel> selected = new HashMap<>();
+        selected.put("4660017706843", selectedProduct);
+        scannerApplication.SelectedDialogNomenclatures = selected;
+        Whitebox.setInternalState(productCommand,"appState", scannerApplication);
     }
 
     @Test
@@ -172,14 +179,6 @@ public class ProductCommandTest
 
         BaseDocumentLogic baseDocumentLogic = new BaseDocumentLogic(null);
         Whitebox.setInternalState(productCommand,"baseDocumentLogic", baseDocumentLogic);
-
-        ProductStructureModel selectedProduct = new ProductStructureModel("7a017e91-bf8e-11e7-80c5-a4bf011ce3c3","641e7835-ed76-11e8-80cd-a4bf011ce3c3", 1.0);
-        HashMap<String, ProductStructureModel> selected = new HashMap<>();
-        selected.put("4660017706843", selectedProduct);
-
-        ScannerApplication scannerApplication = new ScannerApplication();
-        scannerApplication.SelectedDialogNomenclatures = selected;
-        Whitebox.setInternalState(productCommand,"appState", scannerApplication);
 
         ScanningBarcodeStructureModel barcodeStructureModel = new ScanningBarcodeStructureModel("0104660017706843310301245610082011190820171908252100001921000", BarcodeTypes.LocalGS1_EXP);
 
