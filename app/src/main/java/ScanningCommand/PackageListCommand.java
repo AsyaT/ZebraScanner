@@ -105,7 +105,7 @@ public class PackageListCommand extends ResponseFormat implements Command {
 
                 for (int i = 1; i <= product.GetItems(); i++) {
                     ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(product);
-                    ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
+                    //((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
                     FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(product);
                     appState.ScannedProductsToSend.Add(detailsModel);

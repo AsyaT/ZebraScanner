@@ -58,7 +58,9 @@ public class ResponseModelGenerator
     {
         FullDataTableControl.Details result = new FullDataTableControl.Details(
                 product.GetProductGuid(),
+                NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
                 product.GetCharacteristicGUID(),
+                CharacteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
                 WeightCalculator(barcode,product),
                 barcode.getProductionDate(),
                 barcode.getExpirationDate(),
@@ -68,11 +70,12 @@ public class ResponseModelGenerator
         return result;
     }
 
-    public FullDataTableControl.Details CreateFullDataTableResponse(Product_PackageListStructureModel product)
-    {
+    public FullDataTableControl.Details CreateFullDataTableResponse(Product_PackageListStructureModel product) throws ApplicationException {
         FullDataTableControl.Details result = new FullDataTableControl.Details(
                 product.GetProductGuid(),
+                NomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()),
                 product.GetCharacteristicGUID(),
+                CharacteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGUID()),
                 product.GetWeight(),
                 product.GetProductionDate(),
                 product.GetExpirationDate(),

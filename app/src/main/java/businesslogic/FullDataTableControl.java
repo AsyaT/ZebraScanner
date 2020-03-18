@@ -3,6 +3,8 @@ package businesslogic;
 import java.util.ArrayList;
 import java.util.Date;
 
+import presentation.ProductListViewModel;
+
 public class FullDataTableControl
 {
    private ArrayList<Details> ListOfProducts;
@@ -19,6 +21,44 @@ public class FullDataTableControl
        return ListOfProducts;
    }
 
+    public ArrayList<ProductListViewModel> GetDataTable()
+    {
+        ArrayList<ProductListViewModel> result = new ArrayList<>();
+        Integer stringNumberCounter = 1;
+
+        for(Details product : ListOfProducts)
+        {
+            Integer existingQuantity = 0;
+            Double existingWeight = 0.0;
+
+            for(ProductListViewModel plm : result)
+            {
+                if(plm.getProductGuid().equals(product.getProductGuid()) && plm.getCharacteristic().equals(product.getCharacteristic()))
+                {
+                    existingQuantity = Integer.parseInt(plm.getCoefficient());
+                    existingWeight = Double.parseDouble(plm.getSummaryWeight());
+                    result.remove(plm);
+                }
+            }
+
+            Integer newCoef = product.ScannedQuantity + existingQuantity;
+            Double newWeight = product.Weight + existingWeight;
+
+            ProductListViewModel newModel = new ProductListViewModel(
+                    product.ProductGuid,
+                    stringNumberCounter.toString(),
+                    product.ProductNomenclature,
+                    product.CharacteristicName,
+                    newCoef.toString(),
+                    newWeight.toString()
+            );
+
+            result.add(newModel);
+            stringNumberCounter ++;
+        }
+
+        return result;
+    }
 
    private Details IsProductExists(Details product)
    {
@@ -90,7 +130,9 @@ public class FullDataTableControl
    public static class Details
    {
        String ProductGuid;
+       String ProductNomenclature;
        String CharacteristicGuid;
+       String CharacteristicName;
        Double Weight;
        Integer ScannedQuantity;
        Date ProductionDate;
@@ -98,7 +140,9 @@ public class FullDataTableControl
        String ManufacturerGuid;
 
        public Details(String productGuid,
+                      String productNomenclature,
                       String characteristicGuid,
+                      String characteristicName,
                       Double weight,
                       Date productionDate,
                       Date expiredDate,
@@ -106,7 +150,9 @@ public class FullDataTableControl
                       Integer scannedQuantity)
        {
            this.ProductGuid = productGuid;
+           this.ProductNomenclature = productNomenclature;
            this.CharacteristicGuid= characteristicGuid;
+           this.CharacteristicName = characteristicName;
            this.Weight = weight;
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;
@@ -123,6 +169,8 @@ public class FullDataTableControl
        {
            return this.CharacteristicGuid;
        }
+
+       public String getCharacteristic() {return this.CharacteristicName;}
 
        public Integer getScannedQuantity()
            {

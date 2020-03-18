@@ -20,7 +20,6 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import models.ListViewPresentationModel;
 import businesslogic.ResponseModelGenerator;
 import businesslogic.ScannerState;
 import models.ObjectForSaving;
@@ -203,12 +202,10 @@ public class ProductCommand extends ResponseFormat implements Command
     protected void SaveInfoForProductList(ScanningBarcodeStructureModel barcode, ObjectForSaving product)
     {
         try {
-            ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(barcode,(ProductStructureModel) product);
-
-            ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
             FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(barcode,(ProductStructureModel) product);
-            appState.ScannedProductsToSend.Add(detailsModel);
+            //appState.ScannedProductsToSend.Add(detailsModel);
+            ((MainActivity) this.Activity).new AsyncListViewDataUpdate(detailsModel).execute();
         }
         catch (ApplicationException e)
         {
