@@ -125,7 +125,7 @@ public class FullDataTableControl
        }
    }
 
-   //TOD: write test for method
+   //TODO: write test for method
    public ArrayList<ProductListViewModel> GetDataTable()
    {
        ArrayList<ProductListViewModel> result = new ArrayList<>();
