@@ -11,22 +11,26 @@ import presentation.ProductListViewModel;
 public class FullDataTableControl
 {
    private ArrayList<Details> ListOfProducts;
-
-   private ArrayList<String> ProductsToRemove = new ArrayList<>();
+   private ArrayList<String> ProductsToRemove ;
+   private ArrayList<ProductListViewModel> ListViewProducts ;
 
    public FullDataTableControl()
    {
        ListOfProducts = new ArrayList<>();
+       ProductsToRemove = new ArrayList<>();
+       ListViewProducts = new ArrayList<>();
    }
-
    public ArrayList<Details> GetListOfProducts()
    {
        return ListOfProducts;
    }
 
+    public ArrayList<ProductListViewModel> GetListViewProducts()
+    {
+        return ListViewProducts;
+    }
 
-
-   @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
    public Double GetSummaryWeight(String productGuid)
    {
        final Double[] result = {0.0};
@@ -103,12 +107,13 @@ public class FullDataTableControl
                   product.ScannedQuantity = 1;
                   this.ListOfProducts.add(product);
            }
+
+           this.ListViewProducts = MakeReduce();
    }
 
    public void ItemIsClicked(Integer position)
    {
-       ArrayList<ProductListViewModel> current = GetDataTable();
-       String productGuid = current.get(position-1).getProductGuid();
+       String productGuid = this.ListViewProducts.get(position-1).getProductGuid();
        this.ProductsToRemove.add(productGuid);
    }
 
@@ -123,10 +128,12 @@ public class FullDataTableControl
                this.ListOfProducts.remove(product);
            }
        }
+
+       this.ListViewProducts = MakeReduce();
    }
 
    //TODO: write test for method
-   public ArrayList<ProductListViewModel> GetDataTable()
+   public ArrayList<ProductListViewModel> MakeReduce()
    {
        ArrayList<ProductListViewModel> result = new ArrayList<>();
        Integer stringNumberCounter = 1;

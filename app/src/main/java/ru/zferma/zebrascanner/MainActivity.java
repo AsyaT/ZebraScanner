@@ -49,6 +49,7 @@ import models.ManufacturerStructureModel;
 import presentation.CustomListAdapter;
 import presentation.FragmentHelper;
 import presentation.MapScanDataCollection;
+import presentation.ProductListViewModel;
 import scanningcommand.BarcodeExecutor;
 import serverDatabaseInteraction.BarcodeHelper;
 import serverDatabaseInteraction.ManufacturerHelper;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     public Boolean IsBarcodeInfoFragmentShowed = false;
 
     ScannerApplication appState = null;
+    ArrayList<ProductListViewModel> ListViewPresentation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +90,14 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // Check the return status of getEMDKManager and update the status Text
 // View accordingly
         appState = ((ScannerApplication) getApplication());
+        ListViewPresentation = appState.ScannedProductsToSend.GetListViewProducts()  ;
 
         appState.scannerState.Set(ScannerState.PRODUCT);
 
         //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
         UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
 
-        customListAdapter = new CustomListAdapter(this, appState.ScannedProductsToSend.GetDataTable() );
+        customListAdapter = new CustomListAdapter(this, ListViewPresentation );
         listView = (ListView) findViewById(R.id.listViewProductContainer);
 
         LayoutInflater inflater = getLayoutInflater();
@@ -709,6 +712,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected void onPostExecute(Void aVoid)
         {
+            ListViewPresentation = appState.ScannedProductsToSend.GetListViewProducts();
             customListAdapter.notifyDataSetChanged();
         }
 
