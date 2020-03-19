@@ -69,12 +69,12 @@ public class FullDataTableControl
            if( newProduct != null)
            {
                    this.ListOfProducts.remove(newProduct);
-                   product.ScannedQuantity = newProduct.ScannedQuantity + 1;
+                   product.ScannedBoxesQuantity = newProduct.ScannedBoxesQuantity + 1;
                    this.ListOfProducts.add(product);
            }
            else
            {
-                  product.ScannedQuantity = 1;
+                  product.ScannedBoxesQuantity = 1;
                   this.ListOfProducts.add(product);
            }
    }
@@ -102,11 +102,13 @@ public class FullDataTableControl
        String ProductGuid;
        String CharacteristicGuid;
        Double Weight;
-       Integer ScannedQuantity;
+       Integer QuantityPiecesGoods; // TODO: use for eggs
+       Integer ScannedBoxesQuantity;
        Date ProductionDate;
        Date ExpiredDate;
        String ManufacturerGuid;
        String ScannedBarcode;
+       String PackageListGuid; // TODO: use at scanning
 
        public Details(String productGuid,
                       String characteristicGuid,
@@ -124,7 +126,7 @@ public class FullDataTableControl
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;
            this.ManufacturerGuid = manufacturerGuid;
-           this.ScannedQuantity = scannedQuantity;
+           this.ScannedBoxesQuantity = scannedQuantity;
            this.ScannedBarcode = scannedBarcode;
        }
 
@@ -140,7 +142,7 @@ public class FullDataTableControl
 
        public Integer getScannedQuantity()
            {
-               return this.ScannedQuantity;
+               return this.ScannedBoxesQuantity;
            }
 
        public Double getWeight() { return this.Weight;}
@@ -160,7 +162,7 @@ public class FullDataTableControl
                    && ((this.ProductionDate==null && obj.ProductionDate==null) || this.ProductionDate.equals(obj.ProductionDate) )
                    && ((this.ExpiredDate==null && obj.ExpiredDate==null) || this.ExpiredDate.equals(obj.ExpiredDate) )
                    && this.Weight.equals(obj.Weight)
-                   && this.ScannedQuantity.equals(obj.ScannedQuantity);
+                   && this.ScannedBoxesQuantity.equals(obj.ScannedBoxesQuantity);
        }
    }
 }
