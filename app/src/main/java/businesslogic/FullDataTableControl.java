@@ -120,9 +120,37 @@ public class FullDataTableControl
                       String scannedBarcode
        )
        {
+           this.Weight = weight;
+           this.QuantityPiecesGoods = null;
+            MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode);
+       }
+
+       public Details(String productGuid,
+                      String characteristicGuid,
+                      Integer quantityPiecesGoods,
+                      Date productionDate,
+                      Date expiredDate,
+                      String manufacturerGuid,
+                      Integer scannedQuantity,
+                      String scannedBarcode
+       )
+       {
+           this.QuantityPiecesGoods = quantityPiecesGoods;
+           this.Weight = null;
+           MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode);
+       }
+
+       private void MapFromConstructor(String productGuid,
+                                       String characteristicGuid,
+                                       Date productionDate,
+                                       Date expiredDate,
+                                       String manufacturerGuid,
+                                       Integer scannedQuantity,
+                                       String scannedBarcode
+       )
+       {
            this.ProductGuid = productGuid;
            this.CharacteristicGuid= characteristicGuid;
-           this.Weight = weight;
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;
            this.ManufacturerGuid = manufacturerGuid;
@@ -146,12 +174,15 @@ public class FullDataTableControl
            }
 
        public Double getWeight() { return this.Weight;}
+       public Integer getQuantityPiecesGoods () { return this.QuantityPiecesGoods;}
 
        public Date getProductionDate() { return this.ProductionDate;}
 
        public Date getExpiredDate() { return this.ExpiredDate;}
 
        public String getManufacturerGuid() { return this.ManufacturerGuid;}
+
+       public String getScannedBarcode() { return  this.ScannedBarcode;}
 
        @Override
        public boolean equals(Object input) {

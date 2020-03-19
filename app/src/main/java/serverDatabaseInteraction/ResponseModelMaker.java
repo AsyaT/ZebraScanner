@@ -39,14 +39,30 @@ public class ResponseModelMaker
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.Product = product.getProductGuid();
             rpsm.Charact = product.getCharacteristicGuid();
-            rpsm.Quantity = decimalFormat.format(product.getWeight() * product.getScannedQuantity());
+            rpsm.Quantity = decimalFormat.format(CalculateQuantityValue(product.getWeight(), product.getQuantityPiecesGoods()));
             rpsm.PackageCounter = String.valueOf(product.getScannedQuantity());
             rpsm.ManufactureDate = formatter.format(product.getProductionDate());
             rpsm.ExpirationDate = formatter.format(product.getExpiredDate());
             rpsm.Manufacturer = product.getManufacturerGuid();
+            rpsm.PackageList = product.getPackageList();
+            rpsm.BarCode = product.getScannedBarcode();
             responseStructureModel.ProductList.add(rpsm);
         }
 
         return responseStructureModel;
+    }
+
+    private static Double CalculateQuantityValue(Double weight, Integer quantityPiecesGoods)
+    {
+        if(weight == null)
+        {
+            return Double.valueOf(quantityPiecesGoods);
+        }
+        else if(quantityPiecesGoods == null)
+        {
+            return weight;
+        }
+
+        return null;
     }
 }
