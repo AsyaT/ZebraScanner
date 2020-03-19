@@ -118,14 +118,7 @@ public class FullDataTableControl
                   this.ListOfProducts.add(product);
            }
 
-           //TOD: modify to REDUCE method
-           this.DataTable.add(new ProductListViewModel(
-                   product.getProductGuid(),
-                   "1",
-                   product.getCharacteristicGuid(),
-                   product.getProductGuid(),
-                   "1",
-                   product.getWeight().toString()));
+           this.DataTable = ReduceToDataTable();
    }
 
     public void ItemIsClicked(Integer index) // index starts from 0
@@ -150,7 +143,66 @@ public class FullDataTableControl
            }
        }
 
-       // TODO: modify DataTable
+       this.DataTable = ReduceToDataTable();
+   }
+
+   private ArrayList<ProductListViewModel> ReduceToDataTable()
+   {
+       ArrayList<ProductListViewModel> result = new ArrayList<>();
+       Integer stringNumberCounter = 1;
+
+       ArrayList<TempResultDetails> tmpCollection = new ArrayList<>();
+
+       for(Details product : ListOfProducts)
+       {
+           TempResultDetails tmp = IsContains(tmpCollection, product.getProductGuid(), product.getCharacteristicGuid());
+           if( tmp !=null) // contains = true
+           {
+                tmp.Quantity = tmp.Quantity + product.ScannedQuantity;
+                tmp.Weight = tmp.Weight + product.Weight;
+           }
+           else
+           {
+               tmpCollection.add(new TempResultDetails(stringNumberCounter,product.ProductGuid,product.CharacteristicGuid,product.Weight,product.ScannedQuantity));
+               stringNumberCounter++;
+           }
+       }
+
+       return result;
+   }
+
+   private TempResultDetails IsContains(ArrayList<TempResultDetails> collection, String productGuid, String characteristicGuid)
+   {
+       for(TempResultDetails details : collection)
+       {
+           if(details.ProductGuid.equalsIgnoreCase(productGuid) && details.CharacteristicGuid.equalsIgnoreCase(characteristicGuid))
+           {
+               return details;
+           }
+       }
+
+       return null;
+   }
+
+
+
+   //TODO remove class
+   public class TempResultDetails
+   {
+       Integer StringNumber;
+       String ProductGuid;
+       String CharacteristicGuid;
+       Double Weight;
+       Integer Quantity;
+
+       public TempResultDetails(Integer stringNumber, String productGuid, String characteristicGuid,Double weight, Integer quantity)
+       {
+           this.StringNumber = stringNumber;
+           this.ProductGuid = productGuid;
+           this.CharacteristicGuid = characteristicGuid;
+           this.Weight = weight;
+           this.Quantity = quantity;
+       }
    }
 
    public static class Details
