@@ -47,12 +47,14 @@ public class ProgressOrderFragment extends Fragment {
             try {
                 Double doneKilos = 0.0;
                 Integer doneItems = 0;
-
+/*
                 if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
                 {
                     doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getSummaryWeight());
                     doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
                 }
+                
+ */
 
                 TextView txtView = new TextView(getActivity());
                 txtView.setLayoutParams(new TableRow.LayoutParams(120, TableRow.LayoutParams.WRAP_CONTENT));

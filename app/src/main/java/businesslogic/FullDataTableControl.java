@@ -4,16 +4,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import presentation.ProductListViewModel;
+
 public class FullDataTableControl
 {
    private ArrayList<Details> ListOfProducts;
-
    private ArrayList<String> ProductsToRemove = new ArrayList<>();
+    private ArrayList<ProductListViewModel> DataTable;
 
    public FullDataTableControl()
    {
        ListOfProducts = new ArrayList<>();
+       DataTable = new ArrayList<ProductListViewModel>();
    }
+
+    public ArrayList<ProductListViewModel> GetDataTable()
+    {
+        return DataTable;
+    }
 
    public ArrayList<Details> GetListOfProducts()
    {
@@ -77,6 +85,14 @@ public class FullDataTableControl
                   product.ScannedQuantity = 1;
                   this.ListOfProducts.add(product);
            }
+
+           this.DataTable.add(new ProductListViewModel(
+                   product.getProductGuid(),
+                   "1",
+                   product.getCharacteristicGuid(),
+                   product.getProductGuid(),
+                   "1",
+                   product.getWeight().toString()));
    }
 
    public void ItemIsClicked(String productGuid)
