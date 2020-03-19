@@ -2,15 +2,20 @@ package serverDatabaseInteraction;
 
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
+
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
-import ru.zferma.zebrascanner.ScannerApplication;
 
 public class ResponseModelMaker
 {
-    public static String MakeResponseJson(ScannerApplication appState) throws ApplicationException {
+    public static String MakeResponseJson(String accountingArea, String userId, String documentId, List<FullDataTableControl.Details> products) throws ApplicationException {
 
-        ResponseStructureModel responseStructureModel = AnswerToServer(appState);
+        ResponseStructureModel responseStructureModel = AnswerToServer(accountingArea,userId,documentId,products);
         return ConvertModelToJson(responseStructureModel);
     }
 
@@ -20,21 +25,24 @@ public class ResponseModelMaker
         return gson.toJson(model);
     }
 
-    protected static ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication) throws ApplicationException {
+    protected static ResponseStructureModel AnswerToServer(String accountingArea, String userId, String documentId, List<FullDataTableControl.Details> products) throws ApplicationException {
         ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = scannerApplication.GetLocationContext().GetAccountingAreaGUID();
-        responseStructureModel.UserID = scannerApplication.GetBadgeGuid();
-        responseStructureModel.DocumentID = scannerApplication.GetBaseDocument().GetOrderId();
+        responseStructureModel.AccountingAreaGUID = accountingArea;
+        responseStructureModel.UserID = userId;
+        responseStructureModel.DocumentID = documentId;
 
-        for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        DecimalFormat decimalFormat = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance( Locale.GERMAN ));
+
+        for(FullDataTableControl.Details product : products)
         {
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.Product = product.getProductGuid();
             rpsm.Charact = product.getCharacteristicGuid();
             rpsm.Quantity = String.valueOf(product.getWeight() * product.getScannedQuantity());
             rpsm.PackageCounter = String.valueOf(product.getScannedQuantity());
-            rpsm.ManufactureDate = String.valueOf(product.getProductionDate());
-            rpsm.ExpirationDate = String.valueOf(product.getExpiredDate());
+            rpsm.ManufactureDate = formatter.format(product.getProductionDate());
+            rpsm.ExpirationDate = formatter.format(product.getExpiredDate());
             rpsm.Manufacturer = product.getManufacturerGuid();
             responseStructureModel.ProductList.add(rpsm);
         }

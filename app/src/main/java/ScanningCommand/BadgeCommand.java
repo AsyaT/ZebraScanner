@@ -3,13 +3,11 @@ package scanningcommand;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.gson.Gson;
 import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
-import businesslogic.FullDataTableControl;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
@@ -17,7 +15,6 @@ import ru.zferma.zebrascanner.ScanBadgeFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
 import serverDatabaseInteraction.AsyncWebServiceResponse;
 import serverDatabaseInteraction.ResponseModelMaker;
-import serverDatabaseInteraction.ResponseStructureModel;
 
 public class BadgeCommand implements Command {
 
@@ -44,7 +41,11 @@ public class BadgeCommand implements Command {
         try {
             String url = appState.serverConnection.getResponseUrl();
 
-            String jsonResponse = ResponseModelMaker.MakeResponseJson(appState);
+            String jsonResponse = ResponseModelMaker.MakeResponseJson(
+                    appState.GetLocationContext().GetAccountingAreaGUID(),
+                    appState.GetBadgeGuid(),
+                    appState.GetBaseDocument().GetOrderId(),
+                    appState.ScannedProductsToSend.GetListOfProducts());
 
             Integer resultCode = (new AsyncWebServiceResponse())
                     .execute(
