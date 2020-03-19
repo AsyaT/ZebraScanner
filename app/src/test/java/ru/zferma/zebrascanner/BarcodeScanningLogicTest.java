@@ -66,6 +66,7 @@ public class BarcodeScanningLogicTest
        ScannedBarcode.add("010463004929467011190820171909091008202100002926000"); // sector (01) = 046300492946701 sector (21) = 00002 sector(92) = 6000
        ScannedBarcode.add("010463004929467011190820171909091008202100001924000"); // sector (01) = 046300492946701 sector (21) = 00001 sector(92) = 4000
        ScannedBarcode.add("010463004929463331190820171909091008202100001924000"); // sector (01) = 046300492946333 sector (21) = 00001 sector(92) = 4000
+       ScannedBarcode.add("046300492946701"); // EAN13
     }
 
     @Test
@@ -154,6 +155,8 @@ public class BarcodeScanningLogicTest
     public void IsBarcodeScannedTest() throws ApplicationException {
         Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("", ScannedBarcode));
         Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("010463004929467011190820171909091008202100003926000", ScannedBarcode));
+        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("046300492946701", ScannedBarcode));
+        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("046300492955555", ScannedBarcode));
     }
 
     @Test(expected = ApplicationException.class)
