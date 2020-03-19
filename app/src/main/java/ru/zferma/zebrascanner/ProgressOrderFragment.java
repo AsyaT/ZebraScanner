@@ -47,14 +47,12 @@ public class ProgressOrderFragment extends Fragment {
             try {
                 Double doneKilos = 0.0;
                 Integer doneItems = 0;
-/*
-                if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
+
+                if(appState.ScannedProductsToSend.IsProductExists(product.GetProductGuid()))
                 {
-                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getSummaryWeight());
-                    doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
+                    doneKilos = appState.ScannedProductsToSend.GetSummaryKilosByProductGuid(product.GetProductGuid());
+                    doneItems = appState.ScannedProductsToSend.GetItemsByProductGuid(product.GetProductGuid());
                 }
-                
- */
 
                 TextView txtView = new TextView(getActivity());
                 txtView.setLayoutParams(new TableRow.LayoutParams(120, TableRow.LayoutParams.WRAP_CONTENT));
@@ -138,6 +136,4 @@ public class ProgressOrderFragment extends Fragment {
 
         return view;
     }
-
-
 }

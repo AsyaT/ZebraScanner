@@ -38,6 +38,18 @@ public class FullDataTableControl
         return result;
    }
 
+   public Boolean IsProductExists(String productGuid)
+   {
+       for(Details existsProduct : ListOfProducts)
+       {
+           if(existsProduct.ProductGuid.equalsIgnoreCase(productGuid))
+           {
+               return true;
+           }
+       }
+       return false;
+   }
+
    private Details IsProductExists(Details product)
    {
            for(Details existsProduct : ListOfProducts)
@@ -70,6 +82,26 @@ public class FullDataTableControl
        return result;
    }
 
+   public Double GetSummaryKilosByProductGuid(String productGuid)
+   {
+       Double result = 0.0;
+       for(Details product : FindProductsByGuid(productGuid))
+       {
+           result = result + product.getWeight();
+       }
+       return result;
+   }
+
+   public Integer GetItemsByProductGuid(String productGuid)
+   {
+       Integer result = 0;
+       for(Details product : FindProductsByGuid(productGuid))
+       {
+           result = result + product.getScannedQuantity();
+       }
+       return result;
+   }
+
    public void Add(Details product)
    {
            Details newProduct = IsProductExists(product);
@@ -86,6 +118,7 @@ public class FullDataTableControl
                   this.ListOfProducts.add(product);
            }
 
+           //TOD: modify to REDUCE method
            this.DataTable.add(new ProductListViewModel(
                    product.getProductGuid(),
                    "1",
@@ -94,6 +127,11 @@ public class FullDataTableControl
                    "1",
                    product.getWeight().toString()));
    }
+
+    public void ItemIsClicked(Integer index) // index starts from 0
+    {
+        this.DataTable.get(index);
+    }
 
    public void ItemIsClicked(String productGuid)
    {
@@ -111,6 +149,8 @@ public class FullDataTableControl
                this.ListOfProducts.remove(product);
            }
        }
+
+       // TODO: modify DataTable
    }
 
    public static class Details

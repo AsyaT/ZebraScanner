@@ -108,11 +108,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-                //String productGuidToRemove = dataTableControl.GetItemByIndex(position - 1).getProductGuid();
-                //dataTableControl.ItemClicked(view,productGuidToRemove);
-
                 try {
-                //    appState.ScannedProductsToSend.ItemIsClicked(productGuidToRemove);
+                    appState.ScannedProductsToSend.ItemIsClicked(position - 1);
                 }
                 catch (IndexOutOfBoundsException e)
                 {
@@ -126,10 +123,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             @Override
             public void onClick(View view) {
-                //dataTableControl.RemoveSelected();
-                customListAdapter.notifyDataSetChanged();
-
                 appState.ScannedProductsToSend.RemoveSelected();
+                customListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -137,13 +132,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         btnDelAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //dataTableControl.RemoveAll();
-                customListAdapter.notifyDataSetChanged();
-
                 appState.ScannedProductsToSend = new FullDataTableControl();
+                customListAdapter.notifyDataSetChanged();
             }
         });
-
 
         Button btnBarcodeInfo = findViewById(R.id.btnBarcodeInfo);
         btnBarcodeInfo.setOnClickListener(new View.OnClickListener(){
@@ -571,7 +563,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            //dataTableControl.AddOne(Model);
             customListAdapter.notifyDataSetChanged();
         }
 
