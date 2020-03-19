@@ -63,13 +63,15 @@ public class ResponseModelGenerator
                 barcode.getProductionDate(),
                 barcode.getExpirationDate(),
                 CalculateManufacturerGuidForDataTable(barcode.getInternalProducer()),
-                1
+                1,
+                barcode.getFullBarcode()
                 );
         return result;
     }
 
     public FullDataTableControl.Details CreateFullDataTableResponse(Product_PackageListStructureModel product)
     {
+        // TODO: check if need write PackageList barcode
         FullDataTableControl.Details result = new FullDataTableControl.Details(
                 product.GetProductGuid(),
                 product.GetCharacteristicGUID(),
@@ -77,7 +79,8 @@ public class ResponseModelGenerator
                 product.GetProductionDate(),
                 product.GetExpirationDate(),
                 product.GetManufacturerGuid(),
-                product.GetItems()
+                product.GetItems(),
+                null
         );
         return result;
     }

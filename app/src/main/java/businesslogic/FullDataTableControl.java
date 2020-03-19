@@ -2,6 +2,7 @@ package businesslogic;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FullDataTableControl
 {
@@ -19,6 +20,15 @@ public class FullDataTableControl
        return ListOfProducts;
    }
 
+   public List<String> GetListOfBarcode()
+   {
+        List<String> result = new ArrayList<>();
+        for(Details product : ListOfProducts)
+        {
+            result.add(product.ScannedBarcode);
+        }
+        return result;
+   }
 
    private Details IsProductExists(Details product)
    {
@@ -96,6 +106,7 @@ public class FullDataTableControl
        Date ProductionDate;
        Date ExpiredDate;
        String ManufacturerGuid;
+       String ScannedBarcode;
 
        public Details(String productGuid,
                       String characteristicGuid,
@@ -103,7 +114,9 @@ public class FullDataTableControl
                       Date productionDate,
                       Date expiredDate,
                       String manufacturerGuid,
-                      Integer scannedQuantity)
+                      Integer scannedQuantity,
+                      String scannedBarcode
+       )
        {
            this.ProductGuid = productGuid;
            this.CharacteristicGuid= characteristicGuid;
@@ -112,6 +125,7 @@ public class FullDataTableControl
            this.ExpiredDate = expiredDate;
            this.ManufacturerGuid = manufacturerGuid;
            this.ScannedQuantity = scannedQuantity;
+           this.ScannedBarcode = scannedBarcode;
        }
 
        public String getProductGuid()

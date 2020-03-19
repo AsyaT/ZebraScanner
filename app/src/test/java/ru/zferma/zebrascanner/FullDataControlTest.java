@@ -41,7 +41,8 @@ public class FullDataControlTest {
                 new Date(2019,8,20),
                 new Date(2019,8,25),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
-                8);
+                8,
+                scannedBarcode.getFullBarcode());
 
         fullDataTableControl.Add(  details);
     }
@@ -65,7 +66,8 @@ public class FullDataControlTest {
                 new Date(2019,8,20),
                 new Date(2019,8,25),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
-                2));
+                2,
+                scannedBarcode.getFullBarcode()));
 
         Assert.assertEquals(1, fullDataTableControl.GetListOfProducts().size());
 
@@ -96,7 +98,8 @@ public class FullDataControlTest {
                 new Date(2019,8,20),
                 new Date(2019,8,25),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
-                3
+                3,
+                scannedBarcode.getFullBarcode()
                 ));
 
         Assert.assertEquals(2, fullDataTableControl.GetListOfProducts().size());
@@ -118,7 +121,8 @@ public class FullDataControlTest {
                 new Date(2019,8,20),
                 new Date(2019,8,25),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
-                9));
+                9,
+                scannedBarcode.getFullBarcode()));
 
         Assert.assertEquals(3, fullDataTableControl.GetListOfProducts().size());
 
@@ -139,7 +143,8 @@ public class FullDataControlTest {
                 new Date(2019,8,20),
                 new Date(2019,8,25),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
-                4));
+                4,
+                scannedBarcode.getFullBarcode()));
 
         Assert.assertEquals(4, fullDataTableControl.GetListOfProducts().size());
 
@@ -160,7 +165,8 @@ public class FullDataControlTest {
                 new Date(2019,8,20),
                 new Date(2019,8,25),
                 "23504297-7ee1-11e6-80d7-e4115bea65d2",
-                2));
+                2,
+                scannedBarcode.getFullBarcode()));
 
         Assert.assertEquals(5, fullDataTableControl.GetListOfProducts().size());
     }
@@ -185,7 +191,8 @@ public class FullDataControlTest {
                 null,
                 null,
                 null,
-                1));
+                1,
+                scannedBarcode.getFullBarcode()));
 
         Assert.assertEquals(2, fullDataTableControl.GetListOfProducts().size());
     }
