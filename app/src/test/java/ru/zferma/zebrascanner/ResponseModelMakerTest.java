@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import businesslogic.ApplicationException;
@@ -28,8 +28,8 @@ public class ResponseModelMakerTest
                 "4c9f2bb0-9c5c-11e8-80cc-a4bf011ce3c3",
                 "4c9f2bb1-9c5c-11e8-80cc-a4bf011ce3c3",
                 2.1,
-                new Date(2020,0,20),
-                new Date(2020,2,20),
+                new GregorianCalendar(2020,0,20).getTime(),
+                new GregorianCalendar(2020,2,20).getTime(),
                 "8ed0a430-7ee8-11e6-80d7-e4115bea65d2",
                 10,
                 "04630037038224"));
@@ -47,7 +47,7 @@ public class ResponseModelMakerTest
                     "\"Manufacturer\":\"8ed0a430-7ee8-11e6-80d7-e4115bea65d2\"" +
                     "\"PackageList\":\"\""+
                     "\"BarCode\":\"04630037038224\""+
-                    "\"Quantity\":\"21.0\"," +
+                    "\"Quantity\":\"21\"," +
                     "\"PackageCounter\":\"10\"," +
                 "}]}";
 

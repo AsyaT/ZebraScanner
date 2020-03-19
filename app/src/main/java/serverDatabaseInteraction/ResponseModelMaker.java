@@ -31,7 +31,7 @@ public class ResponseModelMaker
         responseStructureModel.UserID = userId;
         responseStructureModel.DocumentID = documentId;
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd", Locale.GERMAN );
         DecimalFormat decimalFormat = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance( Locale.GERMAN ));
 
         for(FullDataTableControl.Details product : products)
@@ -39,7 +39,7 @@ public class ResponseModelMaker
             ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
             rpsm.Product = product.getProductGuid();
             rpsm.Charact = product.getCharacteristicGuid();
-            rpsm.Quantity = String.valueOf(product.getWeight() * product.getScannedQuantity());
+            rpsm.Quantity = decimalFormat.format(product.getWeight() * product.getScannedQuantity());
             rpsm.PackageCounter = String.valueOf(product.getScannedQuantity());
             rpsm.ManufactureDate = formatter.format(product.getProductionDate());
             rpsm.ExpirationDate = formatter.format(product.getExpiredDate());
