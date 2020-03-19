@@ -166,7 +166,7 @@ public class ProductCommand extends ResponseFormat implements Command
     public ProductStructureModel ParseAction(ScanningBarcodeStructureModel barcode) throws ApplicationException, ParseException, DoesNotExistsInOrderException {
             this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(barcode.getLabelType());
             this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT); // We are in Product command, so State = Product scanning
-            this.barcodeScanningLogic.IsBarcodeScanningUnique(barcode.getFullBarcode(), appState.ScannedProductsToSend.GetListOfBarcode());
+            this.barcodeScanningLogic.IsBarcodeScanningUnique(barcode.getFullBarcode(), appState.ScannedProductsToSend.GetListOfBarcode(), barcode.getLabelType());
 
             ArrayList<ProductStructureModel> products =
                     this.BarcodeProductLogic.FindProductByBarcode(barcode.getUniqueIdentifier());

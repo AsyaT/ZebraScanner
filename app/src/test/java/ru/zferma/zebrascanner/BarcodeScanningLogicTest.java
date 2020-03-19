@@ -153,15 +153,15 @@ public class BarcodeScanningLogicTest
 
     @Test
     public void IsBarcodeScannedTest() throws ApplicationException {
-        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("", ScannedBarcode));
-        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("010463004929467011190820171909091008202100003926000", ScannedBarcode));
-        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("046300492946701", ScannedBarcode));
-        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("046300492955555", ScannedBarcode));
+        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("", ScannedBarcode, BarcodeTypes.LocalGS1_EXP));
+        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("010463004929467011190820171909091008202100003926000", ScannedBarcode, BarcodeTypes.LocalGS1_EXP));
+        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("046300492946701", ScannedBarcode, BarcodeTypes.LocalEAN13));
+        Assert.assertTrue (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("046300492955555", ScannedBarcode, BarcodeTypes.LocalEAN13));
     }
 
     @Test(expected = ApplicationException.class)
     public void IsBarcodeScannedExceptionTest() throws ApplicationException {
 
-        Assert.assertFalse (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("010463004929467011190820171909091008202100001926000", ScannedBarcode));
+        Assert.assertFalse (barcodeScanningLogicPrAndPL.IsBarcodeScanningUnique("010463004929467011190820171909091008202100001926000", ScannedBarcode, BarcodeTypes.LocalGS1_EXP));
     }
 }

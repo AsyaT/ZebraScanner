@@ -18,8 +18,8 @@ public class BarcodeScanningLogic
         this.baseDocumentStructureModel = baseDocument;
     }
 
-    public Boolean IsBarcodeScanningUnique(String barcode, List<String> alreadyScanned) throws ApplicationException {
-        if(alreadyScanned.contains(barcode))
+    public Boolean IsBarcodeScanningUnique(String barcode, List<String> alreadyScanned, BarcodeTypes labelType) throws ApplicationException {
+        if(labelType.equals( BarcodeTypes.LocalGS1_EXP ) && alreadyScanned.contains(barcode))
         {
             throw new ApplicationException("Штрих-код "+ barcode +" уже был сканирован");
         }
