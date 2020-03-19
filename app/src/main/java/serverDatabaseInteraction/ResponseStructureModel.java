@@ -16,13 +16,17 @@ public class ResponseStructureModel {
 
     public static class ResponseProductStructureModel
     {
-        public String ProductGUID;
-        public String ProductCharactGUID;
-        public String Weigth;
-        public String Pieces;
-        public String DateOfProduction;
-        public String DataOfExpiration;
-        public String ManufacturerGUID;
+        public String Product;
+        public String Charact;
+
+        public String ManufactureDate;
+        public String ExpirationDate;
+        public String Manufacturer;
+        public String Quantity;
+        public String PackageCounter;
+
+        public String PackageList; //Guid of package list
+        public String BarCode;
     }
 
 }

@@ -16,6 +16,7 @@ import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanBadgeFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
 import serverDatabaseInteraction.AsyncWebServiceResponse;
+import serverDatabaseInteraction.ResponseModelMaker;
 import serverDatabaseInteraction.ResponseStructureModel;
 
 public class BadgeCommand implements Command {
@@ -42,8 +43,8 @@ public class BadgeCommand implements Command {
 
         try {
             String url = appState.serverConnection.getResponseUrl();
-            ResponseStructureModel responseStructureModel = AnswerToServer(appState);
-            String jsonResponse = ConvertModelToJson(responseStructureModel);
+
+            String jsonResponse = ResponseModelMaker.MakeResponseJson(appState);
 
             Integer resultCode = (new AsyncWebServiceResponse())
                     .execute(
@@ -72,33 +73,5 @@ public class BadgeCommand implements Command {
 
         // TODO: 4. GET для печатной формы
 
-    }
-
-    protected String ConvertModelToJson(ResponseStructureModel model)
-    {
-        Gson gson = new Gson();
-        return gson.toJson(model);
-    }
-
-    protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication) throws ApplicationException {
-        ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = scannerApplication.GetLocationContext().GetAccountingAreaGUID();
-        responseStructureModel.UserID = scannerApplication.GetBadgeGuid();
-        responseStructureModel.DocumentID = scannerApplication.GetBaseDocument().GetOrderId();
-
-        for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())
-        {
-            ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
-            rpsm.ProductGUID = product.getProductGuid();
-            rpsm.ProductCharactGUID = product.getCharacteristicGuid();
-            rpsm.Weigth = String.valueOf(product.getWeight() * product.getScannedQuantity());
-            rpsm.Pieces = String.valueOf(product.getScannedQuantity());
-            rpsm.DateOfProduction = String.valueOf(product.getProductionDate());
-            rpsm.DataOfExpiration = String.valueOf(product.getExpiredDate());
-            rpsm.ManufacturerGUID = product.getManufacturerGuid();
-            responseStructureModel.ProductList.add(rpsm);
-        }
-
-        return responseStructureModel;
     }
 }
