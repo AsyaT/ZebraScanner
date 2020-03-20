@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,9 +46,9 @@ import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
+import businesslogic.ScannerState;
 import models.ListViewPresentationModel;
 import models.ManufacturerStructureModel;
-import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
     private ProgressBar ProgressBarMainActivity;
+    private Handler hdlr = new Handler();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
 
@@ -95,12 +97,35 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         appState.scannerState.Set(ScannerState.PRODUCT);
         ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
 
-        ProgressBarMainActivity.setVisibility(View.VISIBLE);
+        new Thread(new Runnable() {
+            public void run() {
+
+                    hdlr.post(new Runnable() {
+                        public void run() {
+                            ProgressBarMainActivity.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                    try {
+                        // Sleep for 100 milliseconds to show the progress slowly.
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                hdlr.post(new Runnable() {
+                    public void run() {
+                        ProgressBarMainActivity.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+        }).start();
 
         //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
-        UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
+       // UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
 
-        ProgressBarMainActivity.setVisibility(View.INVISIBLE);
+
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -661,6 +686,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             AlarmAndNotify(e.getMessage());
         }
     }
+
 
     public class AsyncGetProductsFromFile extends AsyncTask<String, Void,Void>
     {
