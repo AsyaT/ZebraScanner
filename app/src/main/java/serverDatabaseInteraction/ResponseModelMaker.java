@@ -3,7 +3,7 @@ package serverDatabaseInteraction;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +32,8 @@ public class ResponseModelMaker
         responseStructureModel.DocumentID = documentId;
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd", Locale.GERMAN );
-        DecimalFormat decimalFormat = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance( Locale.GERMAN ));
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.GERMAN);
+        DecimalFormat decimalFormat = (DecimalFormat)nf;
 
         for(FullDataTableControl.Details product : products)
         {
@@ -44,7 +45,7 @@ public class ResponseModelMaker
             rpsm.ManufactureDate = formatter.format(product.getProductionDate());
             rpsm.ExpirationDate = formatter.format(product.getExpiredDate());
             rpsm.Manufacturer = product.getManufacturerGuid();
-            rpsm.PackageList = product.getPackageList();
+            rpsm.PackageList = product.getPackageListGuid();
             rpsm.BarCode = product.getScannedBarcode();
             responseStructureModel.ProductList.add(rpsm);
         }

@@ -183,7 +183,8 @@ public class ResponseModelGeneratorTest
                 null,
                 null,
                 1,
-                scannedBarcode
+                scannedBarcode,
+                ""
         );
         Assert.assertTrue(expected.equals(actual));
     }
@@ -207,7 +208,8 @@ public class ResponseModelGeneratorTest
                 null,
                 null,
                 1,
-                scannedBarcode
+                scannedBarcode,
+                ""
         );
         Assert.assertTrue(expected.equals(actual));
     }
@@ -232,7 +234,8 @@ public class ResponseModelGeneratorTest
                 new GregorianCalendar(2020,0,5).getTime(),
                 "23504297-7ee1-11e6-80d7-e4115bea65d2",
                 1,
-                scannedBarcode
+                scannedBarcode,
+                ""
         );
 
         Assert.assertTrue(expected.equals(actual));
@@ -241,6 +244,8 @@ public class ResponseModelGeneratorTest
     @Test
     public void FullDataTablePackageListTest()
     {
+        String scannedPackageListBarcode = "0100653054200320";
+        String packageListGuid = "d7ac8c15-3c28-17e3-8ad7-c411bb1a6888";
         Product_PackageListStructureModel plProduct = new Product_PackageListStructureModel(
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2",
                 "b9e89741-ef89-11e6-80cb-001e67e5da8c",
@@ -250,7 +255,7 @@ public class ResponseModelGeneratorTest
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
                 5);
 
-        FullDataTableControl.Details actual = ModelGenerator.CreateFullDataTableResponse(plProduct);
+        FullDataTableControl.Details actual = ModelGenerator.CreateFullDataTableResponse(plProduct,scannedPackageListBarcode,packageListGuid);
 
         FullDataTableControl.Details expected = new FullDataTableControl.Details(
                 "b1cc5c45-7ca8-11e6-80d7-e4115bea65d2",
@@ -260,7 +265,8 @@ public class ResponseModelGeneratorTest
                 new Date(2020,2,21),
                 "5ef1b244-c11e-11e6-80c7-001e67e5da8b",
                 5,
-                "111111111111111111111111111111"
+                scannedPackageListBarcode,
+                packageListGuid
         );
 
         Assert.assertTrue(expected.equals(actual));

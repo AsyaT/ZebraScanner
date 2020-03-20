@@ -117,14 +117,16 @@ public class FullDataTableControl
                       Date expiredDate,
                       String manufacturerGuid,
                       Integer scannedQuantity,
-                      String scannedBarcode
+                      String scannedBarcode,
+                      String packageListGuid
        )
        {
            this.Weight = weight;
            this.QuantityPiecesGoods = null;
-            MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode);
+            MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode,packageListGuid);
        }
 
+       // TODO: use for eggs
        public Details(String productGuid,
                       String characteristicGuid,
                       Integer quantityPiecesGoods,
@@ -132,12 +134,13 @@ public class FullDataTableControl
                       Date expiredDate,
                       String manufacturerGuid,
                       Integer scannedQuantity,
-                      String scannedBarcode
+                      String scannedBarcode,
+                      String packageListGuid
        )
        {
            this.QuantityPiecesGoods = quantityPiecesGoods;
            this.Weight = null;
-           MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode);
+           MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode,packageListGuid);
        }
 
        private void MapFromConstructor(String productGuid,
@@ -146,7 +149,8 @@ public class FullDataTableControl
                                        Date expiredDate,
                                        String manufacturerGuid,
                                        Integer scannedQuantity,
-                                       String scannedBarcode
+                                       String scannedBarcode,
+                                       String packageListGuid
        )
        {
            this.ProductGuid = productGuid;
@@ -156,6 +160,7 @@ public class FullDataTableControl
            this.ManufacturerGuid = manufacturerGuid;
            this.ScannedBoxesQuantity = scannedQuantity;
            this.ScannedBarcode = scannedBarcode;
+           this.PackageListGuid = packageListGuid;
        }
 
        public String getProductGuid()
@@ -183,6 +188,7 @@ public class FullDataTableControl
        public String getManufacturerGuid() { return this.ManufacturerGuid;}
 
        public String getScannedBarcode() { return  this.ScannedBarcode;}
+       public String getPackageListGuid() { return this.PackageListGuid;}
 
        @Override
        public boolean equals(Object input) {

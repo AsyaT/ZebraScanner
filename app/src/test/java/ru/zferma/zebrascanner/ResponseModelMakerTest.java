@@ -32,7 +32,8 @@ public class ResponseModelMakerTest
                 new GregorianCalendar(2020,2,20).getTime(),
                 "8ed0a430-7ee8-11e6-80d7-e4115bea65d2",
                 10,
-                "04630037038224"));
+                "04630037038224",
+                ""));
 
         String actual = ResponseModelMaker.MakeResponseJson(AccountingAreaId, UserId,BaseDocumentId, Products);
 
@@ -44,11 +45,11 @@ public class ResponseModelMakerTest
                     "\"Charact\":\"4c9f2bb1-9c5c-11e8-80cc-a4bf011ce3c3\"," +
                     "\"ManufactureDate\":\"20200120\"," +
                     "\"ExpirationDate\":\"20200320\"," +
-                    "\"Manufacturer\":\"8ed0a430-7ee8-11e6-80d7-e4115bea65d2\"" +
-                    "\"PackageList\":\"\""+
-                    "\"BarCode\":\"04630037038224\""+
-                    "\"Quantity\":\"21\"," +
+                    "\"Manufacturer\":\"8ed0a430-7ee8-11e6-80d7-e4115bea65d2\"," +
+                    "\"Quantity\":\"2,1\"," +
                     "\"PackageCounter\":\"10\"," +
+                    "\"PackageList\":\"\","+
+                    "\"BarCode\":\"04630037038224\""+
                 "}]}";
 
         Assert.assertEquals(expected,actual);
