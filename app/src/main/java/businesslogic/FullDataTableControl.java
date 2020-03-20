@@ -64,7 +64,6 @@ public class FullDataTableControl
 
    public void Add(Details product)
    {
-       product.ScannedBoxesQuantity = 1;
        this.ListOfProducts.add(product);
    }
 
@@ -150,6 +149,7 @@ public class FullDataTableControl
            this.ScannedBoxesQuantity = scannedQuantity;
            this.ScannedBarcode = scannedBarcode;
            this.PackageListGuid = packageListGuid;
+           this.ScannedBoxesQuantity = scannedQuantity;
        }
 
        public String getProductGuid()
