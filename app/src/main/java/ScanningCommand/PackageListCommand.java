@@ -61,9 +61,9 @@ public class PackageListCommand extends ResponseFormat implements Command {
 
             ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-            // GO to DB and get list of products
+            // GO to DB and get list of products and Package list GUID
 
-            PackageListStructureModel packageListStructureModel = new PackageListStructureModel("", new Date(),"",""); //TODO : create helper
+            PackageListStructureModel packageListStructureModel = new PackageListStructureModel("", new Date(),"", ""); //TODO : create helper
 
             // Add all products to tables
 
@@ -79,7 +79,7 @@ public class PackageListCommand extends ResponseFormat implements Command {
                 }
             }
 
-            SuccessSaveData(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed,packageListStructureModel , barcode);
+            SuccessSaveData(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed, packageListStructureModel , barcode);
 
         }
         catch (ApplicationException ex)
@@ -107,7 +107,10 @@ public class PackageListCommand extends ResponseFormat implements Command {
                     ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(product);
                     ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
 
-                    FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(product);
+                    FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(
+                            product,
+                            barcode.getFullBarcode(),
+                            input.GetPackageListGuid());
                     appState.ScannedProductsToSend.Add(detailsModel);
                 }
             }
