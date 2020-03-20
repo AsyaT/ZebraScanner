@@ -96,22 +96,16 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         appState.scannerState.Set(ScannerState.PRODUCT);
         ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
-
         new Thread(new Runnable() {
             public void run() {
 
-                    hdlr.post(new Runnable() {
-                        public void run() {
-                            ProgressBarMainActivity.setVisibility(View.VISIBLE);
-                        }
-                    });
-
-                    try {
-                        // Sleep for 100 milliseconds to show the progress slowly.
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                hdlr.post(new Runnable() {
+                    public void run() {
+                        ProgressBarMainActivity.setVisibility(View.VISIBLE);
                     }
+                });
+
+                UpdateProductsFromServer();
 
                 hdlr.post(new Runnable() {
                     public void run() {
