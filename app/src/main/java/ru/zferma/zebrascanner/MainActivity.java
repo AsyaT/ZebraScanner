@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -42,15 +43,16 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import ScanningCommand.BarcodeExecutor;
 import businesslogic.ApplicationException;
 import businesslogic.FullDataTableControl;
-import businesslogic.ListViewPresentationModel;
-import businesslogic.ManufacturerStructureModel;
+import models.ListViewPresentationModel;
+import models.ManufacturerStructureModel;
 import businesslogic.ScannerState;
 import presentation.CustomListAdapter;
 import presentation.DataTableControl;
 import presentation.FragmentHelper;
+import presentation.MapScanDataCollection;
+import scanningcommand.BarcodeExecutor;
 import serverDatabaseInteraction.BarcodeHelper;
 import serverDatabaseInteraction.ManufacturerHelper;
 
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 // View accordingly
         ScannerApplication appState = ((ScannerApplication) getApplication());
 
+        appState.scannerState.Set(ScannerState.PRODUCT);
         ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
 
         ProgressBarMainActivity.setVisibility(View.VISIBLE);
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
-        listView = (ListView) findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listViewProductContainer);
 
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_view_header,listView,false);
@@ -111,12 +114,13 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                dataTableControl.ItemClicked(view,position-1);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
+            {
+                String productGuidToRemove = dataTableControl.GetItemByIndex(position - 1).getProductGuid();
+                dataTableControl.ItemClicked(view,productGuidToRemove);
 
                 try {
-                    appState.ScannedProductsToSend.ItemIsClicked(dataTableControl.GetItemByIndex(position - 1).getProductGuid());
+                    appState.ScannedProductsToSend.ItemIsClicked(productGuidToRemove);
                 }
                 catch (IndexOutOfBoundsException e)
                 {
@@ -157,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 try{
                     Fragment barcodeInfoFragment = new BarcodeInfoFragment();
                     FragmentHelper fragmentHelper = new FragmentHelper(MainActivity.this);
-                    fragmentHelper.replaceFragment(barcodeInfoFragment, R.id.frBarcodeInfo);
+                    fragmentHelper.replaceFragment(barcodeInfoFragment, R.id.frBarcodeInfo, "BarcodeInfo");
                     IsBarcodeInfoFragmentShowed = true;
                 }
                 catch (Exception ex){
@@ -170,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         btnBackToOperationsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                DisableScanner();
+
                 if (emdkManager != null) {
 
                     emdkManager.release();
@@ -189,6 +196,30 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             public void onClick(View view) {
                 // Считать бейдж
                 ShowFragmentScanBadge();
+            }
+        });
+
+        Button btnDoScan = findViewById(R.id.btnDoScan);
+        btnDoScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                EditText txtEditBarcodeToScan = findViewById(R.id.txtEditBarcodeToScan);
+                String emulatedBarcode = txtEditBarcodeToScan.getText().toString();
+
+                String[] scannedCollection = emulatedBarcode.split(",");
+
+                if(scannedCollection.length == 2) {
+                    String barcode = scannedCollection[0];
+                    String labelType = scannedCollection[1];
+
+                    ScanDataCollection scanDataCollection = new MapScanDataCollection().CreateCollection(barcode, labelType);
+                    onData(scanDataCollection);
+                }
+                else
+                    {
+                        AlarmAndNotify("Неправильно введены данные: "+ emulatedBarcode);
+                    }
             }
         });
     }
@@ -248,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             new AsyncBarcodeInfoUpdate().execute(message);
         }
         else {
-            new MessageDialog().execute(message);
+            new AsyncMessageDialog().execute(message);
         }
     }
 
@@ -323,6 +354,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             Integer maxIndex = getSupportFragmentManager().getBackStackEntryCount();
             FragmentManager.BackStackEntry topFragment = getSupportFragmentManager().getBackStackEntryAt(maxIndex - 1);
+            FragmentHelper fragmentHelper = new FragmentHelper(MainActivity.this);
+
+            ScannerApplication appState = ((ScannerApplication) getApplication());
+
             if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("OrderProgress") )
             {
                 getSupportFragmentManager().popBackStack();
@@ -337,10 +372,20 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
                 startActivity(operationSelectionIntent);
+                appState.scannerState.Set(ScannerState.PRODUCT);
             }
             else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("ScanBadge") )
             {
                 getSupportFragmentManager().popBackStack();
+                appState.scannerState.Set(ScannerState.PRODUCT);
+            }
+            else if (topFragment.getName() != null &&  topFragment.getName().equalsIgnoreCase("BarcodeInfo") )
+            {
+                Fragment frBarcodeInfo = getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
+                fragmentHelper.closeFragment(frBarcodeInfo);
+
+                appState.scannerState.Set(ScannerState.PRODUCT);
+                IsBarcodeInfoFragmentShowed = false;
             }
             else
             {
@@ -348,6 +393,8 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
         } else {
             super.onBackPressed();
+            Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
+            startActivity(operationSelectionIntent);
         }
     }
 
@@ -391,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
             mediaPlayer.start();
-            new MessageDialog().execute(ex.getMessage());
+            new AsyncMessageDialog().execute(ex.getMessage());
 
         }
     }
@@ -445,6 +492,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         protected void onPostExecute(String result) {
             FragmentWithText barcodeInfoFragment = (FragmentWithText) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
             barcodeInfoFragment.UpdateText(result);
+            EnableScanner();
         }
     }
 
@@ -507,11 +555,11 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     // AsyncTask that configures the scanned data on background
 // thread and updated the result on UI thread with scanned data and type of
 // label
-    public class BaseAsyncDataUpdate extends AsyncTask<Object, Void, Void> {
+    public class AsyncListViewDataUpdate extends AsyncTask<Object, Void, Void> {
 
         ListViewPresentationModel Model = null;
 
-        public BaseAsyncDataUpdate(ListViewPresentationModel model)
+        public AsyncListViewDataUpdate(ListViewPresentationModel model)
         {
             this.Model = model;
         }
@@ -539,7 +587,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     }
 
-    public class MessageDialog extends AsyncTask<String, Void, String>
+    public class AsyncMessageDialog extends AsyncTask<String, Void, String>
     {
 
         AlertDialog.Builder alertDialog;
@@ -566,12 +614,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    try {
-                        scanner.enable();
-                        scanner.read();
-                    } catch (ScannerException e) {
-                        e.printStackTrace();
-                    }
+                    EnableScanner();
                     dialogInterface.dismiss();
                 }
             });
@@ -594,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             appState.barcodeStructureModel = bh.GetBarcodeModel();
             appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
-            appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+            appState.characteristicStructureModel = bh.GetCharacteristicModel();
         }
         catch (ParseException  e)
         {
@@ -668,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 BarcodeHelper bh = new BarcodeHelper(result);
                 appState.barcodeStructureModel = bh.GetBarcodeModel();
                 appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
-                appState.characterisiticStructureModel = bh.GetCharacteristicModel();
+                appState.characteristicStructureModel = bh.GetCharacteristicModel();
             }
             catch (ParseException  e)
             {

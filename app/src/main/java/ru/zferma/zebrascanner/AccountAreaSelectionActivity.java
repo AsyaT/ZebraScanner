@@ -13,8 +13,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import businesslogic.OperationTypesStructureModel;
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import businesslogic.ApplicationException;
+import businesslogic.BarcodeTypes;
+import models.OperationTypesStructureModel;
+import models.OperationsTypesAccountingAreaStructureModel;
 import presentation.AccountingAreasAdapter;
 import presentation.AccountingAreasListViewModel;
 import presentation.FragmentHelper;
@@ -23,13 +25,16 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
 
     OperationTypesStructureModel OperationTypesStructureModel;
     AccountingAreasListViewModel SelectedAccountingArea;
+    HashMap<String, OperationsTypesAccountingAreaStructureModel.AccountingArea> AccountingAreas;
+
+    ScannerApplication appState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_area_selection);
 
-        ScannerApplication appState = ((ScannerApplication)this.getApplication());
+        appState = ((ScannerApplication)this.getApplication());
         OperationTypesStructureModel = appState.LocationContext;
         TextView operationTypeTextView = (TextView) findViewById(R.id.OperationTypeTextView);
         operationTypeTextView.setText(OperationTypesStructureModel.GetOperationName());
@@ -38,31 +43,11 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
         cancelButton = (Button) findViewById(R.id.CancelButtonAA);
 
 
-        OperationsTypesAccountingAreaStructureModel data = appState.operationsTypesAccountingAreaStructureModel;
-
-        ArrayList<AccountingAreasListViewModel> listItem = new ArrayList<>();
-
-        HashMap<String,OperationsTypesAccountingAreaStructureModel.AccountingArea> accountAreas = data.GetAccountingAreas(OperationTypesStructureModel.GetOperationGuid());
-
-         for(String accountAreaGuid: accountAreas.keySet() )
-         {
-             AccountingAreasListViewModel result = new AccountingAreasListViewModel();
-             result.AccountingAreaGuid = accountAreaGuid;
-             result.AccountingAreaName = accountAreas.get(accountAreaGuid).GetName();
-             listItem.add(result);
-         }
-
-        if(listItem == null)
-        {
-            Fragment noConnectionFragment = new NoConnectionFragment();
-            FragmentHelper fragmentHelper = new FragmentHelper(this);
-            fragmentHelper.replaceFragment(noConnectionFragment, R.id.frConnectionInfo);
-
-            new AsyncFragmentInfoUpdate().execute("Соединение с сервером 1С отсутствуем.\n Обратитесь к Системному администратору");
-        }
+        AccountingAreas = GetAccountingAreasList();
+        ArrayList<AccountingAreasListViewModel> listItem = PrepareModel(AccountingAreas);
 
         listView = (ListView)findViewById(R.id.AccountAreaListView);
-        final AccountingAreasAdapter adapter = new AccountingAreasAdapter(this, listItem); // WHAT Is IT "simple_list_item_1" ???
+        final AccountingAreasAdapter adapter = new AccountingAreasAdapter(this, listItem);
 
         listView.setAdapter(adapter);
 
@@ -94,15 +79,22 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
             public void onClick(View view) {
                 if(SelectedAccountingArea != null)
                 {
-                    Intent goToMainActivityIntent = new Intent(getBaseContext(), getOperationsEnum(OperationTypesStructureModel.GetOperationName()).getActivityClass());
+                    Intent goToMainActivityIntent =
+                            new Intent(getBaseContext(), getOperationsEnum(OperationTypesStructureModel.GetOperationName()).getActivityClass());
 
-                    appState.LocationContext = new OperationTypesStructureModel(
-                            OperationTypesStructureModel.GetOperationName(),
-                            OperationTypesStructureModel.GetOperationGuid(),
-                            SelectedAccountingArea.AccountingAreaName,
-                            SelectedAccountingArea.AccountingAreaGuid,
-                            accountAreas.get(SelectedAccountingArea.AccountingAreaGuid).GetScanningPermissions(),
-                            accountAreas.get(SelectedAccountingArea.AccountingAreaGuid).IsPackageListAllowed());
+                    try {
+                        appState.LocationContext = new OperationTypesStructureModel(
+                                OperationTypesStructureModel.GetOperationName(),
+                                OperationTypesStructureModel.GetOperationGuid(),
+                                SelectedAccountingArea.AccountingAreaName,
+                                SelectedAccountingArea.AccountingAreaGuid,
+                                GetScanningPermissions(SelectedAccountingArea.AccountingAreaGuid),
+                                GetPackageListAllowance(SelectedAccountingArea.AccountingAreaGuid));
+                    }
+                    catch (ApplicationException e) {
+
+                        ShowErrorFragment(e.getMessage());
+                    }
 
                     startActivity(goToMainActivityIntent);
                 }
@@ -116,7 +108,69 @@ public class AccountAreaSelectionActivity extends BaseSelectionActivity {
                 startActivity(operationSelection);
             }
         });
+    }
 
+    protected HashMap<BarcodeTypes, Boolean> GetScanningPermissions(String guid) throws ApplicationException {
+        if(AccountingAreas.containsKey(guid))
+        {
+            return AccountingAreas.get(guid).GetScanningPermissions();
+        }
+        else
+        {
+            throw new ApplicationException("Такого участка учёта не существует");
+        }
+    }
 
+    protected Boolean GetPackageListAllowance(String guid) throws ApplicationException {
+        if(AccountingAreas.containsKey(guid))
+        {
+            return AccountingAreas.get(guid).IsPackageListAllowed();
+        }
+        else
+        {
+            throw new ApplicationException("Такого участка учёта не существует");
+        }
+    }
+
+    protected HashMap<String, OperationsTypesAccountingAreaStructureModel.AccountingArea> GetAccountingAreasList()
+    {
+        HashMap<String, OperationsTypesAccountingAreaStructureModel.AccountingArea> accountAreas = null;
+
+        try {
+            accountAreas = appState.operationsTypesAccountingAreaStructureModel.GetAccountingAreas(OperationTypesStructureModel.GetOperationGuid());
+        }
+        catch (ApplicationException e)
+        {
+            ShowErrorFragment(e.getMessage());
+        }
+
+        return accountAreas;
+    }
+
+    protected ArrayList<AccountingAreasListViewModel> PrepareModel(HashMap<String, OperationsTypesAccountingAreaStructureModel.AccountingArea> accountingAreas)
+    {
+        ArrayList<AccountingAreasListViewModel> listItem = new ArrayList<>();
+
+        for (String accountAreaGuid : accountingAreas.keySet()) {
+            AccountingAreasListViewModel result = new AccountingAreasListViewModel();
+            result.AccountingAreaGuid = accountAreaGuid;
+            result.AccountingAreaName = accountingAreas.get(accountAreaGuid).GetName();
+            listItem.add(result);
+        }
+        if(listItem == null)
+        {
+            ShowErrorFragment("Соединение с сервером 1С отсутствуем.\n Обратитесь к Системному администратору");
+        }
+
+        return listItem;
+    }
+
+    protected void ShowErrorFragment(String message)
+    {
+        Fragment noConnectionFragment = new NoConnectionFragment();
+        FragmentHelper fragmentHelper = new FragmentHelper(this);
+        fragmentHelper.replaceFragment(noConnectionFragment, R.id.frConnectionInfo);
+
+        new AsyncFragmentInfoUpdate().execute(message);
     }
 }

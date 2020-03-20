@@ -7,13 +7,14 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 
-import businesslogic.ListViewPresentationModel;
+import models.ListViewPresentationModel;
 
 public class DataTableControl {
 
     private ArrayList<ProductListViewModel> DataTable;
-    private ArrayList<Integer> ItemsToDelete;
+    private ArrayList<String> ItemsToDelete;
 
     public Integer GetSizeOfList()
     {
@@ -23,7 +24,7 @@ public class DataTableControl {
     public DataTableControl()
     {
         DataTable = new ArrayList<ProductListViewModel>();
-        ItemsToDelete = new ArrayList<Integer>();
+        ItemsToDelete = new ArrayList<String>();
     }
 
     public ArrayList<ProductListViewModel> GetDataTable()
@@ -57,17 +58,17 @@ public class DataTableControl {
         return Boolean.FALSE;
     }
 
-    public void ItemClicked(View view, int index)
+    public void ItemClicked(View view, String productGuid)
     {
-        if(ItemsToDelete.contains(index))
+        if(ItemsToDelete.contains(productGuid))
         {
             view.setBackgroundColor(Color.WHITE);
-            ItemsToDelete.remove((Integer) index);
+            ItemsToDelete.remove((String) productGuid);
         }
         else
         {
             view.setBackgroundColor(Color.YELLOW);
-            ItemsToDelete.add(index);
+            ItemsToDelete.add(productGuid);
         }
     }
 
@@ -79,21 +80,26 @@ public class DataTableControl {
         ProductListViewModel existingTableModel =  this.FindProduct( model.ProductGuid);
         if(existingTableModel == null)
         {
-            Integer newStringNumber = this.GetSizeOfList()+1;
+            Integer newStringNumber = this.GetSizeOfList() + 1;
+
+            Double calculateWeight = model.Quantity * model.Weight;
+
             result = new ProductListViewModel(
                     model.ProductGuid,
                     newStringNumber.toString(),
                     model.Characteristic,
                     model.Nomenclature,
-                    "1",
-                    model.Weight.toString());
+                    model.Quantity.toString(),
+                    calculateWeight.toString());
         }
         else
         {
             DataTable.remove(existingTableModel);
 
-            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + 1;
-            Double newWeight = Double.parseDouble( existingTableModel.getWeight()) + model.Weight;
+            Integer newCoefficient = Integer.parseInt( existingTableModel.getCoefficient()) + model.Quantity;
+
+            Double calculateExtraWeight = model.Weight * model.Quantity;
+            Double newWeight = Double.parseDouble( existingTableModel.getSummaryWeight()) + calculateExtraWeight;
 
             result = new ProductListViewModel(
                     model.ProductGuid,
@@ -121,16 +127,29 @@ public class DataTableControl {
 
     public void RemoveSelected()
     {
-        for (Integer x : ItemsToDelete) {
-            ProductListViewModel removedItem = DataTable.remove((int) x);
+        for (String productGuid : ItemsToDelete)
+        {
+            Iterator<ProductListViewModel> i = DataTable.iterator();
 
-            for(ProductListViewModel leftProduct : DataTable)
+            while (i.hasNext())
             {
-                if(Integer.valueOf( leftProduct.getStringNumber()) > Integer.valueOf(removedItem.getStringNumber()) )
+                ProductListViewModel existingLVModel = i.next();
+
+                if(existingLVModel.getProductGuid().equalsIgnoreCase(productGuid))
                 {
-                    leftProduct.setStringNumber(String.valueOf(Integer.valueOf( leftProduct.getStringNumber()) - 1));
+                    Integer newStringNumber = Integer.parseInt(existingLVModel.getStringNumber());
+                    while(i.hasNext())
+                    {
+                        ProductListViewModel itemToRewriteNumber = i.next();
+                        itemToRewriteNumber.setStringNumber(newStringNumber.toString());
+                        newStringNumber = newStringNumber + 1 ;
+                    }
+
+                    DataTable.remove(existingLVModel);
+                    break;
                 }
-            }
+
+            };
         };
         ItemsToDelete.clear();
     }

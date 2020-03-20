@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class WebService extends AsyncTask<String, Void, String> {
+public class AsyncWebService extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... urlString)
@@ -39,7 +39,8 @@ public class WebService extends AsyncTask<String, Void, String> {
             urlConnection.disconnect();
             return result;
 
-            } catch (ProtocolException exception) {
+            }
+        catch (ProtocolException exception) {
             exception.printStackTrace();
         } catch (MalformedURLException exception) {
             exception.printStackTrace();

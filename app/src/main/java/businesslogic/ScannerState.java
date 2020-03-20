@@ -1,9 +1,6 @@
 package businesslogic;
 
-import ScanningCommand.BadgeCommand;
-import ScanningCommand.DocumentBaseCommand;
-import ScanningCommand.PackageListCommand;
-import ScanningCommand.ProductCommand;
+import scanningcommand.*;
 
 public enum ScannerState {
     DOCUMENTBASE(DocumentBaseCommand.class),

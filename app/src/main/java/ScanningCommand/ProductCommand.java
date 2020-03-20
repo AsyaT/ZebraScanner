@@ -1,4 +1,4 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,15 +20,18 @@ import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import businesslogic.ListViewPresentationModel;
-import businesslogic.ProductLogic;
-import businesslogic.ProductStructureModel;
+import models.ListViewPresentationModel;
+import businesslogic.ResponseModelGenerator;
 import businesslogic.ScannerState;
+import models.ObjectForSaving;
+import models.ProductStructureModel;
+import models.ScanningBarcodeStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScannerApplication;
 
-public class ProductCommand implements Command {
+public class ProductCommand extends ResponseFormat implements Command
+{
 
     Activity Activity = null;
     Scanner CurrentScanner = null;
@@ -37,7 +40,7 @@ public class ProductCommand implements Command {
     MediaPlayer mediaPlayer = null;
 
     businesslogic.BarcodeProductLogic BarcodeProductLogic;
-    businesslogic.ProductLogic ProductLogic;
+    ResponseModelGenerator responseModelGenerator;
     BarcodeScanningLogic barcodeScanningLogic;
     BaseDocumentLogic baseDocumentLogic;
 
@@ -48,32 +51,40 @@ public class ProductCommand implements Command {
 
         appState = ((ScannerApplication) Activity.getApplication());
 
-        this.BarcodeProductLogic = new BarcodeProductLogic(appState.barcodeStructureModel,
-                appState.nomenclatureStructureModel,
-                appState.characterisiticStructureModel,
-                appState.manufacturerStructureModel);
+        this.BarcodeProductLogic = new BarcodeProductLogic(appState.barcodeStructureModel);
 
-        this.ProductLogic = new ProductLogic(
+        this.responseModelGenerator = new ResponseModelGenerator(
                 appState.nomenclatureStructureModel,
-                appState.characterisiticStructureModel,
+                appState.characteristicStructureModel,
                 appState.manufacturerStructureModel
         );
 
-        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext, appState.baseDocumentStructureModel);
-        this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
-
+        try {
+            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.GetBaseDocument());
+            this.baseDocumentLogic = new BaseDocumentLogic(appState.GetBaseDocument());
+        }
+        catch (ApplicationException ex)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+        }
         mediaPlayer = MediaPlayer.create(Activity, R.raw.beep01);
     }
 
-    protected void SelectionDialog(List<ProductStructureModel> listNomenclature) {
+    protected void SelectionDialog(List<ProductStructureModel> listNomenclature, ScanningBarcodeStructureModel barcode) {
         List<CharSequence> nomenclatures = new ArrayList<CharSequence>();
         final ProductStructureModel[] result = {null};
 
-        for (ProductStructureModel nomenclature : listNomenclature) {
-            nomenclatures.add(
-                    appState.nomenclatureStructureModel.FindProductByGuid(nomenclature.GetProductGuid()) +
-                            "\n Характеристика: " + appState.characterisiticStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID()) +
-                            "\n Вес: " + nomenclature.GetWeight().toString() + "\n\n");
+        try {
+            for (ProductStructureModel nomenclature : listNomenclature) {
+                nomenclatures.add(
+                        appState.nomenclatureStructureModel.FindProductByGuid(nomenclature.GetProductGuid()) +
+                                "\n Характеристика: " + appState.characteristicStructureModel.FindCharacteristicByGuid(nomenclature.GetCharacteristicGUID()) +
+                                "\n Вес: " + nomenclature.GetWeight().toString() + "\n\n");
+            }
+        }
+        catch (ApplicationException e)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
         }
 
         CharSequence[] showedNomenclatures = nomenclatures.toArray(new CharSequence[nomenclatures.size()]);
@@ -92,11 +103,15 @@ public class ProductCommand implements Command {
 
                                 try {
 
-                                    SuccessSaveData(CheckInOrder(result[0]));
+                                    ProductStructureModel orderProduct =  CheckInOrder(result[0]);
+                                    appState.SelectedDialogNomenclatures.put(barcode.getUniqueIdentifier(), orderProduct);
+                                    SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, orderProduct, barcode);
+
 
                                 } catch (DoesNotExistsInOrderException ex) {
                                     ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
-                                } finally {
+                                }
+                                finally {
 
                                     try {
                                         CurrentScanner.enable();
@@ -128,32 +143,15 @@ public class ProductCommand implements Command {
 
     }
 
-    protected void SuccessSaveData(ProductStructureModel product) {
-        if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == false)
-        {
-            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-
-            ((MainActivity) this.Activity).new BaseAsyncDataUpdate(viewUpdateModel).execute();
-
-            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
-            appState.ScannedProductsToSend.Add(detailsModel);
-        }
-        else if (((MainActivity) this.Activity).IsBarcodeInfoFragmentShowed == true)
-        {
-            String result = this.BarcodeProductLogic.CreateStringResponse(product);
-            ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
-        }
-    }
-
     @Override
     public void ParseData(ScanDataCollection.ScanData data) {
         try {
-
-            ProductStructureModel product = ParseAction(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+            ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
+            ProductStructureModel product = ParseAction(barcode);
 
             if(product!=null)
             {
-                SuccessSaveData(product);
+                SuccessSaveData(((MainActivity) Activity).IsBarcodeInfoFragmentShowed, product, barcode);
             }
 
         } catch (ApplicationException ex) {
@@ -165,21 +163,30 @@ public class ProductCommand implements Command {
         }
     }
 
-    public ProductStructureModel ParseAction(String barcodeData, BarcodeTypes barcodeType) throws ApplicationException, ParseException, DoesNotExistsInOrderException {
-            this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(barcodeType);
+    public ProductStructureModel ParseAction(ScanningBarcodeStructureModel barcode) throws ApplicationException, ParseException, DoesNotExistsInOrderException {
+            this.barcodeScanningLogic.IsBarcodeTypeAllowedToScan(barcode.getLabelType());
             this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PRODUCT); // We are in Product command, so State = Product scanning
+            this.barcodeScanningLogic.IsBarcodeScanningUnique(barcode.getFullBarcode(), appState.ScannedProductsToSend.GetListOfBarcode(), barcode.getLabelType());
 
             ArrayList<ProductStructureModel> products =
-                    this.BarcodeProductLogic.FindProductByBarcode(barcodeData, barcodeType);
+                    this.BarcodeProductLogic.FindProductByBarcode(barcode.getUniqueIdentifier());
 
             if (products.size() > 1)
             {
-                SelectionDialog(products);
+                if(appState.SelectedDialogNomenclatures.containsKey(barcode.getUniqueIdentifier()))
+                {
+                    ProductStructureModel orderProduct =  CheckInOrder(appState.SelectedDialogNomenclatures.get(barcode.getUniqueIdentifier()));
+                    return orderProduct;
+                }
+                else
+                    {
+                    SelectionDialog(products, barcode);
+                }
             }
             else
             {
-                return CheckInOrder(products.get(0));
-
+                ProductStructureModel orderProduct =  CheckInOrder(products.get(0));
+                return orderProduct;
             }
 
         return null;
@@ -193,4 +200,27 @@ public class ProductCommand implements Command {
         return product;
     }
 
+    @Override
+    protected void SaveInfoForProductList(ScanningBarcodeStructureModel barcode, ObjectForSaving product)
+    {
+        try {
+            ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(barcode,(ProductStructureModel) product);
+
+            ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
+
+            FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(barcode,(ProductStructureModel) product);
+            appState.ScannedProductsToSend.Add(detailsModel);
+        }
+        catch (ApplicationException e)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
+        }
+    }
+
+    @Override
+    protected void ShowInfoForFragment(ScanningBarcodeStructureModel barcode, ObjectForSaving product)
+    {
+        String result = this.responseModelGenerator.CreateStringResponse(barcode,(ProductStructureModel) product);
+        ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
+    }
 }

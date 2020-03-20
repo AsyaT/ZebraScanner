@@ -13,18 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import businesslogic.ApplicationException;
-import businesslogic.BarcodeStructureModel;
-import businesslogic.CharacterisiticStructureModel;
-import businesslogic.NomenclatureStructureModel;
-import businesslogic.ProductStructureModel;
+import businesslogic.*;
+import models.BarcodeStructureModel;
+import models.CharacteristicStructureModel;
+import models.NomenclatureStructureModel;
+import models.ProductStructureModel;
 
 public class BarcodeHelper {
 
     private BarcodeModel Model;
     private BarcodeStructureModel BarcodeModel;
     private NomenclatureStructureModel ProductModel;
-    private CharacterisiticStructureModel CharacteristicModel;
+    private CharacteristicStructureModel CharacteristicModel;
 
     public BarcodeHelper(String url, String userpass) throws ApplicationException, ParseException
     {
@@ -51,7 +51,7 @@ public class BarcodeHelper {
         return this.ProductModel;
     }
 
-    public CharacterisiticStructureModel GetCharacteristicModel()
+    public CharacteristicStructureModel GetCharacteristicModel()
     {
         return this.CharacteristicModel;
     }
@@ -60,7 +60,7 @@ public class BarcodeHelper {
     {
         this.BarcodeModel = new BarcodeStructureModel();
         this.ProductModel = new NomenclatureStructureModel();
-        this.CharacteristicModel = new CharacterisiticStructureModel();
+        this.CharacteristicModel = new CharacteristicStructureModel();
 
         for(serverDatabaseInteraction.BarcodeModel.ProductListModel barcode : model.BarCodeList)
         {
@@ -107,7 +107,7 @@ public class BarcodeHelper {
                  return null;
             }
             else {
-                return (new WebServiceProductRead()).execute(url, userpass).get();
+                return (new AsyncWebServiceProductRead()).execute(url, userpass).get();
             }
 
         }

@@ -1,31 +1,34 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 
 import com.symbol.emdk.barcode.ScanDataCollection;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import businesslogic.ApplicationException;
 import businesslogic.BarcodeScanningLogic;
+import businesslogic.BarcodeTypes;
 import businesslogic.BaseDocumentLogic;
 import businesslogic.DoesNotExistsInOrderException;
 import businesslogic.FullDataTableControl;
-import businesslogic.ListViewPresentationModel;
-import businesslogic.PackageListStructureModel;
-import businesslogic.ProductLogic;
-import businesslogic.ProductModel;
-import businesslogic.Product_PackageListStructureModel;
+import models.ListViewPresentationModel;
+import businesslogic.ResponseModelGenerator;
+import models.ObjectForSaving;
+import models.PackageListStructureModel;
+import models.Product_PackageListStructureModel;
 import businesslogic.ScannerState;
+import models.ScanningBarcodeStructureModel;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.ScannerApplication;
 
-public class PackageListCommand implements Command {
+public class PackageListCommand extends ResponseFormat implements Command {
 
     Activity Activity;
     ScannerApplication appState;
 
-    businesslogic.ProductLogic ProductLogic;
+    ResponseModelGenerator responseModelGenerator;
     BaseDocumentLogic baseDocumentLogic;
     BarcodeScanningLogic barcodeScanningLogic;
 
@@ -33,13 +36,19 @@ public class PackageListCommand implements Command {
     public void Action(Activity activity) {
         this.Activity = activity;
 
-        this.ProductLogic = new ProductLogic(
+        this.responseModelGenerator = new ResponseModelGenerator(
                 appState.nomenclatureStructureModel,
-                appState.characterisiticStructureModel,
+                appState.characteristicStructureModel,
                 appState.manufacturerStructureModel);
 
-        this.baseDocumentLogic = new BaseDocumentLogic(appState.baseDocumentStructureModel);
-        this.barcodeScanningLogic = new BarcodeScanningLogic(appState.LocationContext, appState.baseDocumentStructureModel);
+        try {
+            this.baseDocumentLogic = new BaseDocumentLogic(appState.GetBaseDocument());
+            this.barcodeScanningLogic = new BarcodeScanningLogic(appState.GetLocationContext(), appState.GetBaseDocument());
+        }
+        catch (ApplicationException ex)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(ex.getMessage());
+        }
     }
 
     @Override
@@ -50,65 +59,80 @@ public class PackageListCommand implements Command {
             this.barcodeScanningLogic.IsBarcodeAllowedToScan(ScannerState.PACKAGELIST);
             appState.packageListDataTable.IsActionAllowedWithPackageList(data.getData());
 
-            // GO to DB and get list of products
+            ScanningBarcodeStructureModel barcode = new ScanningBarcodeStructureModel(data.getData(), BarcodeTypes.GetType(data.getLabelType()));
 
-            PackageListStructureModel packageListStructureModel = new PackageListStructureModel("", new Date(),"",""); //TODO : create helper
+            // GO to DB and get list of products and Package list GUID
+
+            PackageListStructureModel packageListStructureModel = new PackageListStructureModel("", new Date(),"", ""); //TODO : create helper
 
             // Add all products to tables
 
-            Boolean areAllProductsContainsInOrder = null;
-
             for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts())
             {
-                try {
+                try
+                {
                     this.baseDocumentLogic.IsExistsInOrder(product);
-                    areAllProductsContainsInOrder = true;
                 }
                 catch (DoesNotExistsInOrderException ex)
                 {
                     ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
-                    areAllProductsContainsInOrder = false;
                 }
             }
 
-            //TODO: show full info about Package List
-        /*
-        if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == true)
-        {
-            String result = this.ProductLogic.CreatePcageListInfo(packageList); // TODO: implement method
-            ((MainActivity)this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
-        }
+            SuccessSaveData(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed, packageListStructureModel , barcode);
 
-         */
-
-            if(areAllProductsContainsInOrder == true)
-            {
-                appState.packageListDataTable.Add(packageListStructureModel);
-
-                for( Product_PackageListStructureModel product : packageListStructureModel.GetProducts()) {
-
-                    for(int i=1;  i<= product.GetItems() ; i++) {
-                        SuccessSaveData(product);
-                    }
-                }
-            }
         }
         catch (ApplicationException ex)
         {
             ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
         }
-    }
-
-    protected void SuccessSaveData( ProductModel product)
-    {
-        if(((MainActivity)this.Activity).IsBarcodeInfoFragmentShowed == false)
+        catch (ParseException ex)
         {
-            ListViewPresentationModel viewUpdateModel = this.ProductLogic.CreateListView(product);
-            ((MainActivity)this.Activity).new BaseAsyncDataUpdate( viewUpdateModel).execute();
-
-            FullDataTableControl.Details detailsModel = this.ProductLogic.CreateDetails(product);
-            appState.ScannedProductsToSend.Add(detailsModel);
+            ((MainActivity)Activity).AlarmAndNotify(ex.getMessage());
         }
     }
 
+
+    @Override
+    protected void SaveInfoForProductList(ScanningBarcodeStructureModel barcode, ObjectForSaving packageList)
+    {
+        PackageListStructureModel input = (PackageListStructureModel) packageList;
+
+        appState.packageListDataTable.Add(input);
+
+        try {
+            for (Product_PackageListStructureModel product : input.GetProducts()) {
+
+                for (int i = 1; i <= product.GetItems(); i++) {
+                    ListViewPresentationModel viewUpdateModel = this.responseModelGenerator.CreateListViewResponse(product);
+                    ((MainActivity) this.Activity).new AsyncListViewDataUpdate(viewUpdateModel).execute();
+
+                    FullDataTableControl.Details detailsModel = this.responseModelGenerator.CreateFullDataTableResponse(
+                            product,
+                            barcode.getFullBarcode(),
+                            input.GetPackageListGuid());
+                    appState.ScannedProductsToSend.Add(detailsModel);
+                }
+            }
+        }
+        catch (ApplicationException e)
+        {
+            ((MainActivity) Activity).AlarmAndNotify(e.getMessage());
+        }
+    }
+
+    @Override
+    protected void ShowInfoForFragment(ScanningBarcodeStructureModel barcode, ObjectForSaving packageList)
+    {
+        String result = "";
+        PackageListStructureModel input = (PackageListStructureModel) packageList;
+        for (Product_PackageListStructureModel product : input.GetProducts()) {
+
+            result = result + "\n--------------\n" + (this.responseModelGenerator.CreateStringResponse(product));
+        }
+
+        ((MainActivity) this.Activity).new AsyncBarcodeInfoUpdate().execute(result);
+    }
+
 }
+

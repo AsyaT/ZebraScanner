@@ -1,16 +1,32 @@
 package businesslogic;
 
+import java.util.List;
+
+import models.BaseDocumentStructureModel;
+import models.OperationTypesStructureModel;
+
 public class BarcodeScanningLogic
 {
     //TODO: move here logic for PackageListScanning
 
-    OperationTypesStructureModel OperationTypesStructureModel = null;
+    models.OperationTypesStructureModel OperationTypesStructureModel = null;
     BaseDocumentStructureModel baseDocumentStructureModel = null;
 
     public BarcodeScanningLogic(OperationTypesStructureModel operationTypesStructureModel, BaseDocumentStructureModel baseDocument)
     {
         this.OperationTypesStructureModel = operationTypesStructureModel;
         this.baseDocumentStructureModel = baseDocument;
+    }
+
+    public Boolean IsBarcodeScanningUnique(String barcode, List<String> alreadyScanned, BarcodeTypes labelType) throws ApplicationException {
+        if(labelType.equals( BarcodeTypes.LocalGS1_EXP ) && alreadyScanned.contains(barcode))
+        {
+            throw new ApplicationException("Штрих-код "+ barcode +" уже был сканирован");
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public Boolean IsBarcodeTypeAllowedToScan(BarcodeTypes type) throws ApplicationException {

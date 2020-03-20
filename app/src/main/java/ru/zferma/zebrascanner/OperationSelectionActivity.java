@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import businesslogic.OperationTypesStructureModel;
-import businesslogic.OperationsTypesAccountingAreaStructureModel;
+import models.OperationTypesStructureModel;
+import models.OperationsTypesAccountingAreaStructureModel;
 import presentation.OperationTypesListViewModel;
 import presentation.OperationsListAdapter;
 import businesslogic.ApplicationException;
@@ -62,14 +62,7 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
             return;
         }
 
-        List<OperationTypesListViewModel> listItem = new ArrayList<>();
-
-        for (String operationTypeId : data.GetOperationKeys()) {
-            OperationTypesListViewModel model = new OperationTypesListViewModel();
-            model.OperationGuid = operationTypeId;
-            model.OperationName = data.GetOperationName(operationTypeId);
-            listItem.add(model);
-        }
+        List<OperationTypesListViewModel> listItem = PrepareListViewModel();
 
         final OperationsListAdapter adapter = new OperationsListAdapter(this, listItem);
         listView.setAdapter(adapter);
@@ -108,37 +101,39 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
                     progressBar.setVisibility(ProgressBar.VISIBLE);
 
                     Class NextActivityClass ;
+                    try {
+                        if (data.HasSeveralAccountingAreas(SelectedOperation.OperationGuid)) {
+                            NextActivityClass = AccountAreaSelectionActivity.class;
+                            appState.LocationContext = new OperationTypesStructureModel(
+                                    SelectedOperation.OperationName,
+                                    SelectedOperation.OperationGuid,
+                                    null,
+                                    null,
+                                    null,
+                                    null);
+                        } else {
+                            String accountingAreaGuid = (String) data.GetAccountingAreas(SelectedOperation.OperationGuid).keySet().toArray()[0];
+                            OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea =
+                                    data.GetAccountingAreas(SelectedOperation.OperationGuid).get(accountingAreaGuid);
 
-                    if (data.HasSeveralAccountingAreas(SelectedOperation.OperationGuid))
-                    {
-                        NextActivityClass =  AccountAreaSelectionActivity.class;
-                        appState.LocationContext = new OperationTypesStructureModel(
-                                SelectedOperation.OperationName,
-                                SelectedOperation.OperationGuid,
-                                null,
-                                null,
-                                null,
-                                null);
+                            NextActivityClass = getOperationsEnum(SelectedOperation.OperationName).getActivityClass();
+                            appState.LocationContext = new OperationTypesStructureModel(
+                                    SelectedOperation.OperationName,
+                                    SelectedOperation.OperationGuid,
+                                    accountingArea.GetName(),
+                                    accountingAreaGuid,
+                                    accountingArea.GetScanningPermissions(),
+                                    accountingArea.IsPackageListAllowed());
+                        }
+
+                        Intent nextActivityIntent = new Intent(getBaseContext(), NextActivityClass);
+                        startActivity(nextActivityIntent);
                     }
-                    else
+                    catch (ApplicationException ex)
                     {
-                        String accountingAreaGuid = (String) data.GetAccountingAreas(SelectedOperation.OperationGuid).keySet().toArray()[0];
-                        OperationsTypesAccountingAreaStructureModel.AccountingArea accountingArea =
-                                data.GetAccountingAreas(SelectedOperation.OperationGuid).get(accountingAreaGuid);
-
-                        NextActivityClass =  getOperationsEnum(SelectedOperation.OperationName).getActivityClass();
-                        appState.LocationContext = new OperationTypesStructureModel(
-                                SelectedOperation.OperationName,
-                                 SelectedOperation.OperationGuid,
-                                accountingArea.GetName(),
-                                accountingAreaGuid,
-                                accountingArea.GetScanningPermissions(),
-                                accountingArea.IsPackageListAllowed());
+                        ShowFragmentNoConnection();
+                        new AsyncFragmentInfoUpdate().execute(ex.getMessage());
                     }
-
-                    Intent nextActivityIntent = new Intent(getBaseContext(), NextActivityClass);
-                    startActivity(nextActivityIntent);
-
                 }
             }
         });
@@ -177,7 +172,24 @@ public class OperationSelectionActivity extends BaseSelectionActivity{
         finish();
     }
 
+    protected List<OperationTypesListViewModel> PrepareListViewModel()
+    {
+        List<OperationTypesListViewModel> listItem = new ArrayList<>();
 
+        for (String operationTypeId : data.GetOperationKeys()) {
+            OperationTypesListViewModel model = new OperationTypesListViewModel();
+            model.OperationGuid = operationTypeId;
+            try {
+                model.OperationName = data.GetOperationName(operationTypeId);
+            } catch (ApplicationException e) {
+                ShowFragmentNoConnection();
+                new AsyncFragmentInfoUpdate().execute(e.getMessage());
+            }
+            listItem.add(model);
+        }
+
+        return listItem;
+    }
 
 
 }

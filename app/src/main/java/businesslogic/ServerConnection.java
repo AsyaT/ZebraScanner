@@ -2,12 +2,14 @@ package businesslogic;
 
 public class ServerConnection {
     private String ServerIP;
+    private String Database;
     private String Username;
     private String Password;
 
-    public ServerConnection(String serverIP, String username, String password)
+    public ServerConnection(String serverIP, String database, String username, String password)
     {
         this.ServerIP = serverIP;
+        this.Database = database;
         this.Username = username;
         this.Password = password;
     }
@@ -20,28 +22,28 @@ public class ServerConnection {
 
     public String GetBarcodeListURL(String accountingAreaGuid)
     {
-        return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Products/v1/GetList?AccountingAreaGUID="+accountingAreaGuid;
+        return GenerateUrlBeginning() + "Products/v1/GetList?AccountingAreaGUID="+accountingAreaGuid;
     }
 
     public String GetOperationTypesURL()
     {
-        return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/AccountingArea/v1/GetList?UserName="+ this.Username;
+        return GenerateUrlBeginning() + "AccountingArea/v1/GetList?UserName="+ this.Username;
 
     }
 
     public String GetOrderProductURL(String accountingAreaGuid, String orderGUID)
     {
-        return "http://"+this.ServerIP+"/erp_troyan/hs/TSD_Feed/BaseDocument/v1/GetByGUID?AccountingAreaGUID="+accountingAreaGuid+"&GUID="+orderGUID;
+        return GenerateUrlBeginning() + "BaseDocument/v1/GetByGUID?AccountingAreaGUID="+accountingAreaGuid+"&GUID="+orderGUID;
     }
 
     public String getResponseUrl()
     {
-        return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Execute/v1/Execute";
+        return GenerateUrlBeginning() + "Execute/v1/Execute";
     }
 
     public String getManufacturersURL()
     {
-        return "http://"+ this.ServerIP +"/erp_troyan/hs/TSD_Feed/Manufacturers/v1/GetList";
+        return GenerateUrlBeginning() + "Manufacturers/v1/GetList";
     }
 
     public String GetUsernameAndPassword()
@@ -53,11 +55,14 @@ public class ServerConnection {
         return this.ServerIP;
     }
 
-    public String GetUsername() {
-        return this.Username;
-    }
+    public String GetDatabaseName() { return this.Database;}
 
-    public String GetPassword() {
-        return this.Password;
+    public String GetUsername() { return this.Username; }
+
+    public String GetPassword() { return this.Password; }
+
+    private String GenerateUrlBeginning()
+    {
+        return "http://"+ this.ServerIP +"/"+this.Database+"/hs/TSD_Feed/";
     }
 }

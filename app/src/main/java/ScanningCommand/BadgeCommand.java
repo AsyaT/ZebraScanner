@@ -1,23 +1,22 @@
-package ScanningCommand;
+package scanningcommand;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.gson.Gson;
 import com.symbol.emdk.barcode.ScanDataCollection;
 
 import java.util.concurrent.ExecutionException;
 
-import businesslogic.FullDataTableControl;
+import businesslogic.ApplicationException;
 import presentation.FragmentHelper;
 import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanBadgeFragment;
 import ru.zferma.zebrascanner.ScannerApplication;
-import serverDatabaseInteraction.ResponseStructureModel;
-import serverDatabaseInteraction.WebServiceResponse;
+import serverDatabaseInteraction.AsyncWebServiceResponse;
+import serverDatabaseInteraction.ResponseModelMaker;
 
-public class BadgeCommand implements Command  {
+public class BadgeCommand implements Command {
 
     Activity Activity;
 
@@ -35,17 +34,20 @@ public class BadgeCommand implements Command  {
     public void ParseData(ScanDataCollection.ScanData data)
     {
         ScannerApplication appState = ((ScannerApplication) Activity.getApplication());
-        appState.BadgeGuid = data.getData();
+        appState.SetBadge(data.getData());
 
         // 3. Отправить POST
 
-        String url = appState.serverConnection.getResponseUrl();
-
-        ResponseStructureModel responseStructureModel = AnswerToServer(appState);
-        String jsonResponse = ConvertModelToJson(responseStructureModel);
-
         try {
-            Integer resultCode = (new WebServiceResponse())
+            String url = appState.serverConnection.getResponseUrl();
+
+            String jsonResponse = ResponseModelMaker.MakeResponseJson(
+                    appState.GetLocationContext().GetAccountingAreaGUID(),
+                    appState.GetBadgeGuid(),
+                    appState.GetBaseDocument().GetOrderId(),
+                    appState.ScannedProductsToSend.GetListOfProducts());
+
+            Integer resultCode = (new AsyncWebServiceResponse())
                     .execute(
                         url,
                         appState.serverConnection.GetUsernameAndPassword(),
@@ -53,7 +55,7 @@ public class BadgeCommand implements Command  {
                     .get();
 
             //TODO: notification for user if Success or not
-            ((MainActivity)this.Activity).new MessageDialog().execute(String.valueOf(resultCode));
+            ((MainActivity)this.Activity).new AsyncMessageDialog().execute(String.valueOf(resultCode));
 
             if(resultCode == 200)
             {
@@ -65,42 +67,12 @@ public class BadgeCommand implements Command  {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (ApplicationException e) {
+            ((MainActivity)this.Activity).AlarmAndNotify(e.getMessage());
         }
 
 
         // TODO: 4. GET для печатной формы
 
-    }
-
-    protected String ConvertModelToJson(ResponseStructureModel model)
-    {
-        Gson gson = new Gson();
-        return gson.toJson(model);
-    }
-
-    protected ResponseStructureModel AnswerToServer(ScannerApplication scannerApplication)
-    {
-        ResponseStructureModel responseStructureModel = new ResponseStructureModel();
-        responseStructureModel.AccountingAreaGUID = scannerApplication.LocationContext.GetAccountingAreaGUID(); //TODO : error here. LocationContext == null
-        responseStructureModel.UserID = scannerApplication.BadgeGuid;
-        if(scannerApplication.baseDocumentStructureModel != null)
-        {
-            responseStructureModel.DocumentID = scannerApplication.baseDocumentStructureModel.GetOrderId();
-        }
-
-        for(FullDataTableControl.Details product : scannerApplication.ScannedProductsToSend.GetListOfProducts())
-        {
-            ResponseStructureModel.ResponseProductStructureModel rpsm = new ResponseStructureModel.ResponseProductStructureModel();
-            rpsm.ProductGUID = product.getProductGuid();
-            rpsm.ProductCharactGUID = product.getCharacteristicGuid();
-            rpsm.Weigth = String.valueOf(product.getWeight() * product.getScannedQuantity());
-            rpsm.Pieces = String.valueOf(product.getScannedQuantity());
-            rpsm.DateOfProduction = String.valueOf(product.getProductionDate());
-            rpsm.DataOfExpiration = String.valueOf(product.getExpiredDate());
-            rpsm.ManufacturerGUID = product.getManufacturerGuid();
-            responseStructureModel.ProductList.add(rpsm);
-        }
-
-        return responseStructureModel;
     }
 }

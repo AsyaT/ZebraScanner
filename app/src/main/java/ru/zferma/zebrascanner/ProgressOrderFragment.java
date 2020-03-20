@@ -11,7 +11,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import businesslogic.BaseDocumentStructureModel;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
+import models.BaseDocumentStructureModel;
 
 public class ProgressOrderFragment extends Fragment {
 
@@ -34,6 +39,9 @@ public class ProgressOrderFragment extends Fragment {
 
         ScannerApplication appState = ((ScannerApplication) getActivity().getApplication());
 
+        DecimalFormat formatter = new DecimalFormat("#.###", DecimalFormatSymbols.getInstance( Locale.GERMAN ));
+        formatter.setRoundingMode( RoundingMode.DOWN );
+
         for(BaseDocumentStructureModel.ProductOrderStructureModel product : Order.ProductList())
         {
             try {
@@ -42,7 +50,7 @@ public class ProgressOrderFragment extends Fragment {
 
                 if(activity.dataTableControl.IsProductExists(product.GetProductGuid()))
                 {
-                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getWeight());
+                    doneKilos = Double.parseDouble(activity.dataTableControl.FindProduct(product.GetProductGuid()).getSummaryWeight());
                     doneItems = Integer.parseInt(activity.dataTableControl.FindProduct(product.GetProductGuid()).getCoefficient());
                 }
 
@@ -52,30 +60,31 @@ public class ProgressOrderFragment extends Fragment {
                 txtView.setText(
                         appState.nomenclatureStructureModel.FindProductByGuid(product.GetProductGuid()) +
                                 "\n" +
-                                appState.characterisiticStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGuid()));
+                                appState.characteristicStructureModel.FindCharacteristicByGuid(product.GetCharacteristicGuid()));
                 txtView.setBackgroundResource(R.drawable.textviewborder);
 
                 LinearLayout linearLayoutKilos = new LinearLayout(getActivity());
                 linearLayoutKilos.setOrientation(LinearLayout.HORIZONTAL);
+                linearLayoutKilos.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.MATCH_PARENT));
 
                 TextView txtOrderd = new TextView(getActivity());
                 txtOrderd.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
                 txtOrderd.setGravity(Gravity.CENTER);
-                txtOrderd.setText(product.OrderedInKilos().toString());
+                txtOrderd.setText(formatter.format(product.OrderedInKilos()));
                 txtOrderd.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtExecuted = new TextView(getActivity());
                 txtExecuted.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
                 txtExecuted.setGravity(Gravity.CENTER);
                 Double finalSum = product.DoneInKilos() + doneKilos;
-                txtExecuted.setText(finalSum.toString());
+                txtExecuted.setText(formatter.format(finalSum));
                 txtExecuted.setBackgroundResource(R.drawable.textviewborder);
 
                 TextView txtLeft = new TextView(getActivity());
                 txtLeft.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));
                 txtLeft.setGravity(Gravity.CENTER);
                 Double finalDiff = product.LeftInKilos() - doneKilos;
-                txtLeft.setText(finalDiff.toString());
+                txtLeft.setText(formatter.format(finalDiff));
                 txtLeft.setBackgroundResource(R.drawable.textviewborder);
 
                 linearLayoutKilos.addView(txtOrderd);
@@ -84,6 +93,7 @@ public class ProgressOrderFragment extends Fragment {
 
                 LinearLayout linearLayoutItems = new LinearLayout(getActivity());
                 linearLayoutItems.setOrientation(LinearLayout.HORIZONTAL);
+                linearLayoutItems.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.MATCH_PARENT));
 
                 TextView txtOrderedPieces = new TextView(getActivity());
                 txtOrderedPieces.setLayoutParams(new TableRow.LayoutParams(60, TableRow.LayoutParams.MATCH_PARENT));

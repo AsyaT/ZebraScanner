@@ -2,6 +2,7 @@ package businesslogic;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FullDataTableControl
 {
@@ -19,6 +20,15 @@ public class FullDataTableControl
        return ListOfProducts;
    }
 
+   public List<String> GetListOfBarcode()
+   {
+        List<String> result = new ArrayList<>();
+        for(Details product : ListOfProducts)
+        {
+            result.add(product.ScannedBarcode);
+        }
+        return result;
+   }
 
    private Details IsProductExists(Details product)
    {
@@ -54,19 +64,7 @@ public class FullDataTableControl
 
    public void Add(Details product)
    {
-           Details newProduct = IsProductExists(product);
-
-           if( newProduct != null)
-           {
-                   this.ListOfProducts.remove(newProduct);
-                   product.ScannedQuantity = newProduct.ScannedQuantity + 1;
-                   this.ListOfProducts.add(product);
-           }
-           else
-           {
-                  product.ScannedQuantity = 1;
-                  this.ListOfProducts.add(product);
-           }
+       this.ListOfProducts.add(product);
    }
 
    public void ItemIsClicked(String productGuid)
@@ -92,22 +90,66 @@ public class FullDataTableControl
        String ProductGuid;
        String CharacteristicGuid;
        Double Weight;
-       Integer ScannedQuantity;
+       Integer QuantityPiecesGoods; // TODO: use for eggs
+       Integer ScannedBoxesQuantity;
        Date ProductionDate;
        Date ExpiredDate;
        String ManufacturerGuid;
+       String ScannedBarcode;
+       String PackageListGuid; // TODO: use at scanning
 
-       public Details()
-       {}
+       public Details(String productGuid,
+                      String characteristicGuid,
+                      Double weight,
+                      Date productionDate,
+                      Date expiredDate,
+                      String manufacturerGuid,
+                      Integer scannedQuantity,
+                      String scannedBarcode,
+                      String packageListGuid
+       )
+       {
+           this.Weight = weight;
+           this.QuantityPiecesGoods = null;
+            MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode,packageListGuid);
+       }
 
-       public Details(String productGuid, String characteristicGuid, Double weight, Date productionDate, Date expiredDate, String manufacturerGuid)
+       // TODO: use for eggs
+       public Details(String productGuid,
+                      String characteristicGuid,
+                      Integer quantityPiecesGoods,
+                      Date productionDate,
+                      Date expiredDate,
+                      String manufacturerGuid,
+                      Integer scannedQuantity,
+                      String scannedBarcode,
+                      String packageListGuid
+       )
+       {
+           this.QuantityPiecesGoods = quantityPiecesGoods;
+           this.Weight = null;
+           MapFromConstructor(productGuid,characteristicGuid,productionDate,expiredDate,manufacturerGuid,scannedQuantity,scannedBarcode,packageListGuid);
+       }
+
+       private void MapFromConstructor(String productGuid,
+                                       String characteristicGuid,
+                                       Date productionDate,
+                                       Date expiredDate,
+                                       String manufacturerGuid,
+                                       Integer scannedQuantity,
+                                       String scannedBarcode,
+                                       String packageListGuid
+       )
        {
            this.ProductGuid = productGuid;
            this.CharacteristicGuid= characteristicGuid;
-           this.Weight = weight;
            this.ProductionDate = productionDate;
            this.ExpiredDate = expiredDate;
            this.ManufacturerGuid = manufacturerGuid;
+           this.ScannedBoxesQuantity = scannedQuantity;
+           this.ScannedBarcode = scannedBarcode;
+           this.PackageListGuid = packageListGuid;
+           this.ScannedBoxesQuantity = scannedQuantity;
        }
 
        public String getProductGuid()
@@ -122,15 +164,31 @@ public class FullDataTableControl
 
        public Integer getScannedQuantity()
            {
-               return this.ScannedQuantity;
+               return this.ScannedBoxesQuantity;
            }
 
        public Double getWeight() { return this.Weight;}
+       public Integer getQuantityPiecesGoods () { return this.QuantityPiecesGoods;}
 
        public Date getProductionDate() { return this.ProductionDate;}
 
        public Date getExpiredDate() { return this.ExpiredDate;}
 
        public String getManufacturerGuid() { return this.ManufacturerGuid;}
+
+       public String getScannedBarcode() { return  this.ScannedBarcode;}
+       public String getPackageListGuid() { return this.PackageListGuid;}
+
+       @Override
+       public boolean equals(Object input) {
+           Details obj = (Details) input;
+           return this.ProductGuid.equals(obj.ProductGuid)
+                   && this.CharacteristicGuid.equals(obj.CharacteristicGuid)
+                   && ((this.ManufacturerGuid == null && obj.ManufacturerGuid == null) || this.ManufacturerGuid.equals(obj.ManufacturerGuid))
+                   && ((this.ProductionDate==null && obj.ProductionDate==null) || this.ProductionDate.equals(obj.ProductionDate) )
+                   && ((this.ExpiredDate==null && obj.ExpiredDate==null) || this.ExpiredDate.equals(obj.ExpiredDate) )
+                   && this.Weight.equals(obj.Weight)
+                   && this.ScannedBoxesQuantity.equals(obj.ScannedBoxesQuantity);
+       }
    }
 }

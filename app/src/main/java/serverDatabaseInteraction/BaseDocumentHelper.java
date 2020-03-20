@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import businesslogic.ApplicationException;
-import businesslogic.BaseDocumentStructureModel;
+import models.BaseDocumentStructureModel;
 
 public class BaseDocumentHelper extends PullDataHelperAbstractFactory
 {

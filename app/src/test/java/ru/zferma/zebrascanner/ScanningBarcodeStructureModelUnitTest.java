@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import businesslogic.ApplicationException;
-import businesslogic.ScanningBarcodeStructureModel;
+import models.ScanningBarcodeStructureModel;
 import businesslogic.BarcodeTypes;
 
 import static org.junit.Assert.assertEquals;

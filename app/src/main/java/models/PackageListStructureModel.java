@@ -1,9 +1,9 @@
-package businesslogic;
+package models;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class PackageListStructureModel
+public class PackageListStructureModel implements ObjectForSaving
 {
     private String PackageListGuid;
 
