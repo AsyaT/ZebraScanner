@@ -666,5 +666,5 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             AlarmAndNotify(e.getMessage());
         }
     }
-    
+
 }
