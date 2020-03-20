@@ -163,12 +163,11 @@ public class ResponseModelGenerator
         }
     }
 
-    private String CalculateManufacturerGuidForDataTable(Byte id)
-    {
+    private String CalculateManufacturerGuidForDataTable(Byte id) throws ApplicationException {
         try {
             return ManufacturerStructureModel.GetManufacturerGuidById(id);
         } catch (ApplicationException ex) {
-            return null;
+            throw ex;
         }
     }
 
