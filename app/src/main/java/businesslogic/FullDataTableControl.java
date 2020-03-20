@@ -64,19 +64,8 @@ public class FullDataTableControl
 
    public void Add(Details product)
    {
-           Details newProduct = IsProductExists(product);
-
-           if( newProduct != null)
-           {
-                   this.ListOfProducts.remove(newProduct);
-                   product.ScannedBoxesQuantity = newProduct.ScannedBoxesQuantity + 1;
-                   this.ListOfProducts.add(product);
-           }
-           else
-           {
-                  product.ScannedBoxesQuantity = 1;
-                  this.ListOfProducts.add(product);
-           }
+       product.ScannedBoxesQuantity = 1;
+       this.ListOfProducts.add(product);
    }
 
    public void ItemIsClicked(String productGuid)
