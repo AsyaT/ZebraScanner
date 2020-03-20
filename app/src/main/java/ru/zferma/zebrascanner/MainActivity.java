@@ -485,6 +485,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         protected void onPostExecute(String result) {
             FragmentWithText barcodeInfoFragment = (FragmentWithText) getSupportFragmentManager().findFragmentById(R.id.frBarcodeInfo);
             barcodeInfoFragment.UpdateText(result);
+            EnableScanner();
         }
     }
 
@@ -606,12 +607,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    try {
-                        scanner.enable();
-                        scanner.read();
-                    } catch (ScannerException e) {
-                        e.printStackTrace();
-                    }
+                    EnableScanner();
                     dialogInterface.dismiss();
                 }
             });
