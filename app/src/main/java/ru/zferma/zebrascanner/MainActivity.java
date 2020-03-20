@@ -34,12 +34,6 @@ import com.symbol.emdk.barcode.ScannerException;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -86,15 +80,12 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-// The EMDKManager object will be created and returned in the callback.
         EMDKResults results = EMDKManager.getEMDKManager(
                 getApplicationContext(), this);
-// Check the return status of getEMDKManager and update the status Text
-// View accordingly
-        ScannerApplication appState = ((ScannerApplication) getApplication());
 
+        ScannerApplication appState = ((ScannerApplication) getApplication());
         appState.scannerState.Set(ScannerState.PRODUCT);
+
         ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
         new Thread(new Runnable() {
             public void run() {
@@ -115,11 +106,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
             }
         }).start();
-
-        //new AsyncGetProductsFromFile().execute(appState.LocationContext.GetAccountingAreaGUID()); //TODO : remove from here
-       // UpdateProductsFromServer(); //TODO : remove from here - better to find proper place to call all products
-
-
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -680,117 +666,5 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             AlarmAndNotify(e.getMessage());
         }
     }
-
-
-    public class AsyncGetProductsFromFile extends AsyncTask<String, Void,Void>
-    {
-
-        @Override
-        protected Void doInBackground(String... voids) {
-          /*  try {
-                scanner.read();
-            } catch (ScannerException e) {
-                e.printStackTrace();
-            }
-
-           */
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-
-//-----------------------------------------
-//      Read product table from file from TSD
-//-----------------------------------------
-
-            String result = "";
-            try {
-                File file = new File("/storage/emulated/0/Download/barcodes.txt");
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
-
-                String st;
-                while ((st = br.readLine()) != null)
-                    result+=st;
-
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-// ---------------------------------------------
-            ScannerApplication appState = ((ScannerApplication) getApplication());
-
-            try
-            {
-                BarcodeHelper bh = new BarcodeHelper(result);
-                appState.barcodeStructureModel = bh.GetBarcodeModel();
-                appState.nomenclatureStructureModel =bh.GetNomenclatureModel();
-                appState.characteristicStructureModel = bh.GetCharacteristicModel();
-            }
-            catch (ParseException  e)
-            {
-                AlarmAndNotify(e.getMessage());
-            }
-            catch (Exception ex)
-            {
-                AlarmAndNotify(ex.getMessage());
-            }
-
-            try {
-                ManufacturerHelper manufacturerHelper = new ManufacturerHelper(appState.serverConnection.getManufacturersURL(), appState.serverConnection.GetUsernameAndPassword());
-                appState.manufacturerStructureModel = (ManufacturerStructureModel) manufacturerHelper.GetData();
-            }
-            catch (ApplicationException ex)
-            {
-                AlarmAndNotify(ex.getMessage());
-            } catch (InterruptedException e) {
-                AlarmAndNotify(e.getMessage());
-            } catch (ExecutionException e) {
-                AlarmAndNotify(e.getMessage());
-            }
-        }
-
-    }
-/*
-    private class DataBaseCaller extends AsyncTask<Void, Void, Void>
-    {
-
-        AlertDialog.Builder alertDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            alertDialog = new AlertDialog.Builder(MainActivity.this);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-            alertDialog.setTitle("Info from DB");
-            SQLiteDBHelper dbHandler = new SQLiteDBHelper(MainActivity.this);
-            alertDialog.setMessage(dbHandler.getData(1));
-            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                    dialogInterface.dismiss();
-                }
-            });
-            alertDialog.show();
-            super.onPostExecute(aVoid);
-        }
-    }
-
- */
+    
 }
