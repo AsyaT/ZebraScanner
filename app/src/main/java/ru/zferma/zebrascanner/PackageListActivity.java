@@ -2,8 +2,6 @@ package ru.zferma.zebrascanner;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.view.View;
 
 import com.symbol.emdk.EMDKManager;
 
@@ -13,6 +11,9 @@ public class PackageListActivity extends MainActivity {
     public void onOpened(EMDKManager emdkManager)
     {
         super.onOpened(emdkManager);
+
+        DisableScanner();
+        PullProductsInThread();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PackageListActivity.this);
         builder.setTitle(R.string.ChoseAction)
@@ -39,30 +40,5 @@ public class PackageListActivity extends MainActivity {
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
-        DisableScanner();
-
-        Handler hdlr = new Handler();
-        ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
-        new Thread(new Runnable() {
-            public void run() {
-
-                hdlr.post(new Runnable() {
-                    public void run() {
-                        ProgressBarMainActivity.setVisibility(View.VISIBLE);
-                        //DisableScanner();
-                    }
-                });
-
-                UpdateProductsFromServer();
-
-                hdlr.post(new Runnable() {
-                    public void run() {
-                        ProgressBarMainActivity.setVisibility(View.GONE);
-                        EnableScanner();
-                    }
-                });
-
-            }
-        }).start();
     }
 }

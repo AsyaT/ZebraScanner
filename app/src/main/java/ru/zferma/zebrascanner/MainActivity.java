@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -228,6 +229,32 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         } catch (ScannerException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void PullProductsInThread()
+    {
+        Handler hdlr = new Handler();
+        ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
+        new Thread(new Runnable() {
+            public void run() {
+
+                hdlr.post(new Runnable() {
+                    public void run() {
+                        ProgressBarMainActivity.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                UpdateProductsFromServer();
+
+                hdlr.post(new Runnable() {
+                    public void run() {
+                        ProgressBarMainActivity.setVisibility(View.GONE);
+                        EnableScanner();
+                    }
+                });
+
+            }
+        }).start();
     }
 
     public void DisableScannerOnProductPullNotFinish()
