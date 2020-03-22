@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -61,17 +60,16 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     // Declare a variable to hold scanner device to scan
     private Scanner scanner = null;
-
     public Scanner getScanner()
     {
         return scanner;
     }
 
+    ProgressBar ProgressBarMainActivity;
+
     DataTableControl dataTableControl;
     private ListView listView = null;
     CustomListAdapter customListAdapter = null;
-    private ProgressBar ProgressBarMainActivity;
-    private Handler hdlr = new Handler();
 
     public Boolean IsBarcodeInfoFragmentShowed = false;
 
@@ -86,28 +84,6 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         ScannerApplication appState = ((ScannerApplication) getApplication());
         appState.scannerState.Set(ScannerState.PRODUCT);
 
-        ProgressBarMainActivity = findViewById(R.id.progressBarMainActivity);
-        new Thread(new Runnable() {
-            public void run() {
-
-                hdlr.post(new Runnable() {
-                    public void run() {
-                        ProgressBarMainActivity.setVisibility(View.VISIBLE);
-                        DisableScanner();
-                    }
-                });
-
-                UpdateProductsFromServer();
-
-                hdlr.post(new Runnable() {
-                    public void run() {
-                        ProgressBarMainActivity.setVisibility(View.GONE);
-                        EnableScanner();
-                    }
-                });
-
-            }
-        }).start();
 
         dataTableControl = new DataTableControl();
         customListAdapter = new CustomListAdapter(this, dataTableControl.GetDataTable() );
@@ -252,6 +228,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         } catch (ScannerException e) {
             e.printStackTrace();
         }
+    }
+
+    public void DisableScannerOnProductPullNotFinish()
+    {
+        if(ProgressBarMainActivity.isShown())
+        {
+            DisableScanner(); // enable only if finish product pull
+        }
+
     }
 
     protected void ShowFragmentScanBadge()

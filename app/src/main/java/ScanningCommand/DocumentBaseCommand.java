@@ -13,6 +13,7 @@ import businesslogic.ApplicationException;
 import models.BaseDocumentStructureModel;
 import businesslogic.ScannerState;
 import presentation.FragmentHelper;
+import ru.zferma.zebrascanner.MainActivity;
 import ru.zferma.zebrascanner.OrderInfoFragment;
 import ru.zferma.zebrascanner.R;
 import ru.zferma.zebrascanner.ScanOrderFragment;
@@ -52,6 +53,8 @@ public class DocumentBaseCommand implements Command {
             ShowBottomInfoFragment();
 
             appState.scannerState.Set(ScannerState.PRODUCT);
+
+            ((MainActivity)this.Activity).DisableScannerOnProductPullNotFinish();
         }
         catch (ApplicationException e)
         {
