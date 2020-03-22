@@ -236,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         } catch (ScannerException e) {
             e.printStackTrace();
         }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
     }
 
     protected void EnableScanner()
