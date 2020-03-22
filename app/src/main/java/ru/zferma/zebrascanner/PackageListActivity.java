@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.symbol.emdk.EMDKManager;
-
 public class PackageListActivity extends MainActivity {
 
     @Override
@@ -28,21 +26,10 @@ public class PackageListActivity extends MainActivity {
                     }
                 });
 
-
-
         AlertDialog alertDialog = builder.create();
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
-    }
-
-    @Override
-    public void onOpened(EMDKManager emdkManager)
-    {
-        super.onOpened(emdkManager);
-
         DisableScanner();
     }
-
-
 }

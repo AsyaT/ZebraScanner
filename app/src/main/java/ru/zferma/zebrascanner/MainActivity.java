@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 hdlr.post(new Runnable() {
                     public void run() {
                         ProgressBarMainActivity.setVisibility(View.VISIBLE);
+                        DisableScanner();
                     }
                 });
 
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
                 hdlr.post(new Runnable() {
                     public void run() {
                         ProgressBarMainActivity.setVisibility(View.GONE);
+                        EnableScanner();
                     }
                 });
 
