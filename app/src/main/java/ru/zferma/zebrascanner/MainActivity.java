@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     protected void DisableScanner()
     {
         try {
+            scanner.cancelRead();
             scanner.disable();
         } catch (ScannerException e) {
             e.printStackTrace();
@@ -288,11 +289,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     public void AlarmAndNotify(String message)
     {
-        try {
-            scanner.disable();
-        } catch (ScannerException e) {
-            e.printStackTrace();
-        }
+        DisableScanner();
 
         MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep01);
         mediaPlayer.start();
