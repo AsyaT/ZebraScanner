@@ -383,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
             else if (topFragment.getName() != null && topFragment.getName().equalsIgnoreCase("ScanOrder") )
             {
+                DisableScanner();
                 ReleaseEMDK();
 
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
