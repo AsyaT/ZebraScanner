@@ -161,11 +161,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
                 DisableScanner();
 
-                if (emdkManager != null) {
-
-                    emdkManager.release();
-                    emdkManager = null;
-                }
+                ReleaseEMDK();
 
                 appState.CleanContextEntities();
 
@@ -219,6 +215,15 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
         catch (Exception exception)
         {
             exception.printStackTrace();
+        }
+    }
+
+    protected void ReleaseEMDK()
+    {
+        if (this.emdkManager != null) {
+
+            this.emdkManager.release();
+            this.emdkManager = null;
         }
     }
 
@@ -360,13 +365,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
 
     @Override
     public void onClosed() {
-// The EMDK closed abruptly. // Clean up the objects created by EMDK
-// manager
-        if (this.emdkManager != null) {
-
-            this.emdkManager.release();
-            this.emdkManager = null;
-        }
+        ReleaseEMDK();
     }
 
     @Override
@@ -384,11 +383,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
             }
             else if (topFragment.getName() != null && topFragment.getName().equalsIgnoreCase("ScanOrder") )
             {
-                if (emdkManager != null) {
-
-                    emdkManager.release();
-                    emdkManager = null;
-                }
+                ReleaseEMDK();
 
                 Intent operationSelectionIntent = new Intent(getBaseContext(), OperationSelectionActivity.class);
                 startActivity(operationSelectionIntent);
@@ -473,14 +468,7 @@ public class MainActivity extends AppCompatActivity implements EMDKListener, Sta
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (emdkManager != null) {
-
-// Clean up the objects created by EMDK manager
-            emdkManager.release();
-            emdkManager = null;
-
-
-        }
+        ReleaseEMDK();
     }
 
     @Override
